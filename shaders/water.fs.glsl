@@ -14,8 +14,8 @@ vec2 distort(vec2 uv) {
 	// a affects the amount the x travel affects, b is the max amplitude (height of difference),
 	// c is the time factor (greater c, faster change happens)
 	//                 a      b                  c
-	uv.x += sin(uv.y * 20.) * 0.003 * sin(time * 0.3);
-	uv.y += sin(uv.x * 20.) * 0.003 * sin(time * 0.3);
+	// uv.x += sin(uv.y * 20.) * 0.003 * sin(time * 0.3);
+	// uv.y += sin(uv.x * 20.) * 0.003 * sin(time * 0.3);
  	return uv;
 }
 

@@ -2,8 +2,12 @@
 
 #include "common.hpp"
 
+// stlib
+#include <vector>
+
 class Turtle;
 class Fish;
+class Wall;
 
 class Salmon : public Renderable
 {
@@ -13,17 +17,19 @@ public:
 
 	// Releases all associated resources
 	void destroy();
-	
+
 	// Update salmon position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms);
-	
+	void update(float ms, std::vector<Wall> m_walls);
+
 	// Renders the salmon
 	void draw(const mat3& projection)override;
 
-	// Collision routines for turtles and fish
+	// Collision routines for turtles, fish and wall
 	bool collides_with(const Turtle& turtle);
 	bool collides_with(const Fish& fish);
+	bool collides_with(const Wall& wall);
+	bool new_position_collides_with(vec2 new_position, const Wall& wall);
 
 	// Returns the current salmon position
 	vec2 get_position()const;

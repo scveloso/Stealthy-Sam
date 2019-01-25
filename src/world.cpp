@@ -25,7 +25,7 @@ namespace
 	}
 }
 
-World::World() : 
+World::World() :
 	m_points(0),
 	m_next_turtle_spawn(0.f),
 	m_next_fish_spawn(0.f)
@@ -116,12 +116,23 @@ bool World::init(vec2 screen)
 
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
-	
+
 	fprintf(stderr, "Loaded music\n");
 
 	m_current_speed = 1.f;
 
-	return m_salmon.init() && m_water.init();
+	if (m_salmon.init() && m_water.init())
+	{
+		Wall wall;
+		if (wall.init())
+		{
+			wall.set_position({ (screen.x / 2),  50 });
+			m_walls.emplace_back(wall);
+			return true;
+		}
+		fprintf(stderr, "Failed to spawn wall\n");
+	}
+	return false;
 }
 
 // Releases all the associated resources
@@ -218,7 +229,7 @@ bool World::update(float elapsed_ms)
 
 	// Updating all entities, making the turtle and fish
 	// faster based on current
-	m_salmon.update(elapsed_ms);
+	m_salmon.update(elapsed_ms, m_walls);
 	for (auto& turtle : m_turtles)
 		turtle.update(elapsed_ms * m_current_speed);
 	for (auto& fish : m_fish)
@@ -278,7 +289,7 @@ bool World::update(float elapsed_ms)
 			return false;
 
 		Turtle& new_turtle = m_turtles.back();
-	
+
 		// Setting random initial position
 		new_turtle.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
 
@@ -329,7 +340,6 @@ void World::draw()
 	// Updating window title with points
 	std::stringstream title_ss;
 	title_ss << "Points: " << m_points;
-	std::cout << "proints" << m_points;
 	glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
 	/////////////////////////////////////
@@ -364,6 +374,8 @@ void World::draw()
 		fish.draw(projection_2D);
 	for (auto& missile : m_missiles)
 		missile.draw(projection_2D);
+	for (auto& wall : m_walls)
+		wall.draw(projection_2D);
 	m_salmon.draw(projection_2D);
 
 	/////////////////////
@@ -486,7 +498,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	{
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy(); 
+		m_salmon.destroy();
 		m_salmon.init();
 		m_turtles.clear();
 		m_fish.clear();
@@ -499,7 +511,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_current_speed -= 0.1f;
 	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
 		m_current_speed += 0.1f;
-	
+
 	m_current_speed = fmax(0.f, m_current_speed);
 }
 
@@ -507,7 +519,7 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE SALMON ROTATION HERE
-	// xpos and ypos are relative to the top-left of the window, the salmon's 
+	// xpos and ypos are relative to the top-left of the window, the salmon's
 	// default facing direction is (1, 0)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

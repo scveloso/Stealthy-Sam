@@ -42,6 +42,7 @@ set(SOURCE_FILES
 	src/water.cpp
 	src/world.cpp
     src/missile.cpp
+	src/wall.cpp
 
     src/project_path.hpp
 	src/common.hpp

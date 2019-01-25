@@ -4,6 +4,7 @@
 // internal
 #include "turtle.hpp"
 #include "fish.hpp"
+#include "wall.hpp"
 
 // stlib
 #include <vector>
@@ -31,7 +32,7 @@ bool Salmon::init()
 		int r, g, b;
 		fscanf(mesh_file, "%f %f %f %f %f %f %d %d %d\n", &x, &y, &z, _u, _u+1, _u+2, &r, &g, &b);
 		Vertex vertex;
-		vertex.position = { x, y, -z }; 
+		vertex.position = { x, y, -z };
 		vertex.color = { (float)r / 255, (float)g / 255, (float)b / 255 };
 		vertices.push_back(vertex);
 	}
@@ -72,7 +73,7 @@ bool Salmon::init()
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl")))
 		return false;
-	
+
 	// Setting initial values
 	m_scale.x = -35.f;
 	m_scale.y = 35.f;
@@ -98,27 +99,53 @@ void Salmon::destroy()
 }
 
 // Called on each frame by World::update()
-void Salmon::update(float ms)
+void Salmon::update(float ms, std::vector<Wall> m_walls)
 {
 	const float SALMON_SPEED = 200.f;
 	float step = SALMON_SPEED * (ms / 1000);
 	if (m_is_alive)
 	{
+		vec2 new_position = {m_position.x, m_position.y};
 
-		if (should_move_left) {
-			m_position.x = m_position.x - step;
-		}
-		if (should_move_right) {
-			m_position.x = m_position.x + step;
-		}
-		if (should_move_up) {
-			m_position.y = m_position.y + step;
-		}
-		if (should_move_down) {
-			m_position.y = m_position.y - step;
+		if (should_move_left)
+		{
+			new_position.x = new_position.x - step;
 		}
 
-		
+		if (should_move_right)
+		{
+			new_position.x = new_position.x + step;
+		}
+
+		if (should_move_up)
+		{
+			new_position.y = new_position.y + step;
+		}
+
+		if (should_move_down)
+		{
+			new_position.y = new_position.y - step;
+		}
+
+		// Check if moving will hit a wall
+		auto wall_it = m_walls.begin();
+		bool hit_wall = false;
+		while (wall_it != m_walls.end())
+		{
+			if (new_position_collides_with(new_position, *wall_it))
+			{
+				hit_wall = true;
+				wall_it = m_walls.end();
+			}
+			else
+				++wall_it;
+		}
+
+		// If won't hit a wall, move
+		if (!hit_wall)
+		{
+			m_position = new_position;
+		}
 	}
 	else
 	{
@@ -129,7 +156,6 @@ void Salmon::update(float ms)
 
 	if (m_light_up_countdown_ms > 0.f)
 	{
-
 		m_light_up_countdown_ms -= ms;
 	}
 	else
@@ -142,15 +168,6 @@ void Salmon::draw(const mat3& projection)
 {
 	transform_begin();
 
-	// see Transformations and Rendering in the specification pdf
-	// the following functions are available:
-	// transform_translate()
-	// transform_rotate()
-	// transform_scale()
-//	transform_translate({ 100.f, 100.f });
-//	transform_scale(m_scale);
-
-	
 	// just need to move the salmon whatever direction, so up is:
 	// this is just the original position, statically.
 	// so instead, we need to change it to be the x position.
@@ -213,7 +230,7 @@ void Salmon::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES,(GLsizei)m_num_indices, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Simple bounding box collision check, 
+// Simple bounding box collision check,
 bool Salmon::collides_with(const Turtle& turtle)
 {
 	float dx = m_position.x - turtle.get_position().x;
@@ -234,6 +251,34 @@ bool Salmon::collides_with(const Fish& fish)
 	float dy = m_position.y - fish.get_position().y;
 	float d_sq = dx * dx + dy * dy;
 	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
+	float my_r = std::max(m_scale.x, m_scale.y);
+	float r = std::max(other_r, my_r);
+	r *= 0.6f;
+	if (d_sq < r * r)
+		return true;
+	return false;
+}
+
+bool Salmon::collides_with(const Wall& wall)
+{
+	float dx = m_position.x - wall.get_position().x;
+	float dy = m_position.y - wall.get_position().y;
+	float d_sq = dx * dx + dy * dy;
+	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
+	float my_r = std::max(m_scale.x, m_scale.y);
+	float r = std::max(other_r, my_r);
+	r *= 0.6f;
+	if (d_sq < r * r)
+		return true;
+	return false;
+}
+
+bool Salmon::new_position_collides_with(vec2 new_position, const Wall& wall)
+{
+	float dx = new_position.x - wall.get_position().x;
+	float dy = new_position.y - wall.get_position().y;
+	float d_sq = dx * dx + dy * dy;
+	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
 	float my_r = std::max(m_scale.x, m_scale.y);
 	float r = std::max(other_r, my_r);
 	r *= 0.6f;
@@ -295,4 +340,3 @@ void Salmon::should_move(int direction, bool should)
 		std::cout << "failed to move" << std::endl;
 	}
 }
-
