@@ -5,7 +5,7 @@
 #include "salmon.hpp"
 #include "turtle.hpp"
 #include "fish.hpp"
-#include "water.hpp"
+#include "background.hpp"
 #include "missile.hpp"
 
 // stlib
