@@ -34,7 +34,6 @@ bool Turtle::init()
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
-	//setting upstream
 	// Clearing errors
 	gl_flush_errors();
 	

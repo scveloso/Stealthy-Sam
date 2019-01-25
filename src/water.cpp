@@ -29,7 +29,7 @@ bool Water::init() {
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("water.vs.glsl"), shader_path("water.fs.glsl")))
+	if (!effect.load_from_file(shader_path("background.vs.glsl"), shader_path("background.fs.glsl")))
 		return false;
 
 	return true;
