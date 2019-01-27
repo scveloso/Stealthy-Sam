@@ -111,8 +111,6 @@ bool World::init(vec2 screen)
 
 	fprintf(stderr, "Loaded music\n");
 
-	m_current_speed = 1.f;
-
 	if (m_salmon.init() && m_water.init())
 	{
 		Wall wall;
