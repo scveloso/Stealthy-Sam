@@ -40,14 +40,6 @@ public:
 	bool is_over()const;
 
 private:
-	// Generates a new turtle
-	bool spawn_turtle();
-
-	// Generates a new fish
-	bool spawn_fish();
-
-	bool spawn_fmissile();
-
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -64,24 +56,9 @@ private:
 	// Water effect
 	Water m_water;
 
-	// Number of fish eaten by the salmon, displayed in the window title
-	unsigned int m_points;
-
-	// whether the game has enabled extra features
-	bool advanced_mode;
-
 	// Game entities
 	Salmon m_salmon;
-	std::vector<Turtle> m_turtles;
-	std::vector<Fish> m_fish;
 
-	// missiles iff we're in advanced_mode
-	std::vector<Missile> m_missiles;
-
-	float m_current_speed;
-	float m_next_turtle_spawn;
-	float m_next_fish_spawn;
-	
 	Mix_Music* m_background_music;
 	Mix_Chunk* m_salmon_dead_sound;
 	Mix_Chunk* m_salmon_eat_sound;
