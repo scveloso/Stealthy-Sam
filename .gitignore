@@ -1,3 +1,12 @@
 cmake-build-debug/
 .idea/
+<<<<<<< HEAD
 build/
+=======
+436d
+CMakeCache.txt
+Makefile
+CMakeFiles/
+cmake_install.cmake
+
+>>>>>>> origin/master

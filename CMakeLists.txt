@@ -39,7 +39,7 @@ set(SOURCE_FILES
 	src/fish.cpp
 	src/salmon.cpp
 	src/turtle.cpp
-	src/water.cpp
+        src/background.cpp
 	src/world.cpp
     src/missile.cpp
 	src/wall.cpp
@@ -49,7 +49,7 @@ set(SOURCE_FILES
 	src/fish.hpp
 	src/salmon.hpp
 	src/turtle.hpp
-	src/water.hpp
+        src/background.hpp
 	src/world.hpp
 	)
 
