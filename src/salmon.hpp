@@ -28,7 +28,6 @@ public:
 	// Collision routines for turtles, fish and wall
 	bool collides_with(const Turtle& turtle);
 	bool collides_with(const Fish& fish);
-	bool collides_with(const Wall& wall);
 	bool new_position_collides_with(vec2 new_position, const Wall& wall);
 
 	// Returns the current salmon position

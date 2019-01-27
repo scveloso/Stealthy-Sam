@@ -126,7 +126,7 @@ bool World::init(vec2 screen)
 		Wall wall;
 		if (wall.init())
 		{
-			wall.set_position({ (screen.x / 2),  50 });
+			wall.set_position({ (screen.x / 2),  140 });
 			m_walls.emplace_back(wall);
 			return true;
 		}

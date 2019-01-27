@@ -259,20 +259,6 @@ bool Salmon::collides_with(const Fish& fish)
 	return false;
 }
 
-bool Salmon::collides_with(const Wall& wall)
-{
-	float dx = m_position.x - wall.get_position().x;
-	float dy = m_position.y - wall.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
-
 bool Salmon::new_position_collides_with(vec2 new_position, const Wall& wall)
 {
 	float dx = new_position.x - wall.get_position().x;

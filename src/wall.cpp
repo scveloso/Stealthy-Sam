@@ -3,6 +3,7 @@
 #include "salmon.hpp"
 
 #include <cmath>
+#include <iostream>
 
 Texture Wall::wall_texture;
 
@@ -21,6 +22,8 @@ bool Wall::init()
 	// The position corresponds to the center of the texture
 	float wr = wall_texture.width * 0.5f;
 	float hr = wall_texture.height * 0.5f;
+  std::cout << "wr = " << wr << std::endl;
+  std::cout << "hr = " << hr << std::endl;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.01f };
@@ -59,7 +62,7 @@ bool Wall::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = -0.2f;
+	m_scale.x = 0.2f;
 	m_scale.y = 0.2f;
 	m_rotation = 3.14159;
 
@@ -143,9 +146,14 @@ void Wall::set_position(vec2 position)
 	m_position = position;
 }
 
+vec2 Wall::get_texture_dimensions()const
+{
+  return {(float) wall_texture.width, (float) wall_texture.height};
+}
+
 // Returns the local bounding coordinates scaled by the current size of the wall
 vec2 Wall::get_bounding_box()const
 {
 	// fabs is to avoid negative scale due to the facing direction
-	return { std::fabs(m_scale.x) * wall_texture.width, std::fabs(m_scale.y) * wall_texture.height };
+	return { std::fabs(m_scale.x) * (wall_texture.width), std::fabs(m_scale.y) * (wall_texture.height) };
 }
