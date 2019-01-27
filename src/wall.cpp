@@ -1,6 +1,6 @@
 // Header
 #include "wall.hpp"
-#include "salmon.hpp"
+#include "sam.hpp"
 
 #include <cmath>
 #include <iostream>

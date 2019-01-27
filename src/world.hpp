@@ -2,7 +2,7 @@
 
 // internal
 #include "common.hpp"
-#include "salmon.hpp"
+#include "sam.hpp"
 #include "turtle.hpp"
 #include "fish.hpp"
 #include "background.hpp"
@@ -58,7 +58,7 @@ private:
 	Water m_water;
 
 	// Game entities
-	Salmon m_salmon;
+	Sam m_sam;
 
 	std::vector<Wall> m_walls;
 

@@ -2,7 +2,7 @@
 
 #include "common.hpp"
 
-// Salmon food
+// Sam food
 class Fish : public Renderable
 {
 	// Shared between all fish, no need to load one for each instance
@@ -14,7 +14,7 @@ public:
 
 	// Releases all the associated resources
 	void destroy();
-	
+
 	// Update fish due to current
 	// ms represents the number of milliseconds elapsed from the previous update() call
 	void update(float ms);

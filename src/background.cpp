@@ -43,15 +43,15 @@ void Water::destroy() {
 	glDeleteShader(effect.program);
 }
 
-void Water::set_salmon_dead() {
+void Water::set_sam_dead() {
 	m_dead_time = glfwGetTime();
 }
 
-void Water::reset_salmon_dead_time() {
+void Water::reset_sam_dead_time() {
 	m_dead_time = -1;
 }
 
-float Water::get_salmon_dead_time() const {
+float Water::get_sam_dead_time() const {
 	return glfwGetTime() - m_dead_time;
 }
 

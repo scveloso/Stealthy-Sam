@@ -25,7 +25,6 @@ vec4 fade_color(vec4 in_color) {
 
 void main()
 {
-
     vec4 in_color = texture(screen_texture, uv);
     color = color_shift(in_color);
     color = fade_color(color);

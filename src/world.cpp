@@ -111,7 +111,7 @@ bool World::init(vec2 screen)
 
 	fprintf(stderr, "Loaded music\n");
 
-	if (m_salmon.init() && m_water.init())
+	if (m_sam.init() && m_water.init())
 	{
 		Wall wall;
 		if (wall.init())
@@ -139,7 +139,7 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
-	m_salmon.destroy();
+	m_sam.destroy();
 
 	glfwDestroyWindow(m_window);
 }
@@ -155,16 +155,16 @@ bool World::update(float elapsed_ms)
 
 	// Updating all entities, making the turtle and fish
 	// faster based on current
-	m_salmon.update(elapsed_ms, m_walls);
+	m_sam.update(elapsed_ms, m_walls);
 
 	// If salmon is dead, restart the game after the fading animation
-	if (!m_salmon.is_alive() &&
-		m_water.get_salmon_dead_time() > 5) {
+	if (!m_sam.is_alive() &&
+		m_water.get_sam_dead_time() > 5) {
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy();
-		m_salmon.init();
-		m_water.reset_salmon_dead_time();
+		m_sam.destroy();
+		m_sam.init();
+		m_water.reset_sam_dead_time();
 	}
 
 	return true;
@@ -210,8 +210,12 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
+	// Drawing walls
+	for (auto& wall : m_walls)
+			wall.draw(projection_2D);
+
 	// Drawing entities
-	m_salmon.draw(projection_2D);
+	m_sam.draw(projection_2D);
 
 	/////////////////////
 	// Truely render to the screen
@@ -250,16 +254,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_salmon.should_move(1, true);
+			m_sam.should_move(1, true);
 			break;
 		case GLFW_KEY_D:
-			m_salmon.should_move(2, true);
+			m_sam.should_move(2, true);
 			break;
 		case GLFW_KEY_S:
-			m_salmon.should_move(3, true);
+			m_sam.should_move(3, true);
 			break;
 		case GLFW_KEY_W:
-			m_salmon.should_move(4, true);
+			m_sam.should_move(4, true);
 			break;
 		default:
 			break;
@@ -272,16 +276,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_salmon.should_move(1, false);
+			m_sam.should_move(1, false);
 			break;
 		case GLFW_KEY_D:
-			m_salmon.should_move(2, false);
+			m_sam.should_move(2, false);
 			break;
 		case GLFW_KEY_S:
-			m_salmon.should_move(3, false);
+			m_sam.should_move(3, false);
 			break;
 		case GLFW_KEY_W:
-			m_salmon.should_move(4, false);
+			m_sam.should_move(4, false);
 			break;
 		default:
 			break;
@@ -293,9 +297,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	{
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy();
-		m_salmon.init();
-		m_water.reset_salmon_dead_time();
+		m_sam.destroy();
+		m_sam.init();
+		m_water.reset_sam_dead_time();
 	}
 
 }
