@@ -1,5 +1,6 @@
 // Header
 #include "world.hpp"
+#include "wall_types.h"
 
 // stlib
 #include <string.h>
@@ -115,7 +116,7 @@ bool World::init(vec2 screen)
 	if (m_sam.init() && m_water.init())
 	{
 		Wall wall;
-		if (wall.init())
+		if (wall.init(TALL_WALL))
 		{
 			wall.set_position({ (screen.x / 2),  192 });
 			m_walls.emplace_back(wall);
@@ -124,27 +125,6 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to spawn wall\n");
 	}
 	return false;
-	//
-	// // Create multiple walls
-	// float prev_wall_height = 30;
-	// int count = 0;
-	// if (m_sam.init() && m_water.init())
-	// {
-	// 	while (count < 10) {
-	// 		Wall wall;
-	// 		if (wall.init())
-	// 		{
-	// 			wall.set_position({ (screen.x / 2),  prev_wall_height});
-	// 			prev_wall_height += wall.get_texture_dimensions().y;
-	// 			count++;
-	// 			m_walls.emplace_back(wall);
-	// 		} else {
-	// 			fprintf(stderr, "Failed to spawn wall\n");
-	// 			return false;
-	// 		}
-	// 	}
-	// }
-	// return true;
 }
 
 // Releases all the associated resources

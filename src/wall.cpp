@@ -4,15 +4,22 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
+using namespace std;
 
 Texture Wall::wall_texture;
 
-bool Wall::init()
+bool Wall::init(int wall_type)
 {
 	// Load shared texture
 	if (!wall_texture.is_valid())
 	{
-		if (!wall_texture.load_from_file(textures_path("wall.png"))) // just use the fish one for now
+		bool load_success = false;
+		if (wall_type == 0) {
+			load_success = wall_texture.load_from_file(textures_path("tall_wall.png"));
+		}
+
+		if (!load_success)
 		{
 			fprintf(stderr, "Failed to load wall-fish texture!");
 			return false;
