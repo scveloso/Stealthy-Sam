@@ -1,5 +1,6 @@
 // Header
 #include "world.hpp"
+#include "wall_types.h"
 
 // stlib
 #include <string.h>
@@ -108,10 +109,64 @@ bool World::init(vec2 screen)
 
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
-	
+
 	fprintf(stderr, "Loaded music\n");
 
-	return m_salmon.init() && m_water.init();
+	// Create one long wall
+	if (m_sam.init() && m_water.init())
+	{
+		Wall wall;
+		if (wall.init(TALL_WALL))
+		{
+			// Set at the middle of the top edge of the screen, accounting for half of this wall's height (192)
+			wall.set_position({ (screen.x / 2),  192 });
+			m_walls.emplace_back(wall);
+		}
+
+		Wall wall2;
+		if (wall2.init(WIDE_WALL))
+		{
+			// Set below the previous wall (384 height) accounting for half of this wall's height (19.2)
+			wall2.set_position({ (screen.x / 2),  384 + 19.2 });
+			m_walls.emplace_back(wall2);
+		}
+
+		Wall wall3;
+		if (wall3.init(WIDE_WALL))
+		{
+			// Set left edge of the screen aligned with wall2
+			wall3.set_position({ 100,  384 + 19.2 });
+			m_walls.emplace_back(wall3);
+		}
+
+		Wall wall4;
+		if (wall4.init(WIDE_WALL))
+		{
+			// Set right edge of the screen aligned with wall2
+			wall4.set_position({ (screen.x) - 100,  384 + 19.2 });
+			m_walls.emplace_back(wall4);
+		}
+
+		Wall wall5;
+		if (wall5.init(TALL_WALL))
+		{
+			// Set at bottom edge of the screen
+			wall5.set_position({ (screen.x / 2),  (screen.y) - 50 });
+			m_walls.emplace_back(wall5);
+		}
+
+		Wall wall6;
+		if (wall6.init(WIDE_WALL))
+		{
+			// Set directly above wall 5, shifted to the right by half of its width
+			wall6.set_position({ (float) ((screen.x / 2) + (192 - 19.2)),  (screen.y) - 50 - (192) });
+			m_walls.emplace_back(wall6);
+			return true;
+		}
+
+		fprintf(stderr, "Failed to spawn wall\n");
+	}
+	return false;
 }
 
 // Releases all the associated resources
@@ -128,7 +183,7 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
-	m_salmon.destroy();
+	m_sam.destroy();
 
 	glfwDestroyWindow(m_window);
 }
@@ -140,21 +195,18 @@ bool World::update(float elapsed_ms)
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-
-
 	// Updating all entities, making the turtle and fish
 	// faster based on current
-	m_salmon.update(elapsed_ms);
-
+	m_sam.update(elapsed_ms, m_walls);
 
 	// If salmon is dead, restart the game after the fading animation
-	if (!m_salmon.is_alive() &&
-		m_water.get_salmon_dead_time() > 5) {
+	if (!m_sam.is_alive() &&
+		m_water.get_sam_dead_time() > 5) {
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy();
-		m_salmon.init();
-		m_water.reset_salmon_dead_time();
+		m_sam.destroy();
+		m_sam.init();
+		m_water.reset_sam_dead_time();
 	}
 
 	return true;
@@ -200,8 +252,12 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
+	// Drawing walls
+	for (auto& wall : m_walls)
+			wall.draw(projection_2D);
+
 	// Drawing entities
-	m_salmon.draw(projection_2D);
+	m_sam.draw(projection_2D);
 
 	/////////////////////
 	// Truely render to the screen
@@ -240,16 +296,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_salmon.should_move(1, true);
+			m_sam.should_move(1, true);
 			break;
 		case GLFW_KEY_D:
-			m_salmon.should_move(2, true);
+			m_sam.should_move(2, true);
 			break;
 		case GLFW_KEY_S:
-			m_salmon.should_move(3, true);
+			m_sam.should_move(3, true);
 			break;
 		case GLFW_KEY_W:
-			m_salmon.should_move(4, true);
+			m_sam.should_move(4, true);
 			break;
 		default:
 			break;
@@ -262,16 +318,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_salmon.should_move(1, false);
+			m_sam.should_move(1, false);
 			break;
 		case GLFW_KEY_D:
-			m_salmon.should_move(2, false);
+			m_sam.should_move(2, false);
 			break;
 		case GLFW_KEY_S:
-			m_salmon.should_move(3, false);
+			m_sam.should_move(3, false);
 			break;
 		case GLFW_KEY_W:
-			m_salmon.should_move(4, false);
+			m_sam.should_move(4, false);
 			break;
 		default:
 			break;
@@ -283,9 +339,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	{
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy(); 
-		m_salmon.init();
-		m_water.reset_salmon_dead_time();
+		m_sam.destroy();
+		m_sam.init();
+		m_water.reset_sam_dead_time();
 	}
 
 }
@@ -293,4 +349,3 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
 }
-

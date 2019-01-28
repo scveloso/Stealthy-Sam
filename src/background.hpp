@@ -16,9 +16,9 @@ public:
 	void draw(const mat3& projection)override;
 
 	// Set dead time
-	void set_salmon_dead();
-	void reset_salmon_dead_time();
-	float get_salmon_dead_time() const;
+	void set_sam_dead();
+	void reset_sam_dead_time();
+	float get_sam_dead_time() const;
 
 private:
 	// When salmon is alive, the time is set to -1
