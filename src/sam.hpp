@@ -53,6 +53,10 @@ public:
 
 	void should_move(int direction, bool should);
 
+	float get_half_width()const;
+
+	float get_half_height()const;
+
 private:
 	float m_light_up_countdown_ms; // Used to keep track for how long the Sam should be lit up
 	bool m_is_alive; // True if the Sam is alive

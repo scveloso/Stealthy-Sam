@@ -62,8 +62,8 @@ bool Wall::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = 0.2f;
-	m_scale.y = 0.2f;
+	m_scale.x = 0.3f;
+	m_scale.y = 0.3f;
 	m_rotation = 3.14159;
 
 	return true;
@@ -141,14 +141,21 @@ vec2 Wall::get_position()const
 	return m_position;
 }
 
+// Set the wall's position, this will only be called once per level
+// Set the top, bottom, left and right edges of the wall
 void Wall::set_position(vec2 position)
 {
 	m_position = position;
+
+	m_x1 = position.x - (get_texture_dimensions().x / 2);
+	m_x2 = position.x + (get_texture_dimensions().x / 2);
+	m_y1 = position.y - (get_texture_dimensions().y / 2);
+	m_y2 = position.y + (get_texture_dimensions().y / 2);
 }
 
 vec2 Wall::get_texture_dimensions()const
 {
-  return {(float) wall_texture.width, (float) wall_texture.height};
+  return {(float) (m_scale.x) * (wall_texture.width), (float) (m_scale.y) * (wall_texture.height)};
 }
 
 // Returns the local bounding coordinates scaled by the current size of the wall
@@ -156,4 +163,24 @@ vec2 Wall::get_bounding_box()const
 {
 	// fabs is to avoid negative scale due to the facing direction
 	return { std::fabs(m_scale.x) * (wall_texture.width), std::fabs(m_scale.y) * (wall_texture.height) };
+}
+
+float Wall::get_left_edge()const
+{
+	return m_x1;
+}
+
+float Wall::get_right_edge()const
+{
+	return m_x2;
+}
+
+float Wall::get_top_edge()const
+{
+	return m_y1;
+}
+
+float Wall::get_bottom_edge()const
+{
+	return m_y2;
 }

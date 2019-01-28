@@ -31,8 +31,22 @@ public:
 
 	vec2 get_texture_dimensions()const;
 
+	float get_left_edge()const;
+
+	float get_right_edge()const;
+
+	float get_top_edge()const;
+
+	float get_bottom_edge()const;
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
   float m_rotation; // in radians
+
+	// Coordinates for left edge, right edge, top edge and bottom edge of the object
+	float m_x1;
+	float m_x2;
+	float m_y1;
+	float m_y2;
 };

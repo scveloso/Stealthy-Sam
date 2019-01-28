@@ -66,86 +66,14 @@ bool Sam::init()
 		return false;
 
 	// Setting initial values
-	m_scale.x = 0.2f;
-	m_scale.y = 0.2f;
+	m_scale.x = 0.125f;
+	m_scale.y = 0.125f;
 	m_is_alive = true;
 	m_position = { 50.f, 100.f };
 	m_rotation = 0.f;
 	m_light_up_countdown_ms = -1.f;
 
 	return true;
-	//
-	// ///////// --- original impl
-	// std::vector<Vertex> vertices;
-	// std::vector<uint16_t> indices;
-	//
-	// // Reads the salmon mesh from a file, which contains a list of vertices and indices
-	// FILE* mesh_file = fopen(mesh_path("salmon.mesh"), "r");
-	// if (mesh_file == nullptr)
-	// 	return false;
-	//
-	// // Reading vertices and colors
-	// size_t num_vertices;
-	// fscanf(mesh_file, "%zu\n", &num_vertices);
-	// for (size_t i = 0; i < num_vertices; ++i)
-	// {
-	// 	float x, y, z;
-	// 	float _u[3]; // unused
-	// 	int r, g, b;
-	// 	fscanf(mesh_file, "%f %f %f %f %f %f %d %d %d\n", &x, &y, &z, _u, _u+1, _u+2, &r, &g, &b);
-	// 	Vertex vertex;
-	// 	vertex.position = { x, y, -z };
-	// 	vertex.color = { (float)r / 255, (float)g / 255, (float)b / 255 };
-	// 	vertices.push_back(vertex);
-	// }
-	//
-	// // Reading associated indices
-	// size_t num_indices;
-	// fscanf(mesh_file, "%zu\n", &num_indices);
-	// for (size_t i = 0; i < num_indices; ++i)
-	// {
-	// 	int idx[3];
-	// 	fscanf(mesh_file, "%d %d %d\n", idx, idx + 1, idx + 2);
-	// 	indices.push_back((uint16_t)idx[0]);
-	// 	indices.push_back((uint16_t)idx[1]);
-	// 	indices.push_back((uint16_t)idx[2]);
-	// }
-	//
-	// // Done reading
-	// fclose(mesh_file);
-	//
-	// // Clearing errors
-	// gl_flush_errors();
-	//
-	// // Vertex Buffer creation
-	// glGenBuffers(1, &mesh.vbo);
-	// glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-	//
-	// // Index Buffer creation
-	// glGenBuffers(1, &mesh.ibo);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
-	//
-	// // Vertex Array (Container for Vertex + Index buffer)
-	// glGenVertexArrays(1, &mesh.vao);
-	// if (gl_has_errors())
-	// 	return false;
-	//
-	// // Loading shaders
-	// if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl")))
-	// 	return false;
-	//
-	// // Setting initial values
-	// m_scale.x = -35.f;
-	// m_scale.y = 35.f;
-	// m_is_alive = true;
-	// m_num_indices = indices.size();
-	// m_position = { 50.f, 100.f };
-	// m_rotation = 0.f;
-	// m_light_up_countdown_ms = -1.f;
-	//
-	// return true;
 }
 
 // Releases all graphics resources
@@ -226,72 +154,6 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 	}
 }
 
-// void Salmon::draw(const mat3& projection)
-// {
-// 	transform_begin();
-//
-// 	// just need to move the salmon whatever direction, so up is:
-// 	// this is just the original position, statically.
-// 	// so instead, we need to change it to be the x position.
-// 	transform_translate({ m_position.x, m_position.y });
-//
-// 	// rotation is just whatever radians the salmon is currently updated with
-// 	transform_rotate(m_rotation);
-//
-// 	// scale the texture to the correct size (otherwise tiny)
-// 	transform_scale(m_scale);
-//
-//
-// 	transform_end();
-//
-// 	// Setting shaders
-// 	glUseProgram(effect.program);
-//
-// 	// Enabling alpha channel for textures
-// 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-// 	glEnable(GL_DEPTH_TEST);
-//
-// 	// Getting uniform locations
-// 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-// 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-// 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-// 	GLint light_up_uloc = glGetUniformLocation(effect.program, "light_up");
-//
-// 	// Add another uniform location for if it's dead
-// 	GLint is_dead_uloc = glGetUniformLocation(effect.program, "is_dead");
-//
-// 	// Setting vertices and indices
-// 	glBindVertexArray(mesh.vao);
-// 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-//
-// 	// Input data location as in the vertex buffer
-// 	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
-// 	GLint in_color_loc = glGetAttribLocation(effect.program, "in_color");
-// 	glEnableVertexAttribArray(in_position_loc);
-// 	glEnableVertexAttribArray(in_color_loc);
-// 	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-// 	glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(vec3));
-//
-// 	// Setting uniform values to the currently bound program
-// 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-//
-// 	// !!! Salmon Color
-// 	float color[] = { 1.f, 1.f, 1.f };
-// 	glUniform3fv(color_uloc, 1, color);
-// 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-//
-// 	int is_dead = !m_is_alive;
-// 	glUniform1iv(is_dead_uloc, 1, &is_dead);
-//
-// 	int light_up = should_be_lit_up;
-// 	glUniform1iv(light_up_uloc, 1, &light_up);
-//
-//
-// 	// Drawing!
-// 	glDrawElements(GL_TRIANGLES,(GLsizei)m_num_indices, GL_UNSIGNED_SHORT, nullptr);
-// }
-
 void Sam::draw(const mat3& projection)
 {
 	// Transformation code, see Rendering and Transformation in the template specification for more info
@@ -370,18 +232,75 @@ bool Sam::collides_with(const Fish& fish)
 	return false;
 }
 
+// Return true if new position will collide with the given wall, false otherwise
 bool Sam::new_position_collides_with(vec2 new_position, const Wall& wall)
 {
-	float dx = new_position.x - wall.get_position().x;
-	float dy = new_position.y - wall.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
+	float hw = get_half_width();
+	float hh = get_half_height();
+
+	// Grab sam's edges
+	float sam_x1 = new_position.x - hw;
+	float sam_x2 = new_position.x + hw;
+	float sam_y1 = new_position.y - hh;
+	float sam_y2 = new_position.y + hh;
+
+	// Grab wall's edges
+	float wall_x1 = wall.get_left_edge();
+	float wall_x2 = wall.get_right_edge();
+	float wall_y1 = wall.get_top_edge();
+	float wall_y2 = wall.get_bottom_edge();
+
+	// Collision case 1: top right corner will be inside the wall
+	if (sam_x2 >= wall_x1 && sam_x2 <= wall_x2 &&
+			sam_y1 >= wall_y1 && sam_y1 <= wall_y2)
+	{
 		return true;
+	}
+
+	// Collision case 2: top left corner will be inside the wall
+	if (sam_x1 >= wall_x1 && sam_x1 <= wall_x2 &&
+			sam_y1 >= wall_y1 && sam_y1 <= wall_y2)
+	{
+		return true;
+	}
+
+	// Collision case 3: bottom right corner will be inside the wall
+	if (sam_x2 >= wall_x1 && sam_x2 <= wall_x2 &&
+			sam_y2 >= wall_y1 && sam_y2 <= wall_y2)
+	{
+		return true;
+	}
+
+	// Collision case 4: bottom left corner will be inside the wall
+	if (sam_x1 >= wall_x1 && sam_x1 <= wall_x2 &&
+			sam_y2 >= wall_y1 && sam_y2 <= wall_y2)
+	{
+		return true;
+	}
+
+	// Collision case 5: prevent fat sam from going through thin wall from the bottom
+	if (sam_x1 <= wall_x1 && sam_x2 >= wall_x2 && sam_y1 <= wall_y2 && sam_y2 >= wall_y2)
+	{
+		return true;
+	}
+
+	// Collision case 6: prevent fat sam from going through thin wall from the top
+	if (sam_x1 <= wall_x1 && sam_x2 >= wall_x2 && sam_y2 >= wall_y1 && sam_y1 <= wall_y1)
+	{
+		return true;
+	}
+
 	return false;
+}
+
+float Sam::get_half_width()const
+{
+	return (m_scale.x) * (sam_texture.width / 2);
+}
+
+float Sam::get_half_height()const
+{
+	return (m_scale.y) * (sam_texture.height / 2);
 }
 
 vec2 Sam::get_position()const
