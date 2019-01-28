@@ -31,7 +31,7 @@ public:
 	// Collision routines for turtles, fish and wall
 	bool collides_with(const Turtle& turtle);
 	bool collides_with(const Fish& fish);
-	bool new_position_collides_with(vec2 new_position, const Wall& wall);
+	bool collides_with_wall(vec2 new_position, const Wall& wall);
 
 	// Returns the current Sam position
 	vec2 get_position()const;

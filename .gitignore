@@ -6,3 +6,4 @@ Makefile
 CMakeFiles/
 cmake_install.cmake
 build/
+src/*.gch

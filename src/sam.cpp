@@ -122,7 +122,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		bool hit_wall = false;
 		while (wall_it != m_walls.end())
 		{
-			if (new_position_collides_with(new_position, *wall_it))
+			if (collides_with_wall(new_position, *wall_it))
 			{
 				hit_wall = true;
 				wall_it = m_walls.end();
@@ -142,15 +142,6 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		// If dead we make it face upwards and sink deep down
 		set_rotation(3.1415f);
 		move({ 0.f, step });
-	}
-
-	if (m_light_up_countdown_ms > 0.f)
-	{
-		m_light_up_countdown_ms -= ms;
-	}
-	else
-	{
-		should_be_lit_up = false;
 	}
 }
 
@@ -233,7 +224,7 @@ bool Sam::collides_with(const Fish& fish)
 }
 
 // Return true if new position will collide with the given wall, false otherwise
-bool Sam::new_position_collides_with(vec2 new_position, const Wall& wall)
+bool Sam::collides_with_wall(vec2 new_position, const Wall& wall)
 {
 	float hw = get_half_width();
 	float hh = get_half_height();
