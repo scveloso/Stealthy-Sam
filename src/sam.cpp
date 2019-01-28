@@ -290,6 +290,18 @@ bool Sam::new_position_collides_with(vec2 new_position, const Wall& wall)
 		return true;
 	}
 
+	// Collision case 7: prevent tall sam from going through short wall from the left
+	if (sam_y1 <= wall_y1 && sam_y2 >= wall_y2 && sam_x2 >= wall_x1 && sam_x1 <= wall_x1)
+	{
+		return true;
+	}
+
+	// Collision case 8: prevent tall sam from going through short wall from the right
+	if (sam_y1 <= wall_y1 && sam_y2 >= wall_y2 && sam_x1 <= wall_x2 && sam_x2 >= wall_x2)
+	{
+		return true;
+	}
+
 	return false;
 }
 

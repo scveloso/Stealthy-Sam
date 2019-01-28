@@ -29,6 +29,9 @@ public:
 	// Sets the new wall position
 	void set_position(vec2 position);
 
+	// Set where the edges of each wall are
+	void set_edges();
+
 	// Returns the wall's bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box()const;
 
@@ -52,4 +55,8 @@ private:
 	float m_x2;
 	float m_y1;
 	float m_y2;
+
+	int m_wall_type; // one of: TALL_WALL, WIDE_WALL (refer to wall_type.h)
+
+	//Texture wall_texture;
 };

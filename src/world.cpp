@@ -118,10 +118,52 @@ bool World::init(vec2 screen)
 		Wall wall;
 		if (wall.init(TALL_WALL))
 		{
+			// Set at the middle of the top edge of the screen, accounting for half of this wall's height (192)
 			wall.set_position({ (screen.x / 2),  192 });
 			m_walls.emplace_back(wall);
+		}
+
+		Wall wall2;
+		if (wall2.init(WIDE_WALL))
+		{
+			// Set below the previous wall (384 height) accounting for half of this wall's height (19.2)
+			wall2.set_position({ (screen.x / 2),  384 + 19.2 });
+			m_walls.emplace_back(wall2);
+		}
+
+		Wall wall3;
+		if (wall3.init(WIDE_WALL))
+		{
+			// Set left edge of the screen aligned with wall2
+			wall3.set_position({ 100,  384 + 19.2 });
+			m_walls.emplace_back(wall3);
+		}
+
+		Wall wall4;
+		if (wall4.init(WIDE_WALL))
+		{
+			// Set right edge of the screen aligned with wall2
+			wall4.set_position({ (screen.x) - 100,  384 + 19.2 });
+			m_walls.emplace_back(wall4);
+		}
+
+		Wall wall5;
+		if (wall5.init(TALL_WALL))
+		{
+			// Set at bottom edge of the screen
+			wall5.set_position({ (screen.x / 2),  (screen.y) - 50 });
+			m_walls.emplace_back(wall5);
+		}
+
+		Wall wall6;
+		if (wall6.init(WIDE_WALL))
+		{
+			// Set directly above wall 5, shifted to the right by half of its width
+			wall6.set_position({ (float) ((screen.x / 2) + (192 - 19.2)),  (screen.y) - 50 - (192) });
+			m_walls.emplace_back(wall6);
 			return true;
 		}
+
 		fprintf(stderr, "Failed to spawn wall\n");
 	}
 	return false;
@@ -152,8 +194,6 @@ bool World::update(float elapsed_ms)
 	int w, h;
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
-
-
 
 	// Updating all entities, making the turtle and fish
 	// faster based on current

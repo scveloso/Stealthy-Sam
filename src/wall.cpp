@@ -1,6 +1,7 @@
 // Header
 #include "wall.hpp"
 #include "sam.hpp"
+#include "wall_types.h"
 
 #include <cmath>
 #include <iostream>
@@ -15,13 +16,11 @@ bool Wall::init(int wall_type)
 	if (!wall_texture.is_valid())
 	{
 		bool load_success = false;
-		if (wall_type == 0) {
-			load_success = wall_texture.load_from_file(textures_path("tall_wall.png"));
-		}
+		load_success = wall_texture.load_from_file(textures_path("wall.png"));
 
 		if (!load_success)
 		{
-			fprintf(stderr, "Failed to load wall-fish texture!");
+			fprintf(stderr, "Failed to load wall texture!");
 			return false;
 		}
 	}
@@ -71,7 +70,14 @@ bool Wall::init(int wall_type)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 0.3f;
 	m_scale.y = 0.3f;
-	m_rotation = 3.14159;
+	m_wall_type = wall_type;
+
+	// Rotate the wall based on the type of wall
+	if (m_wall_type == TALL_WALL) {
+		m_rotation = 3.14159;
+	} else if (m_wall_type == WIDE_WALL) {
+		m_rotation = 3.14159 / 2;
+	}
 
 	return true;
 }
@@ -149,15 +155,28 @@ vec2 Wall::get_position()const
 }
 
 // Set the wall's position, this will only be called once per level
-// Set the top, bottom, left and right edges of the wall
+// After, set the top, bottom, left and right edges of the wall
 void Wall::set_position(vec2 position)
 {
 	m_position = position;
 
-	m_x1 = position.x - (get_texture_dimensions().x / 2);
-	m_x2 = position.x + (get_texture_dimensions().x / 2);
-	m_y1 = position.y - (get_texture_dimensions().y / 2);
-	m_y2 = position.y + (get_texture_dimensions().y / 2);
+	set_edges();
+}
+
+// Set the wall edges depending on whether the wall is wide or tall
+void Wall::set_edges()
+{
+	if (m_wall_type == TALL_WALL) {
+		m_x1 = m_position.x - (get_texture_dimensions().x / 2);
+		m_x2 = m_position.x + (get_texture_dimensions().x / 2);
+		m_y1 = m_position.y - (get_texture_dimensions().y / 2);
+		m_y2 = m_position.y + (get_texture_dimensions().y / 2);
+	} else if (m_wall_type == WIDE_WALL) {
+		m_x1 = m_position.x - (get_texture_dimensions().y / 2);
+		m_x2 = m_position.x + (get_texture_dimensions().y / 2);
+		m_y1 = m_position.y - (get_texture_dimensions().x / 2);
+		m_y2 = m_position.y + (get_texture_dimensions().x / 2);
+	}
 }
 
 vec2 Wall::get_texture_dimensions()const
