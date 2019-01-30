@@ -11,9 +11,9 @@ bool Missile::init()
 	// Load shared texture
 	if (!missile_texture.is_valid())
 	{
-		if (!missile_texture.load_from_file(textures_path("fish.png"))) // just use the fish one
+		if (!missile_texture.load_from_file(textures_path("detective.png"))) // just use the detective one
 		{
-			fprintf(stderr, "Failed to load fish texture!");
+			fprintf(stderr, "Failed to load detective texture!");
 			return false;
 		}
 	}

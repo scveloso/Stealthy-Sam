@@ -6,7 +6,6 @@
 #include <vector>
 
 class Turtle;
-class Fish;
 class Wall;
 
 class Sam : public Renderable
@@ -28,9 +27,8 @@ public:
 	// Renders Sam
 	void draw(const mat3& projection)override;
 
-	// Collision routines for turtles, fish and wall
+	// Collision routines for turtles and wall
 	bool collides_with(const Turtle& turtle);
-	bool collides_with(const Fish& fish);
 	bool collides_with_wall(vec2 new_position, const Wall& wall);
 
 	// Returns the current Sam position
@@ -48,9 +46,6 @@ public:
 	// Kills Sam, changing its alive state and triggering on death events
 	void kill();
 
-	// Called when the Sam collides with a fish, starts lighting up the Sam
-	void light_up();
-
 	void should_move(int direction, bool should);
 
 	float get_half_width()const;
@@ -58,7 +53,6 @@ public:
 	float get_half_height()const;
 
 private:
-	float m_light_up_countdown_ms; // Used to keep track for how long the Sam should be lit up
 	bool m_is_alive; // True if the Sam is alive
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -69,6 +63,5 @@ private:
 	bool should_move_right;
 	bool should_move_up;
 	bool should_move_down;
-	bool should_be_lit_up;
 
 };

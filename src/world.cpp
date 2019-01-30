@@ -195,7 +195,7 @@ bool World::update(float elapsed_ms)
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-	// Updating all entities, making the turtle and fish
+	// Updating all entities, making the turtle
 	// faster based on current
 	m_sam.update(elapsed_ms, m_walls);
 

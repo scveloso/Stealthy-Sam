@@ -36,7 +36,6 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 set(SOURCE_FILES
 	src/a1.cpp
 	src/common.cpp
-	src/fish.cpp
 	src/sam.cpp
 	src/turtle.cpp
         src/background.cpp
@@ -46,7 +45,6 @@ set(SOURCE_FILES
 
     src/project_path.hpp
 	src/common.hpp
-	src/fish.hpp
 	src/sam.hpp
 	src/turtle.hpp
         src/background.hpp

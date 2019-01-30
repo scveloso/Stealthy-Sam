@@ -3,7 +3,6 @@
 
 // internal
 #include "turtle.hpp"
-#include "fish.hpp"
 #include "wall.hpp"
 
 // stlib
@@ -71,7 +70,6 @@ bool Sam::init()
 	m_is_alive = true;
 	m_position = { 50.f, 100.f };
 	m_rotation = 0.f;
-	m_light_up_countdown_ms = -1.f;
 
 	return true;
 }
@@ -209,20 +207,6 @@ bool Sam::collides_with(const Turtle& turtle)
 	return false;
 }
 
-bool Sam::collides_with(const Fish& fish)
-{
-	float dx = m_position.x - fish.get_position().x;
-	float dy = m_position.y - fish.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
-
 // Return true if new position will collide with the given wall, false otherwise
 bool Sam::collides_with_wall(vec2 new_position, const Wall& wall)
 {
@@ -332,12 +316,6 @@ void Sam::kill()
 	m_is_alive = false;
 }
 
-// Called when the salmon collides with a fish
-void Sam::light_up()
-{
-	should_be_lit_up = true;
-	m_light_up_countdown_ms = 1500.f;
-}
 
 void Sam::should_move(int direction, bool should)
 {

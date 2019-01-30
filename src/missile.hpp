@@ -8,7 +8,7 @@ class Turtle;
 class Missile : public Renderable
 {
 	// Shared between all missiles, no need to load one for each instance
-	static Texture missile_texture; // which will just be a smaller version of the fish, but black
+	static Texture missile_texture; // which will just be a smaller version of the detective, but black
 
 public:
 	// Creates all the associated render resources and default transform
