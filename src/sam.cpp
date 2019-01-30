@@ -317,3 +317,22 @@ void Sam::kill()
 	m_is_alive = false;
 }
 
+
+void Sam::interact_in_front(std::vector<Closet> closets) {
+	// right now assume that we're interacting with the right:
+
+	vec2 position_to_check;
+
+	if (true)
+	{ // interact with the right
+		position_to_check = { m_position.x + get_half_width(), m_position.y };
+	}
+
+	for (auto& closet : closets)
+	{
+		bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
+		std::cout << "collided: " << collision << std::endl;
+
+	}
+
+}

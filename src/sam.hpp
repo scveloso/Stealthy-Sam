@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "closet.hpp"
 
 // stlib
 #include <vector>
@@ -50,6 +51,8 @@ public:
 	float get_half_width()const;
 
 	float get_half_height()const;
+
+	void interact_in_front(std::vector<Closet> closets);
 
 	int direction;
 

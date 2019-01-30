@@ -111,3 +111,5 @@ struct Renderable
 	void transform_translate(vec2 pos);
 	void transform_end();
 };
+
+bool collides_with(vec2 obj1, vec2 obj1_scale, vec2 obj2, vec2 obj2_bounding);
