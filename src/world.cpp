@@ -258,6 +258,7 @@ void World::draw()
 
 	// Drawing entities
 	m_sam.draw(projection_2D);
+	//m_enemy.draw(projection_2D);
 
 
 	/////////////////////

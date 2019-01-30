@@ -61,7 +61,8 @@ private:
 	// Game entities
 	Sam m_sam;
 
-	//Enemy m_enemy;
+
+	Enemy m_enemy;
 
 	std::vector<Wall> m_walls;
 
