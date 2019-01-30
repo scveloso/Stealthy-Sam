@@ -259,6 +259,7 @@ void World::draw()
 	// Drawing entities
 	m_sam.draw(projection_2D);
 
+
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

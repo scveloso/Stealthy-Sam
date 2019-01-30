@@ -8,6 +8,7 @@
 #include "background.hpp"
 #include "missile.hpp"
 #include "wall.hpp"
+#include "enemy.hpp"
 
 // stlib
 #include <vector>
@@ -59,6 +60,8 @@ private:
 
 	// Game entities
 	Sam m_sam;
+
+	//Enemy m_enemy;
 
 	std::vector<Wall> m_walls;
 
