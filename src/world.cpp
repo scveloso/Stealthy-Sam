@@ -113,6 +113,10 @@ bool World::init(vec2 screen)
 	fprintf(stderr, "Loaded music\n");
 
 	m_enemy.init();
+
+	m_enemy.set_position({ 200.f, 475.f });
+	m_enemy.set_patrol_length(500.f);
+
 	// Create one long wall
 	if (m_sam.init() && m_water.init())
 	{
@@ -210,7 +214,8 @@ bool World::update(float elapsed_ms)
 		m_water.reset_sam_dead_time();
 	}
 
-	spawn_enemy();
+	//spawn_enemy(50.f, 200.f, 100.f);
+	m_enemy.update(elapsed_ms);
 
 	return true;
 }
@@ -292,15 +297,16 @@ bool World::is_over()const
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::spawn_enemy()
+bool World::spawn_enemy(float posx, float posy, float patrol)
 {
 	Enemy enemy;
-	if (enemy.init())
+	if (!m_enemy.init()) 
 	{
-		m_enemy.set_position({ 50.f, 100.f });
+		m_enemy.set_position({ posx, posy });
+		m_enemy.set_patrol_length(patrol);
 		return true;
 	}
-	fprintf(stderr, "Failed to spawn enemy");
+	//fprintf(stderr, "Failed to spawn enemy");
 	return false;
 }
 

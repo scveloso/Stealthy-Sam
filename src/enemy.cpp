@@ -58,8 +58,8 @@ bool Enemy::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = -0.4f;
-	m_scale.y = 0.4f;
+	m_scale.x = -0.025f;
+	m_scale.y = 0.025;
 	m_rotation = 0.f;
 
 	return true;
@@ -80,7 +80,23 @@ void Enemy::destroy()
 
 void Enemy::update(float ms)
 {
-	//none
+	float ENEMY_SPEED = 50.f;
+
+	//printf("%f				%f				%f\n", m_position.x, (m_start_position.x + m_patrol_length), direction_x);
+
+	if (m_position.x > (m_start_position.x + m_patrol_length)) {
+		direction_x = -1;
+		m_scale.x *= -1;
+	}
+
+	if (m_position.x < m_start_position.x) {
+		direction_x = 1;
+		m_scale.x *= -1;
+	}
+
+	ENEMY_SPEED *= direction_x;
+	float step = ENEMY_SPEED* (ms / 1000);
+	m_position.x += step;
 }
 
 void Enemy::draw(const mat3& projection)
@@ -140,6 +156,12 @@ vec2 Enemy::get_position()const
 void Enemy::set_position(vec2 position)
 {
 	m_position = position;
+	m_start_position = position;
+}
+
+void Enemy::set_patrol_length(float len)
+{
+	m_patrol_length = len;
 }
 
 // Returns the local bounding coordinates scaled by the current size of the enemy 

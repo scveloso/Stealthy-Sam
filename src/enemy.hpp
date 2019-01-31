@@ -29,11 +29,19 @@ public:
 	// Sets the new enemy position
 	void set_position(vec2 position);
 
+	void set_patrol_length(float len);
+
 	// Returns the enemy' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box()const;
+
+	float m_patrol_length;
+	float direction_x = 1;
+	float direction_y = 1;
 
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
+	
+	vec2 m_start_position;
 };
