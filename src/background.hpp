@@ -3,7 +3,7 @@
 #include "common.hpp"
 
 
-class Water : public Renderable
+class Background : public Renderable
 {
 public:
 	// Creates all the associated render resources and default transform
@@ -12,7 +12,7 @@ public:
 	// Releases all associated resources
 	void destroy();
 
-	// Renders the water
+	// Renders the Background
 	void draw(const mat3& projection)override;
 
 	// Set dead time

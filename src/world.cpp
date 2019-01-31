@@ -113,7 +113,7 @@ bool World::init(vec2 screen)
 	fprintf(stderr, "Loaded music\n");
 
 	// Create one long wall
-	if (m_sam.init() && m_water.init())
+	if (m_sam.init() && m_background.init())
 	{
 		Wall wall;
 		if (wall.init(TALL_WALL))
@@ -200,12 +200,12 @@ bool World::update(float elapsed_ms)
 
 	// If sam is dead, restart the game after the fading animation
 	if (!m_sam.is_alive() &&
-		m_water.get_sam_dead_time() > 5) {
+		m_background.get_sam_dead_time() > 5) {
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
 		m_sam.destroy();
 		m_sam.init();
-		m_water.reset_sam_dead_time();
+		m_background.reset_sam_dead_time();
 	}
 
 	return true;
@@ -273,7 +273,7 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_water.draw(projection_2D);
+	m_background.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -340,7 +340,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		glfwGetWindowSize(m_window, &w, &h);
 		m_sam.destroy();
 		m_sam.init();
-		m_water.reset_sam_dead_time();
+		m_background.reset_sam_dead_time();
 	}
 
 }

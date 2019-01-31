@@ -48,12 +48,12 @@ private:
 	GLFWwindow* m_window;
 
 	// Screen texture
-	// The draw loop first renders to this texture, then it is used for the water shader
+	// The draw loop first renders to this texture, then it is used for the background shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	// Water effect
-	Water m_water;
+	// Background effect
+	Background m_background;
 
 	// Game entities
 	Sam m_sam;
