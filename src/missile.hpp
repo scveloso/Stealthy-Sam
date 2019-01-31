@@ -3,7 +3,6 @@
 #include "common.hpp"
 
 
-// salmon lazers
 class Missile : public Renderable
 {
 	// Shared between all missiles, no need to load one for each instance

@@ -88,8 +88,8 @@ void Sam::destroy()
 // Called on each frame by World::update()
 void Sam::update(float ms, std::vector<Wall> m_walls)
 {
-	const float SALMON_SPEED = 200.f;
-	float step = SALMON_SPEED * (ms / 1000);
+	const float SAM_SPEED = 200.f;
+	float step = SAM_SPEED * (ms / 1000);
 	if (m_is_alive)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
@@ -296,7 +296,7 @@ bool Sam::is_alive()const
 	return m_is_alive;
 }
 
-// Called when the salmon collides with an enemy
+// Called when the sam collides with an enemy
 void Sam::kill()
 {
 	m_is_alive = false;

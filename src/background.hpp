@@ -21,6 +21,6 @@ public:
 	float get_sam_dead_time() const;
 
 private:
-	// When salmon is alive, the time is set to -1
+	// When sam is alive, the time is set to -1
 	float m_dead_time;
 };
