@@ -1,13 +1,7 @@
 // Header
 #include "enemy.hpp"
 
-#include "wall.hpp"
-
-// stlib
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <iostream>
+#include <cmath>
 
 Texture Enemy::enemy_texture;
 
@@ -28,13 +22,13 @@ bool Enemy::init()
 	float hr = enemy_texture.height * 0.5f;
 
 	TexturedVertex vertices[4];
-	vertices[0].position = { -wr, +hr, -0.01f };
+	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, 1.f };
-	vertices[1].position = { +wr, +hr, -0.01f };
-	vertices[1].texcoord = { 1.f, 1.f, };
-	vertices[2].position = { +wr, -hr, -0.01f };
+	vertices[1].position = { +wr, +hr, -0.02f };
+	vertices[1].texcoord = { 1.f, 1.f };
+	vertices[2].position = { +wr, -hr, -0.02f };
 	vertices[2].texcoord = { 1.f, 0.f };
-	vertices[3].position = { -wr, -hr, -0.01f };
+	vertices[3].position = { -wr, -hr, -0.02f };
 	vertices[3].texcoord = { 0.f, 0.f };
 
 	// counterclockwise as it's the default opengl front winding direction
@@ -62,16 +56,16 @@ bool Enemy::init()
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-	// Setting initial values
-	m_scale.x = 0.125f;
-	m_scale.y = 0.125f;
-	m_is_alive = true;
-	m_position = { 50.f, 100.f };
+	// Setting initial values, scale is negative to make it face the opposite way
+	// 1.0 would be as big as the original texture
+	m_scale.x = -0.4f;
+	m_scale.y = 0.4f;
 	m_rotation = 0.f;
 
 	return true;
 }
 
+// Call if init() was successful
 // Releases all graphics resources
 void Enemy::destroy()
 {
@@ -84,61 +78,9 @@ void Enemy::destroy()
 	glDeleteShader(effect.program);
 }
 
-// Called on each frame by World::update()
-void Enemy::update(float ms, std::vector<Wall> m_walls)
+void Enemy::update(float ms)
 {
-	const float SALMON_SPEED = 200.f;
-	float step = SALMON_SPEED * (ms / 1000);
-	if (m_is_alive)
-	{
-		vec2 new_position = { m_position.x, m_position.y };
-
-		if (should_move_left)
-		{
-			new_position.x = new_position.x - step;
-		}
-
-		if (should_move_right)
-		{
-			new_position.x = new_position.x + step;
-		}
-
-		if (should_move_up)
-		{
-			new_position.y = new_position.y + step;
-		}
-
-		if (should_move_down)
-		{
-			new_position.y = new_position.y - step;
-		}
-
-		// Check if moving will hit a wall
-		auto wall_it = m_walls.begin();
-		bool hit_wall = false;
-		while (wall_it != m_walls.end())
-		{
-			if (collides_with_wall(new_position, *wall_it))
-			{
-				hit_wall = true;
-				wall_it = m_walls.end();
-			}
-			else
-				++wall_it;
-		}
-
-		// If won't hit a wall, move
-		if (!hit_wall)
-		{
-			m_position = new_position;
-		}
-	}
-	else
-	{
-		// If dead we make it face upwards and sink deep down
-		set_rotation(3.1415f);
-		move({ 0.f, step });
-	}
+	//none
 }
 
 void Enemy::draw(const mat3& projection)
@@ -188,91 +130,6 @@ void Enemy::draw(const mat3& projection)
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-	//std::cout << "drawing?" << std::endl;
-}
-
-
-// Return true if new position will collide with the given wall, false otherwise
-bool Enemy::collides_with_wall(vec2 new_position, const Wall& wall)
-{
-	float hw = get_half_width();
-	float hh = get_half_height();
-
-	// Grab enemy's edges
-	float enemy_x1 = new_position.x - hw;
-	float enemy_x2 = new_position.x + hw;
-	float enemy_y1 = new_position.y - hh;
-	float enemy_y2 = new_position.y + hh;
-
-	// Grab wall's edges
-	float wall_x1 = wall.get_left_edge();
-	float wall_x2 = wall.get_right_edge();
-	float wall_y1 = wall.get_top_edge();
-	float wall_y2 = wall.get_bottom_edge();
-
-	// Collision case 1: top right corner will be inside the wall
-	if (enemy_x2 >= wall_x1 && enemy_x2 <= wall_x2 &&
-		enemy_y1 >= wall_y1 && enemy_y1 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 2: top left corner will be inside the wall
-	if (enemy_x1 >= wall_x1 && enemy_x1 <= wall_x2 &&
-		enemy_y1 >= wall_y1 && enemy_y1 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 3: bottom right corner will be inside the wall
-	if (enemy_x2 >= wall_x1 && enemy_x2 <= wall_x2 &&
-		enemy_y2 >= wall_y1 && enemy_y2 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 4: bottom left corner will be inside the wall
-	if (enemy_x1 >= wall_x1 && enemy_x1 <= wall_x2 &&
-		enemy_y2 >= wall_y1 && enemy_y2 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 5: prevent fat enemy from going through thin wall from the bottom
-	if (enemy_x1 <= wall_x1 && enemy_x2 >= wall_x2 && enemy_y1 <= wall_y2 && enemy_y2 >= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 6: prevent fat enemy from going through thin wall from the top
-	if (enemy_x1 <= wall_x1 && enemy_x2 >= wall_x2 && enemy_y2 >= wall_y1 && enemy_y1 <= wall_y1)
-	{
-		return true;
-	}
-
-	// Collision case 7: prevent tall enemy from going through short wall from the left
-	if (enemy_y1 <= wall_y1 && enemy_y2 >= wall_y2 && enemy_x2 >= wall_x1 && enemy_x1 <= wall_x1)
-	{
-		return true;
-	}
-
-	// Collision case 8: prevent tall enemy from going through short wall from the right
-	if (enemy_y1 <= wall_y1 && enemy_y2 >= wall_y2 && enemy_x1 <= wall_x2 && enemy_x2 >= wall_x2)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-float Enemy::get_half_width()const
-{
-	return (m_scale.x) * (enemy_texture.width / 2);
-}
-
-float Enemy::get_half_height()const
-{
-	return (m_scale.y) * (enemy_texture.height / 2);
 }
 
 vec2 Enemy::get_position()const
@@ -280,43 +137,14 @@ vec2 Enemy::get_position()const
 	return m_position;
 }
 
-void Enemy::move(vec2 off)
+void Enemy::set_position(vec2 position)
 {
-	m_position.x += off.x; m_position.y += off.y;
+	m_position = position;
 }
 
-void Enemy::set_rotation(float radians)
+// Returns the local bounding coordinates scaled by the current size of the enemy 
+vec2 Enemy::get_bounding_box()const
 {
-	m_rotation = radians;
-}
-
-bool Enemy::is_alive()const
-{
-	return m_is_alive;
-}
-
-void Enemy::kill()
-{
-	m_is_alive = false;
-}
-
-void Enemy::should_move(int direction, bool should)
-{
-	switch (direction)
-	{
-	case 1: // left
-		should_move_left = should;
-		break;
-	case 2:
-		should_move_right = should;
-		break;
-	case 3:
-		should_move_up = should;
-		break;
-	case 4:
-		should_move_down = should;
-		break;
-	default:
-		std::cout << "failed to move" << std::endl;
-	}
+	// fabs is to avoid negative scale due to the facing direction
+	return { std::fabs(m_scale.x) * enemy_texture.width, std::fabs(m_scale.y) * enemy_texture.height };
 }

@@ -38,6 +38,7 @@ set(SOURCE_FILES
 	src/common.cpp
 	src/fish.cpp
 	src/sam.cpp
+	src/enemy.cpp
 	src/turtle.cpp
         src/background.cpp
 	src/world.cpp
@@ -48,6 +49,7 @@ set(SOURCE_FILES
 	src/common.hpp
 	src/fish.hpp
 	src/sam.hpp
+	src/enemy.hpp
 	src/turtle.hpp
         src/background.hpp
 	src/world.hpp

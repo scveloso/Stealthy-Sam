@@ -112,6 +112,7 @@ bool World::init(vec2 screen)
 
 	fprintf(stderr, "Loaded music\n");
 
+	m_enemy.init();
 	// Create one long wall
 	if (m_sam.init() && m_water.init())
 	{
@@ -209,6 +210,8 @@ bool World::update(float elapsed_ms)
 		m_water.reset_sam_dead_time();
 	}
 
+	spawn_enemy();
+
 	return true;
 }
 
@@ -258,8 +261,8 @@ void World::draw()
 
 	// Drawing entities
 	m_sam.draw(projection_2D);
-	//m_enemy.draw(projection_2D);
 
+	m_enemy.draw(projection_2D);
 
 	/////////////////////
 	// Truely render to the screen
@@ -289,6 +292,17 @@ bool World::is_over()const
 	return glfwWindowShouldClose(m_window);
 }
 
+bool World::spawn_enemy()
+{
+	Enemy enemy;
+	if (enemy.init())
+	{
+		m_enemy.set_position({ 50.f, 100.f });
+		return true;
+	}
+	fprintf(stderr, "Failed to spawn enemy");
+	return false;
+}
 
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
