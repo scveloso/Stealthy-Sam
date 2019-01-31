@@ -37,7 +37,6 @@ set(SOURCE_FILES
 	src/a1.cpp
 	src/common.cpp
 	src/sam.cpp
-	src/turtle.cpp
         src/background.cpp
 	src/world.cpp
     src/missile.cpp
@@ -46,7 +45,6 @@ set(SOURCE_FILES
     src/project_path.hpp
 	src/common.hpp
 	src/sam.hpp
-	src/turtle.hpp
         src/background.hpp
 	src/world.hpp
 	)

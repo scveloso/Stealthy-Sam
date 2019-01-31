@@ -2,7 +2,6 @@
 #include "sam.hpp"
 
 // internal
-#include "turtle.hpp"
 #include "wall.hpp"
 
 // stlib
@@ -192,20 +191,7 @@ void Sam::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Simple bounding box collision check,
-bool Sam::collides_with(const Turtle& turtle)
-{
-	float dx = m_position.x - turtle.get_position().x;
-	float dy = m_position.y - turtle.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
+
 
 // Return true if new position will collide with the given wall, false otherwise
 bool Sam::collides_with_wall(vec2 new_position, const Wall& wall)
@@ -310,7 +296,7 @@ bool Sam::is_alive()const
 	return m_is_alive;
 }
 
-// Called when the salmon collides with a turtle
+// Called when the salmon collides with an enemy
 void Sam::kill()
 {
 	m_is_alive = false;

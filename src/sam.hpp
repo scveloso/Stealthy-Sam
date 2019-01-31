@@ -5,7 +5,6 @@
 // stlib
 #include <vector>
 
-class Turtle;
 class Wall;
 
 class Sam : public Renderable
@@ -27,8 +26,7 @@ public:
 	// Renders Sam
 	void draw(const mat3& projection)override;
 
-	// Collision routines for turtles and wall
-	bool collides_with(const Turtle& turtle);
+	// Collision routines for wall
 	bool collides_with_wall(vec2 new_position, const Wall& wall);
 
 	// Returns the current Sam position

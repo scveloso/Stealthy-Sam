@@ -3,7 +3,6 @@
 // internal
 #include "common.hpp"
 #include "sam.hpp"
-#include "turtle.hpp"
 #include "background.hpp"
 #include "missile.hpp"
 #include "wall.hpp"

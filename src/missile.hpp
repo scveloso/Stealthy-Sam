@@ -2,7 +2,6 @@
 
 #include "common.hpp"
 
-class Turtle;
 
 // salmon lazers
 class Missile : public Renderable
@@ -34,7 +33,6 @@ public:
 	// Returns the missile' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box()const;
 
-	bool collides_with(const Turtle& turtle) const;
 
 private:
 	vec2 m_position; // Window coordinates
