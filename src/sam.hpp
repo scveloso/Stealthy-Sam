@@ -63,6 +63,6 @@ private:
 	float m_rotation; // in radians
 	size_t m_num_indices; // passed to glDrawElements
 
-	bool should_be_lit_up;
-
+	bool m_is_hidden; // True if position off the map and hidden in closet
+	vec2 m_previous_location; // Previous location for when hidden in a closet
 };

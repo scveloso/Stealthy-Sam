@@ -319,6 +319,16 @@ void Sam::kill()
 
 
 void Sam::interact_in_front(std::vector<Closet> closets) {
+
+	// Check if we're already hidden, if so, unhide:
+	if (m_is_hidden) {
+		m_position.x = m_previous_location.x;
+		m_position.y = m_previous_location.y;
+		m_is_hidden = false;
+		return;
+	}
+
+
 	// right now assume that we're interacting with the right:
 
 	vec2 position_to_check;
@@ -331,8 +341,15 @@ void Sam::interact_in_front(std::vector<Closet> closets) {
 	for (auto& closet : closets)
 	{
 		bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
-		std::cout << "collided: " << collision << std::endl;
+		std::cout << "Interacted with closet: " << collision << std::endl;
 
+		if (collision)
+		{
+			// store our current position to restore later and put us off the map
+			m_previous_location = { m_position.x, m_position.y };
+			m_is_hidden = true;
+			m_position.x = 10000;
+			m_position.y = 10000;
+		}
 	}
-
 }
