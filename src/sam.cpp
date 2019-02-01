@@ -2,9 +2,8 @@
 #include "sam.hpp"
 
 // internal
-#include "turtle.hpp"
-#include "fish.hpp"
 #include "wall.hpp"
+#include "constants.hpp"
 
 // stlib
 #include <vector>
@@ -71,7 +70,7 @@ bool Sam::init()
 	m_is_alive = true;
 	m_position = { 50.f, 100.f };
 	m_rotation = 0.f;
-	m_light_up_countdown_ms = -1.f;
+	direction = NO_DIRECTION;
 
 	return true;
 }
@@ -91,51 +90,50 @@ void Sam::destroy()
 // Called on each frame by World::update()
 void Sam::update(float ms, std::vector<Wall> m_walls)
 {
-	const float SALMON_SPEED = 200.f;
-	float step = SALMON_SPEED * (ms / 1000);
+	const float SAM_SPEED = 200.f;
+	float step = SAM_SPEED * (ms / 1000);
 	if (m_is_alive)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
 
-		if (should_move_left)
+		if (direction % LEFT == 0)
 		{
 			new_position.x = new_position.x - step;
+			if (is_movement_interrupted(new_position, m_walls))
+			{
+			    new_position.x = new_position.x + step;
+			}
 		}
 
-		if (should_move_right)
+		if (direction % RIGHT == 0)
 		{
 			new_position.x = new_position.x + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.x = new_position.x - step;
+            }
 		}
 
-		if (should_move_up)
+		if (direction % DOWN == 0)
 		{
 			new_position.y = new_position.y + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y - step;
+            }
 		}
 
-		if (should_move_down)
+		if (direction % UP == 0)
 		{
 			new_position.y = new_position.y - step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y + step;
+            }
 		}
 
-		// Check if moving will hit a wall
-		auto wall_it = m_walls.begin();
-		bool hit_wall = false;
-		while (wall_it != m_walls.end())
-		{
-			if (collides_with_wall(new_position, *wall_it))
-			{
-				hit_wall = true;
-				wall_it = m_walls.end();
-			}
-			else
-				++wall_it;
-		}
+        m_position = new_position;
 
-		// If won't hit a wall, move
-		if (!hit_wall)
-		{
-			m_position = new_position;
-		}
 	}
 	else
 	{
@@ -143,6 +141,20 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		set_rotation(3.1415f);
 		move({ 0.f, step });
 	}
+}
+
+bool Sam::is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls){
+    auto wall_it = m_walls.begin();
+    while (wall_it != m_walls.end())
+    {
+        if (collides_with_wall(new_position, *wall_it))
+        {
+            return true;
+        }
+        else
+            ++wall_it;
+    }
+    return false;
 }
 
 void Sam::draw(const mat3& projection)
@@ -194,34 +206,7 @@ void Sam::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Simple bounding box collision check,
-bool Sam::collides_with(const Turtle& turtle)
-{
-	float dx = m_position.x - turtle.get_position().x;
-	float dy = m_position.y - turtle.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
 
-bool Sam::collides_with(const Fish& fish)
-{
-	float dx = m_position.x - fish.get_position().x;
-	float dy = m_position.y - fish.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
 
 // Return true if new position will collide with the given wall, false otherwise
 bool Sam::collides_with_wall(vec2 new_position, const Wall& wall)
@@ -326,36 +311,9 @@ bool Sam::is_alive()const
 	return m_is_alive;
 }
 
-// Called when the salmon collides with a turtle
+// Called when the sam collides with an enemy
 void Sam::kill()
 {
 	m_is_alive = false;
 }
 
-// Called when the salmon collides with a fish
-void Sam::light_up()
-{
-	should_be_lit_up = true;
-	m_light_up_countdown_ms = 1500.f;
-}
-
-void Sam::should_move(int direction, bool should)
-{
-	switch (direction)
-	{
-	case 1: // left
-		should_move_left = should;
-		break;
-	case 2:
-		should_move_right = should;
-		break;
-	case 3:
-		should_move_up = should;
-		break;
-	case 4:
-		should_move_down = should;
-		break;
-	default:
-		std::cout << "failed to move" << std::endl;
-	}
-}

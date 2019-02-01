@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-bool Water::init() {
+bool Background::init() {
 	m_dead_time = -1;
 
 	// Since we are not going to apply transformation to this screen geometry
@@ -35,7 +35,7 @@ bool Water::init() {
 	return true;
 }
 
-void Water::destroy() {
+void Background::destroy() {
 	glDeleteBuffers(1, &mesh.vbo);
 
 	glDeleteShader(effect.vertex);
@@ -43,19 +43,19 @@ void Water::destroy() {
 	glDeleteShader(effect.program);
 }
 
-void Water::set_sam_dead() {
+void Background::set_sam_dead() {
 	m_dead_time = glfwGetTime();
 }
 
-void Water::reset_sam_dead_time() {
+void Background::reset_sam_dead_time() {
 	m_dead_time = -1;
 }
 
-float Water::get_sam_dead_time() const {
+float Background::get_sam_dead_time() const {
 	return glfwGetTime() - m_dead_time;
 }
 
-void Water::draw(const mat3& projection) {
+void Background::draw(const mat3& projection) {
 	// Enabling alpha channel for textures
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
