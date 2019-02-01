@@ -70,7 +70,6 @@ bool Sam::init()
 	m_is_alive = true;
 	m_position = { 50.f, 100.f };
 	m_rotation = 0.f;
-	m_light_up_countdown_ms = -1.f;
 	direction = NO_DIRECTION;
 
 	return true;
