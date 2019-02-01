@@ -69,7 +69,7 @@ bool Sam::init()
 	m_scale.x = 0.125f;
 	m_scale.y = 0.125f;
 	m_is_alive = true;
-	m_position = { 50.f, 100.f };
+	m_position = { 100.f, 200.f };
 	m_rotation = 0.f;
 	m_light_up_countdown_ms = -1.f;
 
@@ -100,42 +100,41 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		if (should_move_left)
 		{
 			new_position.x = new_position.x - step;
+			if (is_movement_interrupted(new_position, m_walls))
+			{
+			    new_position.x = new_position.x + step;
+			}
 		}
 
 		if (should_move_right)
 		{
 			new_position.x = new_position.x + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.x = new_position.x - step;
+            }
 		}
 
 		if (should_move_up)
 		{
 			new_position.y = new_position.y + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y - step;
+            }
 		}
 
 		if (should_move_down)
 		{
 			new_position.y = new_position.y - step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y + step;
+            }
 		}
 
-		// Check if moving will hit a wall
-		auto wall_it = m_walls.begin();
-		bool hit_wall = false;
-		while (wall_it != m_walls.end())
-		{
-			if (collides_with_wall(new_position, *wall_it))
-			{
-				hit_wall = true;
-				wall_it = m_walls.end();
-			}
-			else
-				++wall_it;
-		}
+        m_position = new_position;
 
-		// If won't hit a wall, move
-		if (!hit_wall)
-		{
-			m_position = new_position;
-		}
 	}
 	else
 	{
@@ -143,6 +142,20 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		set_rotation(3.1415f);
 		move({ 0.f, step });
 	}
+}
+
+bool Sam::is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls){
+    auto wall_it = m_walls.begin();
+    while (wall_it != m_walls.end())
+    {
+        if (collides_with_wall(new_position, *wall_it))
+        {
+            return true;
+        }
+        else
+            ++wall_it;
+    }
+    return false;
 }
 
 void Sam::draw(const mat3& projection)

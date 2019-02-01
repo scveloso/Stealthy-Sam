@@ -32,6 +32,7 @@ public:
 	bool collides_with(const Turtle& turtle);
 	bool collides_with(const Fish& fish);
 	bool collides_with_wall(vec2 new_position, const Wall& wall);
+	bool is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls);
 
 	// Returns the current Sam position
 	vec2 get_position()const;
