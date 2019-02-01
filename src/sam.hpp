@@ -58,6 +58,8 @@ public:
 
 	float get_half_height()const;
 
+	int direction;
+
 private:
 	float m_light_up_countdown_ms; // Used to keep track for how long the Sam should be lit up
 	bool m_is_alive; // True if the Sam is alive
@@ -66,10 +68,6 @@ private:
 	float m_rotation; // in radians
 	size_t m_num_indices; // passed to glDrawElements
 
-	bool should_move_left;
-	bool should_move_right;
-	bool should_move_up;
-	bool should_move_down;
 	bool should_be_lit_up;
 
 };

@@ -5,6 +5,7 @@
 #include "turtle.hpp"
 #include "fish.hpp"
 #include "wall.hpp"
+#include "constants.hpp"
 
 // stlib
 #include <vector>
@@ -72,6 +73,7 @@ bool Sam::init()
 	m_position = { 100.f, 200.f };
 	m_rotation = 0.f;
 	m_light_up_countdown_ms = -1.f;
+	direction = NO_DIRECTION;
 
 	return true;
 }
@@ -97,7 +99,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
 
-		if (should_move_left)
+		if (direction % LEFT == 0)
 		{
 			new_position.x = new_position.x - step;
 			if (is_movement_interrupted(new_position, m_walls))
@@ -106,7 +108,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 			}
 		}
 
-		if (should_move_right)
+		if (direction % RIGHT == 0)
 		{
 			new_position.x = new_position.x + step;
 			if (is_movement_interrupted(new_position, m_walls))
@@ -115,7 +117,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
             }
 		}
 
-		if (should_move_up)
+		if (direction % DOWN == 0)
 		{
 			new_position.y = new_position.y + step;
 			if (is_movement_interrupted(new_position, m_walls))
@@ -124,7 +126,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
             }
 		}
 
-		if (should_move_down)
+		if (direction % UP == 0)
 		{
 			new_position.y = new_position.y - step;
 			if (is_movement_interrupted(new_position, m_walls))
@@ -350,25 +352,4 @@ void Sam::light_up()
 {
 	should_be_lit_up = true;
 	m_light_up_countdown_ms = 1500.f;
-}
-
-void Sam::should_move(int direction, bool should)
-{
-	switch (direction)
-	{
-	case 1: // left
-		should_move_left = should;
-		break;
-	case 2:
-		should_move_right = should;
-		break;
-	case 3:
-		should_move_up = should;
-		break;
-	case 4:
-		should_move_down = should;
-		break;
-	default:
-		std::cout << "failed to move" << std::endl;
-	}
 }

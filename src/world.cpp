@@ -1,6 +1,7 @@
 // Header
 #include "world.hpp"
 #include "wall_types.h"
+#include "constants.hpp"
 
 // stlib
 #include <string.h>
@@ -291,21 +292,21 @@ bool World::is_over()const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	if (action == GLFW_REPEAT || action == GLFW_PRESS)
+	if (action == GLFW_PRESS)
 	{
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_sam.should_move(1, true);
+			m_sam.direction *= LEFT;
 			break;
 		case GLFW_KEY_D:
-			m_sam.should_move(2, true);
+			m_sam.direction *= RIGHT;
 			break;
 		case GLFW_KEY_S:
-			m_sam.should_move(3, true);
+			m_sam.direction *= DOWN;
 			break;
 		case GLFW_KEY_W:
-			m_sam.should_move(4, true);
+			m_sam.direction *= UP;
 			break;
 		default:
 			break;
@@ -318,16 +319,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_sam.should_move(1, false);
+			m_sam.direction /= LEFT;
 			break;
 		case GLFW_KEY_D:
-			m_sam.should_move(2, false);
+			m_sam.direction /= RIGHT;
 			break;
 		case GLFW_KEY_S:
-			m_sam.should_move(3, false);
+			m_sam.direction /= DOWN;
 			break;
 		case GLFW_KEY_W:
-			m_sam.should_move(4, false);
+			m_sam.direction /= UP;
 			break;
 		default:
 			break;
