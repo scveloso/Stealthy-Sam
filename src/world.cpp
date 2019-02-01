@@ -96,15 +96,15 @@ bool World::init(vec2 screen)
 	}
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-	m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-	m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
+	m_sam_dead_sound = Mix_LoadWAV(audio_path("sam_dead.wav"));
+	m_sam_eat_sound = Mix_LoadWAV(audio_path("sam_eat.wav"));
 
-	if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr)
+	if (m_background_music == nullptr || m_sam_dead_sound == nullptr || m_sam_eat_sound == nullptr)
 	{
 		fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
 			audio_path("music.wav"),
-			audio_path("salmon_dead.wav"),
-			audio_path("salmon_eat.wav"));
+			audio_path("sam_dead.wav"),
+			audio_path("sam_eat.wav"));
 		return false;
 	}
 
@@ -114,7 +114,7 @@ bool World::init(vec2 screen)
 	fprintf(stderr, "Loaded music\n");
 
 	// Create one long wall
-	if (m_sam.init() && m_water.init())
+	if (m_sam.init() && m_background.init())
 	{
 		Wall wall;
 		if (wall.init(TALL_WALL))
@@ -177,10 +177,10 @@ void World::destroy()
 
 	if (m_background_music != nullptr)
 		Mix_FreeMusic(m_background_music);
-	if (m_salmon_dead_sound != nullptr)
-		Mix_FreeChunk(m_salmon_dead_sound);
-	if (m_salmon_eat_sound != nullptr)
-		Mix_FreeChunk(m_salmon_eat_sound);
+	if (m_sam_dead_sound != nullptr)
+		Mix_FreeChunk(m_sam_dead_sound);
+	if (m_sam_eat_sound != nullptr)
+		Mix_FreeChunk(m_sam_eat_sound);
 
 	Mix_CloseAudio();
 
@@ -196,18 +196,17 @@ bool World::update(float elapsed_ms)
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-	// Updating all entities, making the turtle and fish
-	// faster based on current
+	// Updating all entities
 	m_sam.update(elapsed_ms, m_walls);
 
-	// If salmon is dead, restart the game after the fading animation
+	// If sam is dead, restart the game after the fading animation
 	if (!m_sam.is_alive() &&
-		m_water.get_sam_dead_time() > 5) {
+		m_background.get_sam_dead_time() > 5) {
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
 		m_sam.destroy();
 		m_sam.init();
-		m_water.reset_sam_dead_time();
+		m_background.reset_sam_dead_time();
 	}
 
 	return true;
@@ -275,7 +274,7 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_water.draw(projection_2D);
+	m_background.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -342,7 +341,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		glfwGetWindowSize(m_window, &w, &h);
 		m_sam.destroy();
 		m_sam.init();
-		m_water.reset_sam_dead_time();
+		m_background.reset_sam_dead_time();
 	}
 
 }

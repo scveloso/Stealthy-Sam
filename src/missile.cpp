@@ -1,6 +1,5 @@
 // Header
 #include "missile.hpp"
-#include "turtle.hpp"
 
 #include <cmath>
 
@@ -11,9 +10,9 @@ bool Missile::init()
 	// Load shared texture
 	if (!missile_texture.is_valid())
 	{
-		if (!missile_texture.load_from_file(textures_path("fish.png"))) // just use the fish one
+		if (!missile_texture.load_from_file(textures_path("detective.png"))) // just use the detective one
 		{
-			fprintf(stderr, "Failed to load fish texture!");
+			fprintf(stderr, "Failed to load detective texture!");
 			return false;
 		}
 	}
@@ -158,16 +157,3 @@ vec2 Missile::get_bounding_box()const
 	return { std::fabs(m_scale.x) * missile_texture.width, std::fabs(m_scale.y) * missile_texture.height };
 }
 
-bool Missile::collides_with(const Turtle& turtle) const {
-	// Copied from the starter code from salmon.cpp
-	float dx = m_position.x - turtle.get_position().x;
-	float dy = m_position.y - turtle.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}

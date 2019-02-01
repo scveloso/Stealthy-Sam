@@ -2,13 +2,11 @@
 
 #include "common.hpp"
 
-class Turtle;
 
-// salmon lazers
 class Missile : public Renderable
 {
 	// Shared between all missiles, no need to load one for each instance
-	static Texture missile_texture; // which will just be a smaller version of the fish, but black
+	static Texture missile_texture; // which will just be a smaller version of the detective, but black
 
 public:
 	// Creates all the associated render resources and default transform
@@ -34,7 +32,6 @@ public:
 	// Returns the missile' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box()const;
 
-	bool collides_with(const Turtle& turtle) const;
 
 private:
 	vec2 m_position; // Window coordinates
