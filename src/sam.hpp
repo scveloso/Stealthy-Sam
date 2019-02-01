@@ -28,6 +28,7 @@ public:
 
 	// Collision routines for wall
 	bool collides_with_wall(vec2 new_position, const Wall& wall);
+	bool is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls);
 
 	// Returns the current Sam position
 	vec2 get_position()const;
@@ -50,6 +51,8 @@ public:
 
 	float get_half_height()const;
 
+	int direction;
+
 private:
 	bool m_is_alive; // True if the Sam is alive
 	vec2 m_position; // Window coordinates
@@ -57,9 +60,6 @@ private:
 	float m_rotation; // in radians
 	size_t m_num_indices; // passed to glDrawElements
 
-	bool should_move_left;
-	bool should_move_right;
-	bool should_move_up;
-	bool should_move_down;
+	bool should_be_lit_up;
 
 };

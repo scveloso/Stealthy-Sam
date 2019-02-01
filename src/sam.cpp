@@ -3,6 +3,7 @@
 
 // internal
 #include "wall.hpp"
+#include "constants.hpp"
 
 // stlib
 #include <vector>
@@ -69,6 +70,7 @@ bool Sam::init()
 	m_is_alive = true;
 	m_position = { 50.f, 100.f };
 	m_rotation = 0.f;
+	direction = NO_DIRECTION;
 
 	return true;
 }
@@ -94,45 +96,44 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
 
-		if (should_move_left)
+		if (direction % LEFT == 0)
 		{
 			new_position.x = new_position.x - step;
+			if (is_movement_interrupted(new_position, m_walls))
+			{
+			    new_position.x = new_position.x + step;
+			}
 		}
 
-		if (should_move_right)
+		if (direction % RIGHT == 0)
 		{
 			new_position.x = new_position.x + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.x = new_position.x - step;
+            }
 		}
 
-		if (should_move_up)
+		if (direction % DOWN == 0)
 		{
 			new_position.y = new_position.y + step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y - step;
+            }
 		}
 
-		if (should_move_down)
+		if (direction % UP == 0)
 		{
 			new_position.y = new_position.y - step;
+			if (is_movement_interrupted(new_position, m_walls))
+            {
+                new_position.y = new_position.y + step;
+            }
 		}
 
-		// Check if moving will hit a wall
-		auto wall_it = m_walls.begin();
-		bool hit_wall = false;
-		while (wall_it != m_walls.end())
-		{
-			if (collides_with_wall(new_position, *wall_it))
-			{
-				hit_wall = true;
-				wall_it = m_walls.end();
-			}
-			else
-				++wall_it;
-		}
+        m_position = new_position;
 
-		// If won't hit a wall, move
-		if (!hit_wall)
-		{
-			m_position = new_position;
-		}
 	}
 	else
 	{
@@ -140,6 +141,20 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		set_rotation(3.1415f);
 		move({ 0.f, step });
 	}
+}
+
+bool Sam::is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls){
+    auto wall_it = m_walls.begin();
+    while (wall_it != m_walls.end())
+    {
+        if (collides_with_wall(new_position, *wall_it))
+        {
+            return true;
+        }
+        else
+            ++wall_it;
+    }
+    return false;
 }
 
 void Sam::draw(const mat3& projection)
@@ -302,24 +317,3 @@ void Sam::kill()
 	m_is_alive = false;
 }
 
-
-void Sam::should_move(int direction, bool should)
-{
-	switch (direction)
-	{
-	case 1: // left
-		should_move_left = should;
-		break;
-	case 2:
-		should_move_right = should;
-		break;
-	case 3:
-		should_move_up = should;
-		break;
-	case 4:
-		should_move_down = should;
-		break;
-	default:
-		std::cout << "failed to move" << std::endl;
-	}
-}
