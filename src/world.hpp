@@ -3,8 +3,6 @@
 // internal
 #include "common.hpp"
 #include "sam.hpp"
-#include "turtle.hpp"
-#include "fish.hpp"
 #include "background.hpp"
 #include "missile.hpp"
 #include "wall.hpp"
@@ -50,12 +48,12 @@ private:
 	GLFWwindow* m_window;
 
 	// Screen texture
-	// The draw loop first renders to this texture, then it is used for the water shader
+	// The draw loop first renders to this texture, then it is used for the background shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	// Water effect
-	Water m_water;
+	// Background effect
+	Background m_background;
 
 	// Game entities
 	Sam m_sam;
@@ -63,8 +61,8 @@ private:
 	std::vector<Wall> m_walls;
 
 	Mix_Music* m_background_music;
-	Mix_Chunk* m_salmon_dead_sound;
-	Mix_Chunk* m_salmon_eat_sound;
+	Mix_Chunk* m_sam_dead_sound;
+	Mix_Chunk* m_sam_eat_sound;
 
 	// C++ rng
 	std::default_random_engine m_rng;

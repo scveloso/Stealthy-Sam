@@ -23,7 +23,7 @@ void main()
 	}
 
 
-	// Salmon mesh is contained in a 2x2 square (see salmon.mesh for vertices)
+	// Sam mesh is contained in a 2x2 square (see sam.mesh for vertices)
 	float radius = distance(vec2(0.0), vpos);
 	if (light_up == 1 && radius < 1.0)
 	{
