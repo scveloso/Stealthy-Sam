@@ -43,7 +43,7 @@ public:
 
 private:
 
-	bool spawn_enemy(float posx, float posy, float patrol);
+	bool spawn_enemy(float posx, float posy, float patrol_x, float patrol_y);
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -62,9 +62,7 @@ private:
 
 	// Game entities
 	Sam m_sam;
-
-
-	Enemy m_enemy;
+	std::vector<Enemy> m_enemies;
 
 	std::vector<Wall> m_walls;
 

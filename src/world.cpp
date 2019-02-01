@@ -112,10 +112,12 @@ bool World::init(vec2 screen)
 
 	fprintf(stderr, "Loaded music\n");
 
-	m_enemy.init();
+	//m_enemy.init();
 
-	m_enemy.set_position({ 200.f, 475.f });
-	m_enemy.set_patrol_length(500.f);
+	//m_enemy.set_position({ 200.f, 475.f });
+	//m_enemy.set_patrol_length(500.f);
+
+	//spawn_enemy(200.f, 475.f, 500.f);
 
 	// Create one long wall
 	if (m_sam.init() && m_water.init())
@@ -214,8 +216,27 @@ bool World::update(float elapsed_ms)
 		m_water.reset_sam_dead_time();
 	}
 
-	//spawn_enemy(50.f, 200.f, 100.f);
-	m_enemy.update(elapsed_ms);
+	// spawn enemies here
+
+	const size_t MAX_ENEMIES = 4;
+
+	//spawn_enemy(x,y,patrol_length_x, patrol_length_y)
+	// you can only choose patrol in one direction
+
+	if (m_enemies.size() < MAX_ENEMIES) {
+		spawn_enemy(200.f, 475.f, 500.f, 0.f);
+		spawn_enemy(200.f, 575.f, 300.f, 0.f);
+		spawn_enemy(200.f, 650.f, 300.f, 0.f);
+
+		spawn_enemy(850.f, 200.f, 0.f, 300.f);
+	}
+	
+
+	for (auto& enemy : m_enemies) {
+		enemy.update(elapsed_ms);
+	}
+
+
 
 	return true;
 }
@@ -267,7 +288,10 @@ void World::draw()
 	// Drawing entities
 	m_sam.draw(projection_2D);
 
-	m_enemy.draw(projection_2D);
+	//drawing enemies
+	for (auto& enemy : m_enemies) {
+		enemy.draw(projection_2D);
+	}
 
 	/////////////////////
 	// Truely render to the screen
@@ -297,13 +321,15 @@ bool World::is_over()const
 	return glfwWindowShouldClose(m_window);
 }
 
-bool World::spawn_enemy(float posx, float posy, float patrol)
+bool World::spawn_enemy(float posx, float posy, float patrol_x, float patrol_y)
 {
 	Enemy enemy;
-	if (!m_enemy.init()) 
+	if (enemy.init()) 
 	{
-		m_enemy.set_position({ posx, posy });
-		m_enemy.set_patrol_length(patrol);
+		enemy.set_position({ posx, posy });
+		enemy.set_patrol_length_x(patrol_x);
+		enemy.set_patrol_length_y(patrol_y);
+		m_enemies.emplace_back(enemy);
 		return true;
 	}
 	//fprintf(stderr, "Failed to spawn enemy");

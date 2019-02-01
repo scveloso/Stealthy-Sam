@@ -83,20 +83,38 @@ void Enemy::update(float ms)
 	float ENEMY_SPEED = 50.f;
 
 	//printf("%f				%f				%f\n", m_position.x, (m_start_position.x + m_patrol_length), direction_x);
+	if (m_patrol_length_x != 0.f)
+	{
+		if (m_position.x > (m_start_position.x + m_patrol_length_x)) {
+			direction_x = -1;
+			m_scale.x *= -1;
+		}
 
-	if (m_position.x > (m_start_position.x + m_patrol_length)) {
-		direction_x = -1;
-		m_scale.x *= -1;
+		if (m_position.x < m_start_position.x) {
+			direction_x = 1;
+			m_scale.x *= -1;
+		}
+
+		ENEMY_SPEED *= direction_x;
+		float step = ENEMY_SPEED * (ms / 1000);
+		m_position.x += step;
 	}
+	else
+	{
+		if (m_position.y > (m_start_position.y + m_patrol_length_y)) {
+			direction_y = -1;
+			m_scale.x *= -1;
+		}
 
-	if (m_position.x < m_start_position.x) {
-		direction_x = 1;
-		m_scale.x *= -1;
+		if (m_position.y < m_start_position.y) {
+			direction_y = 1;
+			m_scale.x *= -1;
+		}
+
+		ENEMY_SPEED *= direction_y;
+		float step = ENEMY_SPEED * (ms / 1000);
+		m_position.y += step;
 	}
-
-	ENEMY_SPEED *= direction_x;
-	float step = ENEMY_SPEED* (ms / 1000);
-	m_position.x += step;
 }
 
 void Enemy::draw(const mat3& projection)
@@ -159,9 +177,14 @@ void Enemy::set_position(vec2 position)
 	m_start_position = position;
 }
 
-void Enemy::set_patrol_length(float len)
+void Enemy::set_patrol_length_x(float len)
 {
-	m_patrol_length = len;
+	m_patrol_length_x = len;
+}
+
+void Enemy::set_patrol_length_y(float len)
+{
+	m_patrol_length_y = len;
 }
 
 // Returns the local bounding coordinates scaled by the current size of the enemy 

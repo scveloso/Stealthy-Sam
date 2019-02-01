@@ -29,12 +29,14 @@ public:
 	// Sets the new enemy position
 	void set_position(vec2 position);
 
-	void set_patrol_length(float len);
+	void set_patrol_length_x(float len);\
+	void set_patrol_length_y(float len);
 
 	// Returns the enemy' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box()const;
 
-	float m_patrol_length;
+	float m_patrol_length_x;
+	float m_patrol_length_y;
 	float direction_x = 1;
 	float direction_y = 1;
 
