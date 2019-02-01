@@ -92,7 +92,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 {
 	const float SAM_SPEED = 200.f;
 	float step = SAM_SPEED * (ms / 1000);
-	if (m_is_alive)
+	if (m_is_alive && !m_is_hidden)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
 
@@ -134,12 +134,6 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 
         m_position = new_position;
 
-	}
-	else
-	{
-		// If dead we make it face upwards and sink deep down
-		set_rotation(3.1415f);
-		move({ 0.f, step });
 	}
 }
 
