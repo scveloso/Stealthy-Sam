@@ -162,11 +162,18 @@ bool World::init(vec2 screen)
 			// Set directly above wall 5, shifted to the right by half of its width
 			wall6.set_position({ (float) ((screen.x / 2) + (192 - 19.2)),  (screen.y) - 50 - (192) });
 			m_walls.emplace_back(wall6);
-			return true;
 		}
 
-		fprintf(stderr, "Failed to spawn wall\n");
+		Closet closet1;
+		if (closet1.init())
+		{
+			closet1.set_position({ (screen.x / 2) - 250, (screen.y / 2) - 250 });
+			m_closets.emplace_back(closet1);
+		}
+
+		return true;
 	}
+	fprintf(stderr, "Failed to spawn wall\n");
 	return false;
 }
 
@@ -256,7 +263,11 @@ void World::draw()
 	for (auto& wall : m_walls)
 			wall.draw(projection_2D);
 
-	// Drawing entities
+	// Draw interactable
+	for (auto& interactable : m_closets)
+		interactable.draw(projection_2D);
+
+	// Drawing Sam
 	m_sam.draw(projection_2D);
 
 	/////////////////////
@@ -328,6 +339,10 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			break;
 		case GLFW_KEY_W:
 			m_sam.direction /= UP;
+			break;
+
+		case GLFW_KEY_E:
+			m_sam.interact_in_front(m_closets);
 			break;
 		default:
 			break;

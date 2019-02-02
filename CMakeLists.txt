@@ -34,19 +34,22 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/a1.cpp
-	src/common.cpp
-	src/sam.cpp
+        src/a1.cpp
+        src/common.cpp
+        src/sam.cpp
         src/background.cpp
-	src/world.cpp
-    src/missile.cpp
-	src/wall.cpp
+        src/world.cpp
+        src/missile.cpp
+        src/wall.cpp
+        src/closet.cpp
 
-    src/project_path.hpp
-	src/common.hpp
-	src/sam.hpp
+        src/project_path.hpp
+        src/common.hpp
+        src/sam.hpp
         src/background.hpp
-	src/world.hpp
+        src/world.hpp
+        src/wall.hpp
+        src/closet.hpp
 	)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
