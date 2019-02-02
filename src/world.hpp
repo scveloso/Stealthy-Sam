@@ -7,6 +7,7 @@
 #include "missile.hpp"
 #include "wall.hpp"
 #include "enemy.hpp"
+#include "closet.hpp"
 
 // stlib
 #include <vector>
@@ -63,6 +64,7 @@ private:
 	std::vector<Enemy> m_enemies;
 
 	std::vector<Wall> m_walls;
+	std::vector<Closet> m_closets;
 
 	Mix_Music* m_background_music;
 	Mix_Chunk* m_sam_dead_sound;

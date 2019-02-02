@@ -92,7 +92,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 {
 	const float SAM_SPEED = 200.f;
 	float step = SAM_SPEED * (ms / 1000);
-	if (m_is_alive)
+	if (m_is_alive && !m_is_hidden)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
 
@@ -134,12 +134,6 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 
         m_position = new_position;
 
-	}
-	else
-	{
-		// If dead we make it face upwards and sink deep down
-		set_rotation(3.1415f);
-		move({ 0.f, step });
 	}
 }
 
@@ -317,3 +311,39 @@ void Sam::kill()
 	m_is_alive = false;
 }
 
+
+void Sam::interact_in_front(std::vector<Closet> closets) {
+
+	// Check if we're already hidden, if so, unhide:
+	if (m_is_hidden) {
+		m_position.x = m_previous_location.x;
+		m_position.y = m_previous_location.y;
+		m_is_hidden = false;
+		return;
+	}
+
+
+	// right now assume that we're interacting with the right:
+
+	vec2 position_to_check;
+
+	if (true)
+	{ // interact with the right
+		position_to_check = { m_position.x + get_half_width(), m_position.y };
+	}
+
+	for (auto& closet : closets)
+	{
+		bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
+		std::cout << "Interacted with closet: " << collision << std::endl;
+
+		if (collision)
+		{
+			// store our current position to restore later and put us off the map
+			m_previous_location = { m_position.x, m_position.y };
+			m_is_hidden = true;
+			m_position.x = 10000;
+			m_position.y = 10000;
+		}
+	}
+}
