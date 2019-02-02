@@ -17,6 +17,7 @@
 
 #define data_path PROJECT_SOURCE_DIR "./data"
 #define textures_path(name)  data_path "/textures/" name
+#define sam_textures_path(name) data_path "/textures/CartoonDetective/Run/" name
 #define audio_path(name) data_path  "/audio/" name
 #define mesh_path(name) data_path  "/meshes/" name
 

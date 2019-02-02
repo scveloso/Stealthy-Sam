@@ -18,7 +18,7 @@ bool Sam::init()
 	// Load shared texture
 	if (!sam_texture.is_valid())
 	{
-		if (!sam_texture.load_from_file(textures_path("detective.png")))
+		if (!sam_texture.load_from_file(sam_textures_path("Run_01.png")))
 		{
 			fprintf(stderr, "Failed to load sam texture!");
 			return false;
@@ -26,8 +26,8 @@ bool Sam::init()
 	}
 
 	// The position corresponds to the center of the texture
-	float wr = sam_texture.width * 0.5f;
-	float hr = sam_texture.height * 0.5f;
+	float wr = sam_texture.width * 7.f;
+	float hr = sam_texture.height * 7.f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.01f };
@@ -99,6 +99,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		if (direction % LEFT == 0)
 		{
 			new_position.x = new_position.x - step;
+			sam_texture.load_from_file(sam_textures_path("leftRun_02.png"));
 			if (is_movement_interrupted(new_position, m_walls))
 			{
 			    new_position.x = new_position.x + step;
@@ -108,6 +109,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
 		if (direction % RIGHT == 0)
 		{
 			new_position.x = new_position.x + step;
+			sam_texture.load_from_file(sam_textures_path("Run_02.png"));
 			if (is_movement_interrupted(new_position, m_walls))
             {
                 new_position.x = new_position.x - step;
@@ -130,6 +132,11 @@ void Sam::update(float ms, std::vector<Wall> m_walls)
             {
                 new_position.y = new_position.y + step;
             }
+		}
+
+		if (direction % LEFT != 0 && direction % RIGHT != 0 && direction % UP != 0 && direction % DOWN != 0)
+		{
+			sam_texture.load_from_file(sam_textures_path("Run_02.png"));
 		}
 
         m_position = new_position;
