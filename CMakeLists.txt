@@ -39,7 +39,7 @@ set(SOURCE_FILES
         src/sam.cpp
         src/background.cpp
         src/world.cpp
-        #src/missile.cpp
+        src/missile.cpp
         src/wall.cpp
         src/closet.cpp
 		src/enemy.cpp
