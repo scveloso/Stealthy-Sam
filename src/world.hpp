@@ -6,6 +6,7 @@
 #include "background.hpp"
 #include "missile.hpp"
 #include "wall.hpp"
+#include "enemy.hpp"
 #include "closet.hpp"
 
 // stlib
@@ -40,6 +41,8 @@ public:
 	bool is_over()const;
 
 private:
+
+	bool spawn_enemy(float posx, float posy, float patrol_x, float patrol_y);
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -58,6 +61,7 @@ private:
 
 	// Game entities
 	Sam m_sam;
+	std::vector<Enemy> m_enemies;
 
 	std::vector<Wall> m_walls;
 	std::vector<Closet> m_closets;

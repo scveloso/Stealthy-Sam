@@ -2,6 +2,7 @@
 #include "missile.hpp"
 
 #include <cmath>
+#include <algorithm>
 
 Texture Missile::missile_texture;
 
