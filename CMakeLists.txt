@@ -39,6 +39,8 @@ set(SOURCE_FILES
         src/sam.cpp
         src/background.cpp
         src/world.cpp
+        src/room.cpp
+        src/roomone.cpp
         src/missile.cpp
         src/wall.cpp
         src/closet.cpp
@@ -49,6 +51,8 @@ set(SOURCE_FILES
         src/sam.hpp
         src/background.hpp
         src/world.hpp
+        src/room.hpp
+        src/roomone.hpp
         src/wall.hpp
         src/closet.hpp
 		src/enemy.hpp

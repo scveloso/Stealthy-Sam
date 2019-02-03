@@ -8,6 +8,8 @@
 #include "wall.hpp"
 #include "enemy.hpp"
 #include "closet.hpp"
+#include "room.hpp"
+#include "roomone.hpp"
 
 // stlib
 #include <vector>
@@ -47,7 +49,7 @@ private:
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
-private:
+protected:
 	// Window handle
 	GLFWwindow* m_window;
 
@@ -61,8 +63,12 @@ private:
 
 	// Game entities
 	Sam m_sam;
-	std::vector<Enemy> m_enemies;
+	Room *m_room; // the current room
 
+	RoomOne m_roomOne; // the first room
+	// TODO: Implement second, third and fourth rooms
+
+	std::vector<Enemy> m_enemies;
 	std::vector<Wall> m_walls;
 	std::vector<Closet> m_closets;
 

@@ -1,6 +1,7 @@
 // internal
 #include "common.hpp"
 #include "world.hpp"
+#include "roomone.hpp"
 
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
@@ -11,11 +12,11 @@
 
 using Clock = std::chrono::high_resolution_clock;
 
-// Global 
+// Global
 World world;
 const int width = 1200;
 const int height = 800;
-const char* title = "Your Title Here";
+const char* title = "Stealthy Sam";
 
 // Entry point
 int main(int argc, char* argv[])

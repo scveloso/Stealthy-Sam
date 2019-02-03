@@ -28,8 +28,6 @@ bool Wall::init(int wall_type)
 	// The position corresponds to the center of the texture
 	float wr = wall_texture.width * 0.5f;
 	float hr = wall_texture.height * 0.5f;
-  std::cout << "wr = " << wr << std::endl;
-  std::cout << "hr = " << hr << std::endl;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.01f };
