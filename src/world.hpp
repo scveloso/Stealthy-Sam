@@ -66,6 +66,8 @@ private:
 	std::vector<Wall> m_walls;
 	std::vector<Closet> m_closets;
 
+	vec2 m_screen;
+
 	Mix_Music* m_background_music;
 	Mix_Chunk* m_sam_dead_sound;
 	Mix_Chunk* m_sam_eat_sound;
