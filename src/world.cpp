@@ -108,6 +108,8 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
+	m_screen = screen;
+
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
 
@@ -211,7 +213,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// Updating all entities
-	m_sam.update(elapsed_ms, m_walls);
+	m_sam.update(elapsed_ms, m_walls, m_screen);
 
 	// If sam is dead, restart the game after the fading animation
 	if (!m_sam.is_alive() &&
@@ -237,7 +239,7 @@ bool World::update(float elapsed_ms)
 
 		spawn_enemy(850.f, 200.f, 0.f, 300.f);
 	}
-	
+
 
 	for (auto& enemy : m_enemies) {
 		enemy.update(elapsed_ms);
@@ -335,7 +337,7 @@ bool World::is_over()const
 bool World::spawn_enemy(float posx, float posy, float patrol_x, float patrol_y)
 {
 	Enemy enemy;
-	if (enemy.init()) 
+	if (enemy.init())
 	{
 		enemy.set_position({ posx, posy });
 		enemy.set_patrol_length_x(patrol_x);
