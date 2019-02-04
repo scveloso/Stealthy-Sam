@@ -41,6 +41,7 @@ set(SOURCE_FILES
         src/world.cpp
         src/room.cpp
         src/roomone.cpp
+        src/roomtwo.cpp
         src/missile.cpp
         src/wall.cpp
         src/closet.cpp
@@ -53,6 +54,7 @@ set(SOURCE_FILES
         src/world.hpp
         src/room.hpp
         src/roomone.hpp
+        src/roomtwo.hpp
         src/wall.hpp
         src/closet.hpp
 		src/enemy.hpp

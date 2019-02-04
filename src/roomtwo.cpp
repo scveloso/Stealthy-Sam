@@ -1,5 +1,5 @@
 // Header
-#include "roomone.hpp"
+#include "roomtwo.hpp"
 #include "wall_types.h"
 #include "constants.hpp"
 
@@ -11,56 +11,40 @@
 #include <math.h>
 
 // Room initialization
-// Walls in room 1 are laid out to have a smaller room, hallways and corners
-bool RoomOne::init(vec2 screen) {
+// Walls in room two make up an "island" in the middle of the screen
+bool RoomTwo::init(vec2 screen) {
 	if (m_sam.init())
 	{
 		Wall wall;
-		if (wall.init(TALL_WALL))
+		if (wall.init(WIDE_WALL))
 		{
-			// Set at the middle of the top edge of the screen, accounting for half of this wall's height (192)
-			wall.set_position({ (screen.x / 2),  192 });
+			// Set at the middle of the screen, offset by its 1.5x height upwards (-57.6)
+			wall.set_position({ (screen.x / 2),  float((screen.y / 2) - 57.6) });
 			m_walls.emplace_back(wall);
 		}
 
-		Wall wall2;
+    Wall wall2;
 		if (wall2.init(WIDE_WALL))
 		{
-			// Set below the previous wall (384 height) accounting for half of this wall's height (19.2)
-			wall2.set_position({ (screen.x / 2),  384 + 19.2 });
+			// Set at the middle of the screen, offset by its half of height upwards (-19.2)
+			wall2.set_position({ (screen.x / 2),  float((screen.y / 2) - 19.2) });
 			m_walls.emplace_back(wall2);
 		}
 
-		Wall wall3;
+    Wall wall3;
 		if (wall3.init(WIDE_WALL))
 		{
-			// Set left edge of the screen aligned with wall2
-			wall3.set_position({ 100,  384 + 19.2 });
+			// Set at the middle of the screen, offset by half of its height downwards (+19.2)
+			wall3.set_position({ (screen.x / 2),  float((screen.y / 2) + 19.2) });
 			m_walls.emplace_back(wall3);
 		}
 
-		Wall wall4;
+    Wall wall4;
 		if (wall4.init(WIDE_WALL))
 		{
-			// Set right edge of the screen aligned with wall2
-			wall4.set_position({ (screen.x) - 100,  384 + 19.2 });
+			// Set at the middle of the screen, offset by its 1.5x height downwards (+57.6)
+			wall4.set_position({ (screen.x / 2),  float((screen.y / 2) + 57.6) });
 			m_walls.emplace_back(wall4);
-		}
-
-		Wall wall5;
-		if (wall5.init(TALL_WALL))
-		{
-			// Set at bottom edge of the screen
-			wall5.set_position({ (screen.x / 2),  (screen.y) - 50 });
-			m_walls.emplace_back(wall5);
-		}
-
-		Wall wall6;
-		if (wall6.init(WIDE_WALL))
-		{
-			// Set directly above wall 5, shifted to the right by half of its width
-			wall6.set_position({ (float) ((screen.x / 2) + (192 - 19.2)),  (screen.y) - 50 - (192) });
-			m_walls.emplace_back(wall6);
 		}
 
 		Closet closet1;
@@ -77,7 +61,7 @@ bool RoomOne::init(vec2 screen) {
 }
 
 // Update our game world
-bool RoomOne::update(float elapsed_ms, vec2 screen)
+bool RoomTwo::update(float elapsed_ms, vec2 screen)
 {
   // Updating all entities
 	m_sam.update(elapsed_ms, m_walls, screen);

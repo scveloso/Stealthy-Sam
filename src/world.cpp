@@ -112,6 +112,9 @@ bool World::init(vec2 screen)
 	m_screen = screen;
 
 	// Initialize current room
+	// TODO: Implement room switching via doors
+	// For now, if want to work on a room, switch m_room = &m_roomTwo to m_room = &<desired_room>
+	// m_room = &m_roomTwo
 	m_room = &m_roomOne;
 	m_room->init(m_screen);
 

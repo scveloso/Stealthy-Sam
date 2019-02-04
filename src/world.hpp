@@ -10,6 +10,7 @@
 #include "closet.hpp"
 #include "room.hpp"
 #include "roomone.hpp"
+#include "roomtwo.hpp"
 
 // stlib
 #include <vector>
@@ -66,7 +67,8 @@ protected:
 	Room *m_room; // the current room
 
 	RoomOne m_roomOne; // the first room
-	// TODO: Implement second, third and fourth rooms
+	RoomTwo m_roomTwo; // the second room
+	// TODO: Finish implementing the second, third and fourth rooms
 
 	std::vector<Enemy> m_enemies;
 	std::vector<Wall> m_walls;
