@@ -12,8 +12,9 @@
 
 // Room initialization
 // Walls in room two make up an "island" in the middle of the screen
-bool RoomTwo::init(vec2 screen) {
-	if (m_sam.init())
+bool RoomTwo::init(vec2 screen, Sam* sam) {
+	m_sam = sam;
+	if (true)
 	{
 		Wall wall;
 		if (wall.init(WIDE_WALL))
@@ -47,6 +48,13 @@ bool RoomTwo::init(vec2 screen) {
 			m_walls.emplace_back(wall4);
 		}
 
+		Door door1;
+		if (door1.init(CHANGE_ROOM_ONE, RIGHT_DOOR))
+		{
+			door1.set_position({(screen.x) - 40, (screen.y / 2) + 250 });
+			m_doors.emplace_back(door1);
+		}
+
 		Closet closet1;
 		if (closet1.init())
 		{
@@ -61,10 +69,12 @@ bool RoomTwo::init(vec2 screen) {
 }
 
 // Update our game world
-bool RoomTwo::update(float elapsed_ms, vec2 screen)
+int RoomTwo::update(float elapsed_ms, vec2 screen)
 {
+	int action = NO_ACTION;
+
   // Updating all entities
-	m_sam.update(elapsed_ms, m_walls, screen);
+	action = m_sam->update(elapsed_ms, m_walls, screen, m_doors);
 
 	// Spawn enemies here
 	const size_t MAX_ENEMIES = 4;
@@ -83,5 +93,5 @@ bool RoomTwo::update(float elapsed_ms, vec2 screen)
 		enemy.update(elapsed_ms);
 	}
 
-	return true;
+	return action;
 }

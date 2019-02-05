@@ -112,11 +112,10 @@ bool World::init(vec2 screen)
 	m_screen = screen;
 
 	// Initialize current room
-	// TODO: Implement room switching via doors
-	// For now, if want to work on a room, switch m_room = &m_roomTwo to m_room = &<desired_room>
-	// m_room = &m_roomTwo
-	m_room = &m_roomOne;
-	m_room->init(m_screen);
+	if (m_sam.init()) {
+		m_room = &m_roomOne;
+		m_room->init(m_screen, &m_sam);
+	}
 
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
@@ -158,7 +157,17 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// Update current room
-	m_room->update(elapsed_ms, screen);
+	int action = m_room->update(elapsed_ms, screen);
+
+	if (action == CHANGE_ROOM_TWO) {
+		m_room = &m_roomTwo;
+		m_room->init(m_screen, &m_sam);
+		m_sam.set_position({(screen.x) - 90, (screen.y / 2) + 250 });
+	} else if (action == CHANGE_ROOM_ONE) {
+		m_room = &m_roomOne;
+		m_room->init(m_screen, &m_sam);
+		m_sam.set_position({90, (screen.y / 2) + 250 });
+	}
 
 	return true;
 }
