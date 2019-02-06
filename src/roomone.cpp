@@ -14,8 +14,10 @@
 // Walls in room 1 are laid out to have a smaller room, hallways and corners
 bool RoomOne::init(vec2 screen, Sam* sam) {
 	m_sam = sam;
-	if (true)
+	if (!m_is_initialized)
 	{
+		m_is_initialized = true;
+
 		Wall wall;
 		if (wall.init(TALL_WALL))
 		{

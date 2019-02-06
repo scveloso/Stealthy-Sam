@@ -14,8 +14,10 @@
 // Walls in room two make up an "island" in the middle of the screen
 bool RoomTwo::init(vec2 screen, Sam* sam) {
 	m_sam = sam;
-	if (true)
+	if (!m_is_initialized)
 	{
+		m_is_initialized = true;
+
 		Wall wall;
 		if (wall.init(WIDE_WALL))
 		{

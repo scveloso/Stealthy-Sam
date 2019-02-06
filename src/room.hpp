@@ -28,8 +28,11 @@ class Room
 
     void on_key(int key, int action, int mod);
 
+    bool is_initialized();
+
   protected:
     Sam* m_sam;
+    bool m_is_initialized = false;
     std::vector<Enemy> m_enemies;
   	std::vector<Wall> m_walls;
   	std::vector<Closet> m_closets;

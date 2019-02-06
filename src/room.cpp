@@ -99,3 +99,8 @@ void Room::on_key(int key, int action, int mod)
 		m_sam->init();
 	}
 }
+
+bool Room::is_initialized()
+{
+	return m_is_initialized;
+}
