@@ -461,7 +461,7 @@ void Sam::interact_in_front(std::vector<Closet> closets) {
 	        break;
         case RIGHT:
             position_to_check = { m_position.x + get_half_width(), m_position.y };
-            break:
+            break;
         case DOWN:
             position_to_check = { m_position.x, m_position.y + get_half_width() };
             break;
