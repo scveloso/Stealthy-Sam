@@ -63,6 +63,7 @@ public:
 	void interact_in_front(std::vector<Closet> closets);
 
 	int direction;
+	int direction_facing;
 
 private:
 	bool m_is_alive; // True if the Sam is alive

@@ -52,15 +52,19 @@ void Room::on_key(int key, int action, int mod)
 		{
 		case GLFW_KEY_A:
 			m_sam->direction *= LEFT;
+			m_sam->direction_facing = LEFT;
 			break;
 		case GLFW_KEY_D:
 			m_sam->direction *= RIGHT;
+			m_sam->direction_facing = RIGHT;
 			break;
 		case GLFW_KEY_S:
 			m_sam->direction *= DOWN;
+			m_sam->direction_facing = DOWN;
 			break;
 		case GLFW_KEY_W:
 			m_sam->direction *= UP;
+			m_sam->direction_facing = UP;
 			break;
 		case GLFW_KEY_E:
 			m_sam->interact_in_front(m_closets);
