@@ -12,9 +12,12 @@
 
 // Room initialization
 // Walls in room 1 are laid out to have a smaller room, hallways and corners
-bool RoomOne::init(vec2 screen) {
-	if (m_sam.init())
+bool RoomOne::init(vec2 screen, Sam* sam) {
+	m_sam = sam;
+	if (!m_is_initialized)
 	{
+		m_is_initialized = true;
+
 		Wall wall;
 		if (wall.init(TALL_WALL))
 		{
@@ -63,10 +66,17 @@ bool RoomOne::init(vec2 screen) {
 			m_walls.emplace_back(wall6);
 		}
 
+		Door door1;
+		if (door1.init(CHANGE_ROOM_TWO, LEFT_DOOR))
+		{
+			door1.set_position({40, (screen.y / 2) + 250 });
+			m_doors.emplace_back(door1);
+		}
+
 		Closet closet1;
 		if (closet1.init())
 		{
-			closet1.set_position({ (screen.x / 2) - 250, (screen.y / 2) - 250 });
+			closet1.set_position({(screen.x / 2) - 250, (screen.y / 2) - 250 });
 			m_closets.emplace_back(closet1);
 		}
 
@@ -77,10 +87,13 @@ bool RoomOne::init(vec2 screen) {
 }
 
 // Update our game world
-bool RoomOne::update(float elapsed_ms, vec2 screen)
+// Returns an update_action enumeration in update_action.cpp
+int RoomOne::update(float elapsed_ms, vec2 screen)
 {
+	int action = NO_ACTION;
+
   // Updating all entities
-	m_sam.update(elapsed_ms, m_walls, screen);
+	action = m_sam->update(elapsed_ms, m_walls, screen, m_doors);
 
 	// Spawn enemies here
 	const size_t MAX_ENEMIES = 4;
@@ -99,5 +112,5 @@ bool RoomOne::update(float elapsed_ms, vec2 screen)
 		enemy.update(elapsed_ms);
 	}
 
-	return true;
+	return action;
 }
