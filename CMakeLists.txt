@@ -47,6 +47,7 @@ set(SOURCE_FILES
         src/closet.cpp
         src/door.cpp
 		src/enemy.cpp
+		src/collision.cpp
 
         src/project_path.hpp
         src/common.hpp
@@ -60,6 +61,7 @@ set(SOURCE_FILES
         src/closet.hpp
         src/door.hpp
 		src/enemy.hpp
+		src/collision.hpp
 	)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
