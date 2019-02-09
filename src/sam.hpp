@@ -27,11 +27,6 @@ public:
 	// Renders Sam
 	void draw(const mat3& projection)override;
 
-	// Collision routines for wall and screen
-	bool collides_with_wall(vec2 new_position, const Wall& wall);
-	bool collides_with_screen_edge(vec2 new_position, vec2 screen);
-	bool is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls, vec2 screen);
-
 	// Returns the current Sam position
 	vec2 get_position()const;
 
@@ -49,9 +44,7 @@ public:
 
 	void should_move(int direction, bool should);
 
-	float get_half_width()const;
-
-	float get_half_height()const;
+	vec2 get_scale();
 
 	void interact_in_front(std::vector<Closet> closets);
 

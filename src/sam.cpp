@@ -4,6 +4,7 @@
 // internal
 #include "wall.hpp"
 #include "constants.hpp"
+#include "collision.hpp"
 
 // stlib
 #include <vector>
@@ -12,6 +13,7 @@
 #include <iostream>
 
 Texture Sam::sam_texture;
+Collision* collision;
 
 bool Sam::init()
 {
@@ -75,6 +77,8 @@ bool Sam::init()
 	m_rotation = 0.f;
 	direction = NO_DIRECTION;
 
+	collision = new Collision(get_scale(), sam_texture);
+
 	return true;
 }
 
@@ -88,6 +92,8 @@ void Sam::destroy()
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
 	glDeleteShader(effect.program);
+
+	delete collision;
 }
 
 // Called on each frame by World::update()
@@ -103,7 +109,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 		{
 			new_position.x = new_position.x - step;
 			sam_texture.load_from_file(sam_textures_path("leftRun_02.png"));
-			if (is_movement_interrupted(new_position, m_walls, screen))
+			if (collision->is_movement_interrupted(new_position, m_walls, screen))
 			{
 			    new_position.x = new_position.x + step;
 			}
@@ -113,7 +119,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 		{
 			new_position.x = new_position.x + step;
 			sam_texture.load_from_file(sam_textures_path("Run_02.png"));
-			if (is_movement_interrupted(new_position, m_walls, screen))
+			if (collision->is_movement_interrupted(new_position, m_walls, screen))
             {
                 new_position.x = new_position.x - step;
             }
@@ -122,7 +128,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 		if (direction % DOWN == 0)
 		{
 			new_position.y = new_position.y + step;
-			if (is_movement_interrupted(new_position, m_walls, screen))
+			if (collision->is_movement_interrupted(new_position, m_walls, screen))
             {
                 new_position.y = new_position.y - step;
             }
@@ -131,7 +137,7 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 		if (direction % UP == 0)
 		{
 			new_position.y = new_position.y - step;
-			if (is_movement_interrupted(new_position, m_walls, screen))
+			if (collision->is_movement_interrupted(new_position, m_walls, screen))
             {
                 new_position.y = new_position.y + step;
             }
@@ -147,20 +153,6 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 	}
 }
 
-bool Sam::is_movement_interrupted(vec2 new_position, std::vector<Wall> m_walls, vec2 screen){
-    auto wall_it = m_walls.begin();
-    while (wall_it != m_walls.end())
-    {
-        if (collides_with_wall(new_position, *wall_it) ||
-						collides_with_screen_edge(new_position, screen))
-        {
-            return true;
-        }
-        else
-            ++wall_it;
-    }
-    return false;
-}
 
 void Sam::draw(const mat3& projection)
 {
@@ -211,109 +203,6 @@ void Sam::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Return true if new position will collide with the given wall, false otherwise
-bool Sam::collides_with_wall(vec2 new_position, const Wall& wall)
-{
-	float hw = get_half_width();
-	float hh = get_half_height();
-
-	// Grab sam's edges
-	// (Note: we don't want the edges of the texture but rather the edges of the actual sprite)
-	float sam_x1 = (new_position.x - (hw * 0.25));
-	float sam_x2 = (new_position.x + (hw * 0.25));
-	float sam_y1 = new_position.y - (hh * 0.75);
-	float sam_y2 = new_position.y + (hh * 0.5);
-
-	// Grab wall's edges
-	float wall_x1 = wall.get_left_edge();
-	float wall_x2 = wall.get_right_edge();
-	float wall_y1 = wall.get_top_edge();
-	float wall_y2 = wall.get_bottom_edge();
-
-	// Collision case 1: top right corner will be inside the wall
-	if (sam_x2 >= wall_x1 && sam_x2 <= wall_x2 &&
-			sam_y1 >= wall_y1 && sam_y1 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 2: top left corner will be inside the wall
-	if (sam_x1 >= wall_x1 && sam_x1 <= wall_x2 &&
-			sam_y1 >= wall_y1 && sam_y1 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 3: bottom right corner will be inside the wall
-	if (sam_x2 >= wall_x1 && sam_x2 <= wall_x2 &&
-			sam_y2 >= wall_y1 && sam_y2 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 4: bottom left corner will be inside the wall
-	if (sam_x1 >= wall_x1 && sam_x1 <= wall_x2 &&
-			sam_y2 >= wall_y1 && sam_y2 <= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 5: prevent fat sam from going through thin wall from the bottom
-	if (sam_x1 <= wall_x1 && sam_x2 >= wall_x2 &&
-			sam_y1 <= wall_y2 && sam_y2 >= wall_y2)
-	{
-		return true;
-	}
-
-	// Collision case 6: prevent fat sam from going through thin wall from the top
-	if (sam_x1 <= wall_x1 && sam_x2 >= wall_x2 &&
-			sam_y2 >= wall_y1 && sam_y1 <= wall_y1)
-	{
-		return true;
-	}
-
-	// Collision case 7: prevent tall sam from going through short wall from the left
-	if (sam_y1 <= wall_y1 && sam_y2 >= wall_y2 &&
-			sam_x2 >= wall_x1 && sam_x1 <= wall_x1)
-	{
-		return true;
-	}
-
-	// Collision case 8: prevent tall sam from going through short wall from the right
-	if (sam_y1 <= wall_y1 && sam_y2 >= wall_y2 &&
-			sam_x1 <= wall_x2 && sam_x2 >= wall_x2)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-// Return true if new position will collide with the screen's edges, false otherwise
-bool Sam::collides_with_screen_edge(vec2 new_position, vec2 screen)
-{
-	float hw = get_half_width();
-	float hh = get_half_height();
-
-	// Grab sam's edges
-	// (Note: we don't want the edges of the texture but rather the edges of the actual sprite)
-	float sam_x1 = (new_position.x - (hw * 0.6));
-	float sam_x2 = (new_position.x + (hw * 0.6));
-	float sam_y1 = new_position.y - (hh * 1.2);
-	float sam_y2 = new_position.y + (hh);
-
-	return (sam_x2 >= screen.x || sam_x1 <= 0 || sam_y1 <= 0 || sam_y2 >= screen.y);
-}
-
-float Sam::get_half_width()const
-{
-	return (m_scale.x) * (sam_texture.width / 2);
-}
-
-float Sam::get_half_height()const
-{
-	return (m_scale.y) * (sam_texture.height / 2);
-}
 
 vec2 Sam::get_position()const
 {
@@ -341,6 +230,11 @@ void Sam::kill()
 	m_is_alive = false;
 }
 
+vec2 Sam::get_scale()
+{
+	return m_scale;
+}
+
 
 void Sam::interact_in_front(std::vector<Closet> closets) {
 	// Check if we're already hidden, if so, unhide:
@@ -356,7 +250,7 @@ void Sam::interact_in_front(std::vector<Closet> closets) {
 
 	if (true)
 	{ // interact with the right
-		position_to_check = { m_position.x + get_half_width(), m_position.y };
+		position_to_check = { m_position.x + ((m_scale.x) * (sam_texture.width / 2)), m_position.y };
 	}
 
 	for (auto& closet : closets)
