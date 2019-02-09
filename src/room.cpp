@@ -1,5 +1,6 @@
 #include "room.hpp"
 #include "constants.hpp"
+#include <iostream>
 
 // Draw all room entities
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
@@ -13,8 +14,12 @@ void Room::draw(const mat3& projection)
 	for (auto& interactable : m_closets)
 		interactable.draw(projection);
 
+	// Draw doors
+	for (auto& door : m_doors)
+		door.draw(projection);
+
 	// Drawing Sam
-	m_sam.draw(projection);
+	m_sam->draw(projection);
 
 	// Drawing enemies
 	for (auto& enemy : m_enemies) {
@@ -46,42 +51,46 @@ void Room::on_key(int key, int action, int mod)
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_sam.direction *= LEFT;
+			m_sam->direction *= LEFT;
+			m_sam->direction_facing = LEFT;
 			break;
 		case GLFW_KEY_D:
-			m_sam.direction *= RIGHT;
+			m_sam->direction *= RIGHT;
+			m_sam->direction_facing = RIGHT;
 			break;
 		case GLFW_KEY_S:
-			m_sam.direction *= DOWN;
+			m_sam->direction *= DOWN;
+			m_sam->direction_facing = DOWN;
 			break;
 		case GLFW_KEY_W:
-			m_sam.direction *= UP;
+			m_sam->direction *= UP;
+			m_sam->direction_facing = UP;
+			break;
+		case GLFW_KEY_E:
+			m_sam->interact_in_front(m_closets);
 			break;
 		default:
 			break;
 		}
 	}
 
-	if (action == GLFW_RELEASE)
+	if (action == GLFW_RELEASE && m_sam->direction != NO_DIRECTION)
 	{
 		switch (key)
 		{
 		case GLFW_KEY_A:
-			m_sam.direction /= LEFT;
+			m_sam->direction /= LEFT;
 			break;
 		case GLFW_KEY_D:
-			m_sam.direction /= RIGHT;
+			m_sam->direction /= RIGHT;
 			break;
 		case GLFW_KEY_S:
-			m_sam.direction /= DOWN;
+			m_sam->direction /= DOWN;
 			break;
 		case GLFW_KEY_W:
-			m_sam.direction /= UP;
+			m_sam->direction /= UP;
 			break;
 
-		case GLFW_KEY_E:
-			m_sam.interact_in_front(m_closets);
-			break;
 		default:
 			break;
 		}
@@ -90,7 +99,12 @@ void Room::on_key(int key, int action, int mod)
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
 	{
-		m_sam.destroy();
-		m_sam.init();
+		m_sam->destroy();
+		m_sam->init();
 	}
+}
+
+bool Room::is_initialized()
+{
+	return m_is_initialized;
 }

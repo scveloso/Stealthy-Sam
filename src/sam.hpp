@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 #include "closet.hpp"
+#include "wall.hpp"
+#include "door.hpp"
 
 // stlib
 #include <vector>
@@ -22,13 +24,18 @@ public:
 
 	// Update Sam's position based on direction
 	// ms represents the number of milliseconds elapsed from the previous update() call
-	void update(float ms, std::vector<Wall> m_walls, vec2 screen);
+	int update(float ms, std::vector<Wall> m_walls, vec2 screen, std::vector<Door> doors);
 
 	// Renders Sam
 	void draw(const mat3& projection)override;
 
+	bool collides_with_door(vec2 new_position, const Door& door);
+	int is_entering_door(vec2 new_position, std::vector<Door> doors, vec2 screen);
 	// Returns the current Sam position
 	vec2 get_position()const;
+
+	// Set Sam's new position
+	void set_position(vec2 new_position);
 
 	// Moves the Sam's position by the specified offset
 	void move(vec2 off);
@@ -45,10 +52,13 @@ public:
 	void should_move(int direction, bool should);
 
 	vec2 get_scale();
+	float get_half_width()const;
+	float get_half_height()const;
 
 	void interact_in_front(std::vector<Closet> closets);
 
 	int direction;
+	int direction_facing;
 
 private:
 	bool m_is_alive; // True if the Sam is alive

@@ -45,6 +45,7 @@ set(SOURCE_FILES
         src/missile.cpp
         src/wall.cpp
         src/closet.cpp
+        src/door.cpp
 		src/enemy.cpp
 		src/collision.cpp
 
@@ -58,6 +59,7 @@ set(SOURCE_FILES
         src/roomtwo.hpp
         src/wall.hpp
         src/closet.hpp
+        src/door.hpp
 		src/enemy.hpp
 		src/collision.hpp
 	)

@@ -2,7 +2,6 @@
 #include "sam.hpp"
 
 // internal
-#include "wall.hpp"
 #include "constants.hpp"
 #include "collision.hpp"
 
@@ -28,9 +27,6 @@ bool Sam::init()
 	}
 
 	// The position corresponds to the center of the texture
-	//float wr = sam_texture.width * 7.f;
-	//float hr = sam_texture.height * 7.f;
-
 	float wr = sam_texture.width * 0.5;
 	float hr = sam_texture.height * 0.5;
 
@@ -97,10 +93,13 @@ void Sam::destroy()
 }
 
 // Called on each frame by World::update()
-void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
+// Returns an update action from update_action.hpp
+int Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen, std::vector<Door> doors)
 {
+	int updateAction = NO_ACTION;
 	const float SAM_SPEED = 200.f;
 	float step = SAM_SPEED * (ms / 1000);
+
 	if (m_is_alive && !m_is_hidden)
 	{
 		vec2 new_position = {m_position.x, m_position.y};
@@ -148,11 +147,109 @@ void Sam::update(float ms, std::vector<Wall> m_walls, vec2 screen)
 			sam_texture.load_from_file(sam_textures_path("Run_02.png"));
 		}
 
-        m_position = new_position;
+    m_position = new_position;
 
+		// Check if Sam entered a door and which door
+		updateAction = is_entering_door(new_position, doors, screen);
 	}
+
+	return updateAction;
 }
 
+
+// If door is being entered, return the action to be executed
+// Otherwise, return NO_ACTION
+int Sam::is_entering_door(vec2 new_position, std::vector<Door> doors, vec2 screen) {
+	auto door_it = doors.begin();
+	while (door_it != doors.end())
+	{
+			if (collides_with_door(new_position, *door_it)) // && collides_with_screen_edge(new_position, screen))
+			{
+					return door_it->get_update_action();
+			}
+			else
+					++door_it;
+	}
+	return NO_ACTION;
+}
+
+// Return true if new position will collide with a door, false otherwise
+bool Sam::collides_with_door(vec2 new_position, const Door& door)
+{
+	float hw = get_half_width();
+	float hh = get_half_height();
+
+	// Grab sam's edges
+	// (Note: we don't want the edges of the texture but rather the edges of the actual sprite)
+	float sam_x1 = (new_position.x - (hw * 0.25));
+	float sam_x2 = (new_position.x + (hw * 0.25));
+	float sam_y1 = new_position.y - (hh * 0.75);
+	float sam_y2 = new_position.y + (hh * 0.5);
+
+	// Grab wall's edges
+	float door_x1 = door.get_left_edge();
+	float door_x2 = door.get_right_edge();
+	float door_y1 = door.get_top_edge();
+	float door_y2 = door.get_bottom_edge();
+
+	// Collision case 1: top right corner will be inside the door
+	if (sam_x2 >= door_x1 && sam_x2 <= door_x2 &&
+		sam_y1 >= door_y1 && sam_y1 <= door_y2)
+	{
+		return true;
+	}
+
+	// Collision case 2: top left corner will be inside the door
+	if (sam_x1 >= door_x1 && sam_x1 <= door_x2 &&
+		sam_y1 >= door_y1 && sam_y1 <= door_y2)
+	{
+		return true;
+	}
+
+	// Collision case 3: bottom right corner will be inside the door
+	if (sam_x2 >= door_x1 && sam_x2 <= door_x2 &&
+		sam_y2 >= door_y1 && sam_y2 <= door_y2)
+	{
+		return true;
+	}
+
+	// Collision case 4: bottom left corner will be inside the door
+	if (sam_x1 >= door_x1 && sam_x1 <= door_x2 &&
+		sam_y2 >= door_y1 && sam_y2 <= door_y2)
+	{
+		return true;
+	}
+
+	// Collision case 5: prevent fat sam from going through thin door from the bottom
+	if (sam_x1 <= door_x1 && sam_x2 >= door_x2 &&
+		sam_y1 <= door_y2 && sam_y2 >= door_y2)
+	{
+		return true;
+	}
+
+	// Collision case 6: prevent fat sam from going through thin door from the top
+	if (sam_x1 <= door_x1 && sam_x2 >= door_x2 &&
+		sam_y2 >= door_y1 && sam_y1 <= door_y1)
+	{
+		return true;
+	}
+
+	// Collision case 7: prevent tall sam from going through short door from the left
+	if (sam_y1 <= door_y1 && sam_y2 >= door_y2 &&
+		sam_x2 >= door_x1 && sam_x1 <= door_x1)
+	{
+		return true;
+	}
+
+	// Collision case 8: prevent tall sam from going through short door from the right
+	if (sam_y1 <= door_y1 && sam_y2 >= door_y2 &&
+		sam_x1 <= door_x2 && sam_x2 >= door_x2)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 void Sam::draw(const mat3& projection)
 {
@@ -203,10 +300,24 @@ void Sam::draw(const mat3& projection)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
+float Sam::get_half_width()const
+{
+	return (m_scale.x) * (sam_texture.width / 2);
+}
+
+float Sam::get_half_height()const
+{
+	return (m_scale.y) * (sam_texture.height / 2);
+}
 
 vec2 Sam::get_position()const
 {
 	return m_position;
+}
+
+void Sam::set_position(vec2 new_position)
+{
+	m_position = new_position;
 }
 
 void Sam::move(vec2 off)
@@ -236,7 +347,8 @@ vec2 Sam::get_scale()
 }
 
 
-void Sam::interact_in_front(std::vector<Closet> closets) {
+void Sam::interact_in_front(std::vector<Closet> closets)
+{
 	// Check if we're already hidden, if so, unhide:
 	if (m_is_hidden) {
 		m_position.x = m_previous_location.x;
@@ -251,19 +363,33 @@ void Sam::interact_in_front(std::vector<Closet> closets) {
 	if (true)
 	{ // interact with the right
 		position_to_check = { m_position.x + ((m_scale.x) * (sam_texture.width / 2)), m_position.y };
-	}
+		switch (direction_facing) {
+		case LEFT:
+			position_to_check = { m_position.x - get_half_width(), m_position.y };
+			break;
+		case RIGHT:
+			position_to_check = { m_position.x + get_half_width(), m_position.y };
+			break;
+		case DOWN:
+			position_to_check = { m_position.x, m_position.y + get_half_width() };
+			break;
+		case UP:
+			position_to_check = { m_position.x, m_position.y - get_half_width() };
+			break;
+		}
 
-	for (auto& closet : closets)
-	{
-		bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
-
-		if (collision)
+		for (auto& closet : closets)
 		{
-			// Store our current position to restore later and put us off the map
-			m_previous_location = { m_position.x, m_position.y };
-			m_is_hidden = true;
-			m_position.x = 10000;
-			m_position.y = 10000;
+			bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
+			if (collision)
+			{
+				std::cout << "Closet entered" << std::endl;
+				// Store our current position to restore later and put us off the map
+				m_previous_location = { m_position.x, m_position.y };
+				m_is_hidden = true;
+				m_position.x = 10000;
+				m_position.y = 10000;
+			}
 		}
 	}
 }
