@@ -453,20 +453,26 @@ void Sam::interact_in_front(std::vector<Closet> closets) {
 		return;
 	}
 
-	std::cout << "Interacted in front" << std::endl;
-
 	// Right now assume that we're interacting with the right:
 	vec2 position_to_check;
-
-	if (true)
-	{ // interact with the right
-		position_to_check = { m_position.x + get_half_width(), m_position.y };
+	switch (direction_facing) {
+	    case LEFT:
+	        position_to_check = { m_position.x - get_half_width(), m_position.y };
+	        break;
+        case RIGHT:
+            position_to_check = { m_position.x + get_half_width(), m_position.y };
+            break;
+        case DOWN:
+            position_to_check = { m_position.x, m_position.y + get_half_width() };
+            break;
+        case UP:
+            position_to_check = { m_position.x, m_position.y - get_half_width() };
+            break;
 	}
 
 	for (auto& closet : closets)
 	{
 		bool collision = collides_with(position_to_check, m_scale, closet.get_position(), closet.get_bounding_box());
-
 		if (collision)
 		{
 			std::cout << "Closet entered" << std::endl;
