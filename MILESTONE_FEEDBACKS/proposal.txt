@@ -1,0 +1,12 @@
+Team 5 GRADE 80
+Grader Edoardo
+
+-5 The core physics requirement is not satisfied
+-5 Unclear/undeveloped sentences: Abrupt end to movement/2D skeletal animations
+-5 Lack of details and content in the advanced technical elements
+-5 Development plan is too generic
+
+The features to be implemented in the game are in line with the expectations and requirements, but the proposal itself could have benefit from more in-depth details and examples to help up 
+In the core technical features, what you are describing is the lack of physic-based controls, we are not sure what your plans are for this technical requirement.
+There also seems to be some overlap between the Geometry and Physics components of the project, they both mention collision detection and inverse square falloff would be more appropriate as a rendering feature (~ softer shadows).
+The development plan is also scarce, the subdivision should have been fine-grained enough to get an idea of what each member could have worked on during each week (without necessarily have explicit assignments).
