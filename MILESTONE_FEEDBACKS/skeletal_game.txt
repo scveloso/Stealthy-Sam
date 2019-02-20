@@ -1,0 +1,15 @@
+Team 5
+
+
+Grade: 70
+Creative:
++5 Player can interact with the closet.
+
+Issues:
+-5 Drawing order: the zombies are always rendered on top of the player regardless of their relative positions. For instance, when the player is closer to the camera, the zombie blocks the top part of the player, generating an incorrect illusion of depth.
+-5 Zombie facing direction can be wrong if the game runs long enough, which generates the artifact of zombie moving backward.
+
+Feedback:
+Please fix bugs. Also, the player in this version is always facing right while he should face the direction of the previous motion. E.g. after walking to the left, the player should keep facing left when the player stops.
+Consider how you can fulfill the basic physics requirement. The current physics (not using acceleration) is too simple.
+It seems that the work distribution is relatively even. 
