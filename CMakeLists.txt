@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(436d)
 
-## added to make debugging symbols appear
-set(CMAKE_BUILD_TYPE Debug)
-
 # Set c++11
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
@@ -34,34 +31,41 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-        src/a1.cpp
-        src/common.cpp
-        src/sam.cpp
-        src/background.cpp
-        src/world.cpp
-        src/room.cpp
-        src/roomone.cpp
-        src/roomtwo.cpp
-        src/missile.cpp
-        src/wall.cpp
-        src/closet.cpp
-        src/door.cpp
-		src/enemy.cpp
-		src/collision.cpp
+	src/main.cpp
+	src/common.cpp
+	src/fish.cpp
+	src/salmon.cpp
+	src/turtle.cpp
+	src/water.cpp
+	src/world.cpp
+	src/ObjectManager.cpp
+	src/DrawSystem.cpp
+	src/InputSystem.cpp
+	src/CollisionSystem.cpp
 
-        src/project_path.hpp
-        src/common.hpp
-        src/sam.hpp
-        src/background.hpp
-        src/world.hpp
-        src/room.hpp
-        src/roomone.hpp
-        src/roomtwo.hpp
-        src/wall.hpp
-        src/closet.hpp
-        src/door.hpp
-		src/enemy.hpp
-		src/collision.hpp
+    src/project_path.hpp
+	src/common.hpp
+	src/fish.hpp
+	src/salmon.hpp
+	src/turtle.hpp
+	src/water.hpp
+	src/world.hpp
+	src/ObjectManager.hpp
+	src/Entity.hpp
+	src/DrawSystem.hpp
+	src/InputSystem.hpp
+	src/CollisionSystem.hpp
+
+	src/Components/Component.hpp
+	src/Components/DrawCmp.hpp
+	src/Components/DrawCmp.cpp
+	src/Components/TransformCmp.hpp
+	src/Components/TransformCmp.cpp
+	src/Components/InputCmp.hpp
+	src/Components/InputCmp.cpp
+	src/Components/CollisionCmp.cpp
+	src/Components/CollisionCmp.hpp
+
 	)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -90,12 +94,12 @@ if (IS_OS_LINUX OR IS_OS_MAC)
     # Try to find packages rather than to use the precompiled ones
     # Since we're on OSX or Linux, we can just use pkgconfig.
     find_package(PkgConfig REQUIRED)
-
+    
     pkg_search_module(GLFW REQURIED glfw3)
 
     pkg_search_module(SDL2 REQURIED sdl2)
     pkg_search_module(SDL2MIXER REQURIED SDL2_mixer)
-
+    
     # Link Frameworks on OSX
     if (IS_OS_MAC)
        find_library(COCOA_LIBRARY Cocoa)
@@ -106,10 +110,10 @@ elseif (IS_OS_WINDOWS)
 # https://stackoverflow.com/questions/17126860/cmake-link-precompiled-library-depending-on-os-and-architecture
     set(GLFW_FOUND TRUE)
     set(SDL2_FOUND TRUE)
-
+    
     set(GLFW_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/include")
     set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/include/SDL")
-
+    
     if (${CMAKE_SIZEOF_VOID_P} MATCHES "8")
         set(GLFW_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/lib/glfw3dll-x64.lib")
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/lib/SDL2-x64.lib")
@@ -122,7 +126,7 @@ elseif (IS_OS_WINDOWS)
         set(GLFW_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/lib/glfw3dll-x86.lib")
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/lib/SDL2-x86.lib")
 	set(SDL2MIXER_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/lib/SDL2_mixer-x86.lib")
-
+	
 	set(GLFW_DLL "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/lib/glfw3-x86.dll")
 	set(SDL_DLL "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/lib/SDL2-x86.dll")
 	set(SDLMIXER_DLL "${CMAKE_CURRENT_SOURCE_DIR}/ext/sdl/lib/SDL2_mixer-x86.dll")

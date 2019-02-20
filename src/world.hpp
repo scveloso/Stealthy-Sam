@@ -2,15 +2,10 @@
 
 // internal
 #include "common.hpp"
-#include "sam.hpp"
-#include "background.hpp"
-#include "missile.hpp"
-#include "wall.hpp"
-#include "enemy.hpp"
-#include "closet.hpp"
-#include "room.hpp"
-#include "roomone.hpp"
-#include "roomtwo.hpp"
+#include "salmon.hpp"
+#include "turtle.hpp"
+#include "fish.hpp"
+#include "water.hpp"
 
 // stlib
 #include <vector>
@@ -20,7 +15,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-// Container for all our entities and game logic. Individual rendering / update is
+// Container for all our entities and game logic. Individual rendering / update is 
 // deferred to the relative update() methods
 class World
 {
@@ -44,41 +39,45 @@ public:
 	bool is_over()const;
 
 private:
+	// Generates a new turtle
+	bool spawn_turtle();
 
-	bool spawn_enemy(float posx, float posy, float patrol_x, float patrol_y);
+	// Generates a new fish
+	bool spawn_fish();
+
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
-protected:
+private:
 	// Window handle
 	GLFWwindow* m_window;
 
 	// Screen texture
-	// The draw loop first renders to this texture, then it is used for the background shader
+	// The draw loop first renders to this texture, then it is used for the water shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	// Background effect
-	Background m_background;
+	static Texture turtle;
+
+	// Water effect
+	Water m_water;
+
+	// Number of fish eaten by the salmon, displayed in the window title
+	unsigned int m_points;
 
 	// Game entities
-	Sam m_sam;
-	Room *m_room; // the current room
+	Salmon m_salmon;
+	std::vector<Turtle> m_turtles;
+	std::vector<Fish> m_fish;
 
-	RoomOne m_roomOne; // the first room
-	RoomTwo m_roomTwo; // the second room
-	// TODO: Finish implementing the second, third and fourth rooms
-
-	std::vector<Enemy> m_enemies;
-	std::vector<Wall> m_walls;
-	std::vector<Closet> m_closets;
-
-	vec2 m_screen;
-
+	float m_current_speed;
+	float m_next_turtle_spawn;
+	float m_next_fish_spawn;
+	
 	Mix_Music* m_background_music;
-	Mix_Chunk* m_sam_dead_sound;
-	Mix_Chunk* m_sam_eat_sound;
+	Mix_Chunk* m_salmon_dead_sound;
+	Mix_Chunk* m_salmon_eat_sound;
 
 	// C++ rng
 	std::default_random_engine m_rng;

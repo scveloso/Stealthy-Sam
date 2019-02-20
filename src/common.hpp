@@ -17,7 +17,6 @@
 
 #define data_path PROJECT_SOURCE_DIR "./data"
 #define textures_path(name)  data_path "/textures/" name
-#define sam_textures_path(name) data_path "/textures/CartoonDetective/Run/" name
 #define audio_path(name) data_path  "/audio/" name
 #define mesh_path(name) data_path  "/meshes/" name
 
@@ -102,7 +101,7 @@ struct Renderable
 
 	// projection contains the orthographic projection matrix. As every Renderable::draw()
 	// renders itself it needs it to correctly bind it to its shader.
-	virtual void draw(const mat3& projection) = 0;
+	void draw(const mat3& projection);
 
 	// gl Immediate mode equivalent, see the Rendering and Transformations section in the
 	// specification pdf
@@ -112,5 +111,3 @@ struct Renderable
 	void transform_translate(vec2 pos);
 	void transform_end();
 };
-
-bool collides_with(vec2 obj1, vec2 obj1_scale, vec2 obj2, vec2 obj2_bounding);

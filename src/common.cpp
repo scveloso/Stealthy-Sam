@@ -7,7 +7,6 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include <algorithm>
 
 void gl_flush_errors()
 {
@@ -282,18 +281,4 @@ void Renderable::transform_translate(vec2 offset)
 void Renderable::transform_end()
 {
 	//
-}
-
-bool collides_with(vec2 obj1, vec2 obj1_scale, vec2 obj2, vec2 obj2_bounding)
-{
-	float dx = obj1.x - obj2.x;
-	float dy = obj1.y - obj2.y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(obj2_bounding.x, obj2_bounding.y);
-	float my_r = std::max(obj1_scale.x, obj1_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
 }
