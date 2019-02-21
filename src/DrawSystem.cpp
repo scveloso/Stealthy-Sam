@@ -18,8 +18,8 @@ bool DrawSystem::setup()
 		transformComponent.setHeight(entity, draw->texture.height);
 		transformComponent.setWidth(entity, draw->texture.width);
 
-		printf("HEIGHT: %d\n", draw->texture.height);
-		printf("WIDTH: %d\n", draw->texture.width);
+		//printf("HEIGHT: %d\n", draw->texture.height);
+		//printf("WIDTH: %d\n", draw->texture.width);
 
 		//printf("SETUP ID: %d\n", entity.id);
 
@@ -67,6 +67,7 @@ bool DrawSystem::setup()
 
 	return true;
 }
+
 void DrawSystem::update(const mat3 projection)
 {
 		//printf("START DRAWING\n");

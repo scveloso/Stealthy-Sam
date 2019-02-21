@@ -5,7 +5,7 @@
 #include <vector>
 
 
-class Component
+class Cmp
 {
 public:
 	void add(Entity *entity);

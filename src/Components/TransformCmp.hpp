@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.hpp"
 
-class TransformCmp : public Component
+class TransformCmp : public Cmp
 {
 public:
 	void add(Entity *entity, vec2 m_position, vec2 m_scale, float m_rotation);

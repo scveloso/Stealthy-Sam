@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.hpp"
 
-class CollisionCmp : public Component
+class CollisionCmp : public Cmp
 {
 public:
 	void add(Entity *entity);
