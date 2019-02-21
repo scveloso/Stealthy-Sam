@@ -4,8 +4,8 @@
 class CollisionCmp : public Component
 {
 public:
-	void add(Entity entity);
-	std::vector<std::pair<Entity, Collision*>> getmap();
+	void add(Entity *entity);
+	std::vector<std::pair<Entity*, Collision*>> getmap();
 private:
-	std::vector<std::pair<Entity, Collision*>> collision_list;
+	std::vector<std::pair<Entity*, Collision*>> collision_list;
 };

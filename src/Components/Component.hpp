@@ -8,7 +8,7 @@
 class Component
 {
 public:
-	void add(Entity entity);
+	void add(Entity *entity);
 };
 
 struct Draw : public Renderable

@@ -12,7 +12,7 @@ bool DrawSystem::setup()
 {
 	for (auto& it : drawComponent.getmap())
 	{
-		Entity entity = it.first;
+		Entity *entity = it.first;
 		Draw *draw = it.second;
 
 		transformComponent.setHeight(entity, draw->texture.height);
@@ -72,7 +72,7 @@ void DrawSystem::update(const mat3 projection)
 		//printf("START DRAWING\n");
 		for (auto& it : drawComponent.getmap())
 		{
-			Entity entity = it.first;
+			Entity *entity = it.first;
 			Draw *draw = it.second;
 
 			//printf("Drawing ID: %d\n", entity.id);

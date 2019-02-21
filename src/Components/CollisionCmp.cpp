@@ -1,6 +1,6 @@
 #include "CollisionCmp.hpp"
 
-void CollisionCmp::add(Entity entity) {
+void CollisionCmp::add(Entity *entity) {
 
 	Collision *collision = new Collision();
 	collision->bottom	= false;
@@ -10,7 +10,7 @@ void CollisionCmp::add(Entity entity) {
 	collision_list.emplace_back(entity, collision);
 }
 
-std::vector<std::pair<Entity, Collision*>> CollisionCmp::getmap()
+std::vector<std::pair<Entity*, Collision*>> CollisionCmp::getmap()
 {
 	return collision_list;
 }

@@ -138,8 +138,9 @@ bool World::init(vec2 screen)
 	CollisionCmp cc;
 
 	// Entity ids are manually made
-	Entity ent = om.makeEntity(0);
-	Entity ent1 = om.makeEntity(1);
+	Entity *ent = om.makeEntity("Yellow Square", 1);
+	Entity *ent1 = om.makeEntity("Brick Wall", 1);
+	Entity *ent2 = om.makeEntity("Second Brick Wall", 1);
 
 	Texture turtle;
 
@@ -152,6 +153,10 @@ bool World::init(vec2 screen)
 	tc.add(ent1, { 300,300 }, { 0.5, 0.5 }, 0.0);
 	dc.add(ent1, textures_path("wall.jpg"));
 	cc.add(ent1);
+
+	tc.add(ent2, { 600,600 }, { 0.5, 0.5 }, 0.0);
+	dc.add(ent2, textures_path("wall.jpg"));
+
 	
 	
 	ds = new DrawSystem(om, dc, tc);
@@ -273,6 +278,7 @@ void World::draw()
 bool World::is_over()const
 {
 	return glfwWindowShouldClose(m_window);
+
 }
 
 // Creates a new turtle and if successfull adds it to the list of turtles

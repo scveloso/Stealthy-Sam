@@ -6,10 +6,10 @@ class ObjectManager
 {
 public:
 	ObjectManager();
-	Entity makeEntity(int id);
-	std::vector<Entity> getEntities();
+	Entity* makeEntity(char* label, int gameState);
+	std::vector<Entity*> getEntities();
 
 private:
-	std::vector<Entity> entities;
+	std::vector<Entity*> entities;
 	int num_of_entities;
 };

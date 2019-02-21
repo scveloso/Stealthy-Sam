@@ -2,18 +2,20 @@
 
 ObjectManager::ObjectManager()
 {
-
+	num_of_entities = 0;
 }
 
-Entity ObjectManager::makeEntity(int id) {
-	//Manually making ids for now
-	Entity entity;
-	entity.id = id;
+Entity* ObjectManager::makeEntity(char* label, int gameState) {
+	Entity *entity = new Entity();
+	entity->id = num_of_entities;
+	entity->label = label;
+	entity->gameState = gameState;
 	entities.emplace_back(entity);
+	num_of_entities++;
 	return entity;
 }
 
-std::vector<Entity> ObjectManager::getEntities()
+std::vector<Entity*> ObjectManager::getEntities()
 {
 	return entities;
 }

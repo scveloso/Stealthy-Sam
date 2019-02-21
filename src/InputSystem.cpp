@@ -26,7 +26,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 			switch (key)
 			{
 			case GLFW_KEY_A:
-				if (!collisionComponent.getmap().at(it.id).second->left) {
+				if (!collisionComponent.getmap().at(it->id).second->left) {
 					transformComponent.setDirection(it, LEFT);
 				}
 				break;

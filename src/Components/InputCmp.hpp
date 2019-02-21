@@ -4,9 +4,9 @@
 class InputCmp : public Component
 {
 public:
-	void add(Entity entity);
-	std::vector<Entity> getmap();
+	void add(Entity *entity);
+	std::vector<Entity*> getmap();
 private:
-	std::vector<Entity> input_list;
+	std::vector<Entity*> input_list;
 
 };
