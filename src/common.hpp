@@ -19,6 +19,7 @@
 #define textures_path(name)  data_path "/textures/" name
 #define audio_path(name) data_path  "/audio/" name
 #define mesh_path(name) data_path  "/meshes/" name
+#define map_path(name) data_path "/maps/" name
 
 // Not much math is needed and there are already way too many libraries linked (:
 // If you want to do some overloads..
@@ -61,7 +62,7 @@ struct Texture
 	GLuint depth_render_buffer_id;
 	int width;
 	int height;
-	
+
 	// Loads texture from file specified by path
 	bool load_from_file(const char* path);
 	// Screen texture
@@ -70,7 +71,7 @@ struct Texture
 };
 
 // A Mesh is a collection of a VertexBuffer and an IndexBuffer. A VAO
-// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and 
+// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and
 // an Index Buffer
 struct Mesh
 {

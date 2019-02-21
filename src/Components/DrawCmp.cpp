@@ -14,7 +14,7 @@ void DrawCmp::add(Entity *entity, const char* file)
 
 	//draw->texture = texture;
 
-	printf("LOADED TEXTURE %d\n", draw->texture.height);
+	//printf("LOADED TEXTURE %d\n", draw->texture.height);
 
 	draw_list.emplace_back(std::make_pair(entity, draw));
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Entity.hpp"
-#include "common.hpp"
+#include "../Entity.hpp"
+#include "../common.hpp"
 #include <vector>
 
 
-class Component
+class Cmp
 {
 public:
 	void add(Entity *entity);

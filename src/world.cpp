@@ -1,18 +1,18 @@
 // Header
 #include "world.hpp"
 #include "DrawSystem.hpp"
-#include "Components/DrawCmp.hpp"
-#include "Components/TransformCmp.hpp"
-#include "ObjectManager.hpp"
-#include "Components/InputCmp.hpp"
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
+#include "TileConstants.hpp"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 // stlib
 #include <string.h>
 #include <cassert>
+#include <string>
 #include <sstream>
-
+#include <iostream>
 
 DrawSystem* ds;
 InputSystem* is;
@@ -35,7 +35,7 @@ namespace
 	}
 }
 
-World::World() : 
+World::World() :
 	m_points(0),
 	m_next_turtle_spawn(0.f),
 	m_next_fish_spawn(0.f)
@@ -126,45 +126,122 @@ bool World::init(vec2 screen)
 
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
-	
+
 	fprintf(stderr, "Loaded music\n");
 
 	m_current_speed = 1.f;
 
+	Texture turtle;
+
+	std::cout << "Screen.x: " << screen.x << std::endl;
+	std::cout << "Screen.y: " << screen.y << std::endl;
+
+
+	//textures_path needs to be sent this way (can't seem to make it work inside the function)
+	generateEntities(map_path("room_one.json"));
+
+	return m_salmon.init() && m_water.init() && ds->setup() && is->setup(m_window);
+}
+
+// Generate entities from a given path to a JSON map file
+void World::generateEntities(std::string room_path)
+{
+	// Components and Object Manager
 	ObjectManager om;
 	DrawCmp dc;
 	TransformCmp tc;
 	InputCmp ic;
 	CollisionCmp cc;
 
-	// Entity ids are manually made
-	Entity *ent = om.makeEntity("Yellow Square", 1);
-	Entity *ent1 = om.makeEntity("Brick Wall", 1);
-	Entity *ent2 = om.makeEntity("Second Brick Wall", 1);
+	int id = 0;
 
-	Texture turtle;
+	// Generate main player
+	Entity* playerEntity = om.makeEntity("Player", id);
+	id++;
+	tc.add(playerEntity, { 200.f, 150.f }, { 3.125f, 2.63f }, 0.0);
+	dc.add(playerEntity, textures_path("Dungeon/sam.png"));
+	ic.add(playerEntity);
+	cc.add(playerEntity);
 
-	//textures_path needs to be sent this way (can't seem to make it work inside the function)
-	tc.add(ent, { 600,200 }, { 0.2,0.2 }, 0.0);
-	dc.add(ent, textures_path("square.png"));
-	ic.add(ent);
-	cc.add(ent);
-	
-	tc.add(ent1, { 300,300 }, { 0.5, 0.5 }, 0.0);
-	dc.add(ent1, textures_path("wall.jpg"));
-	cc.add(ent1);
+	// Read JSON map file
+	std::ifstream data(room_path);
+	json map = json::parse(data);
+	json layers = map["layers"];
 
-	tc.add(ent2, { 600,600 }, { 0.5, 0.5 }, 0.0);
-	dc.add(ent2, textures_path("wall.jpg"));
+	// Go through layers
+	for (json::iterator layer_it = layers.begin(); layer_it != layers.end(); ++layer_it)
+	{
+		json tiles = (*layer_it)["data"];
 
-	
-	
+		float y = TILE_HEIGHT / 2;
+		float x = TILE_WIDTH / 2;
+
+		// Go through all tiles in this layer
+		for (json::iterator tile_it = tiles.begin(); tile_it != tiles.end(); ++tile_it)
+		{
+			if (x > SCREEN_WIDTH)
+			{
+				x = TILE_WIDTH / 2;
+				y += TILE_HEIGHT;
+			}
+
+			// Read tile value
+			int val = (*tile_it).get<int>();
+			val--; // For some weird reason, the values in JSON are one more than the ones on Tiled
+
+
+			Entity* entity;
+			if (val == WALL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/wall_mid.png"));
+				cc.add(entity);
+			}
+			else if (val == CLOSET)
+			{
+				entity = om.makeEntity("Closet", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/chest_closed.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR)
+			{
+				entity = om.makeEntity("Door", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == ENEMY)
+			{
+				entity = om.makeEntity("Enemy", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/enemy.png"));
+				cc.add(entity);
+			}
+
+			x += TILE_WIDTH;
+		}
+	}
+
+	// Proceed to initialize systems
+	initializeSystems(om, dc, tc, ic, cc);
+}
+
+// Set-up DrawSystem, InputSystem, CollisionSystem
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc)
+{
 	ds = new DrawSystem(om, dc, tc);
 	is = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
-
-	return m_salmon.init() && m_water.init() && ds->setup() && is->setup(m_window);
-
 }
 
 // Releases all the associated resources
@@ -247,7 +324,7 @@ void World::draw()
 		turtle.draw(projection_2D);
 	for (auto& fish : m_fish)
 		fish.draw(projection_2D);
-	
+
 	m_salmon.draw(projection_2D);
 
 	ds->update(projection_2D);
@@ -321,7 +398,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	{
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy(); 
+		m_salmon.destroy();
 		m_salmon.init();
 		m_turtles.clear();
 		m_fish.clear();
@@ -334,6 +411,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_current_speed -= 0.1f;
 	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
 		m_current_speed += 0.1f;
-	
+
 	m_current_speed = fmax(0.f, m_current_speed);
 }

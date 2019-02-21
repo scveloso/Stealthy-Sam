@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.hpp"
 
-class DrawCmp : public Component
+class DrawCmp : public Cmp
 {
 public:
 	void add(Entity *entity, const char* file);

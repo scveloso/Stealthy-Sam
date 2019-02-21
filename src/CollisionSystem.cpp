@@ -17,7 +17,7 @@ void CollisionSystem::update(float elapsed_ms)
 	Entity *entity = transformComponent.getmap().at(0).first;
 
 	//printf("update Collision System %s\n", entity->label);
-		
+
 	tr1 = transformComponent.getTransform(entity);
 
 		for (auto& it2 : collisionComponent.getmap())
@@ -35,7 +35,7 @@ void CollisionSystem::update(float elapsed_ms)
 }
 
 bool CollisionSystem::AABB(Entity *e1, Transform *tr1, Entity *e2, Transform *tr2) {
-	
+
 	float half_width_obj1 = (tr1->m_scale.x) * (tr1->width / 2);
 	float half_height_obj1 = (tr1->m_scale.y) * (tr1->height / 2);
 

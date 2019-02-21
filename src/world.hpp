@@ -6,10 +6,17 @@
 #include "turtle.hpp"
 #include "fish.hpp"
 #include "water.hpp"
+#include "Components/DrawCmp.hpp"
+#include "Components/TransformCmp.hpp"
+#include "Components/InputCmp.hpp"
+#include "Components/CollisionCmp.hpp"
+#include "ObjectManager.hpp"
+
 
 // stlib
 #include <vector>
 #include <random>
+#include <string>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -25,6 +32,12 @@ public:
 
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
+
+	// Generate entities from a given path to a JSON map file
+	void generateEntities(std::string room_path);
+
+	// Set-up DrawSystem, InputSystem, CollisionSystem
+	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc);
 
 	// Releases all associated resources
 	void destroy();

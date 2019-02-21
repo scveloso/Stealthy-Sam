@@ -2,4 +2,4 @@
 
 // Please don't change the content of this header
 
-#define PROJECT_SOURCE_DIR "C:/Users/Mah-dir Sheikh/Desktop/stealthy_sam/"
+#define PROJECT_SOURCE_DIR "/Users/sveloso/Documents/team05game_refactored/team05game/"
