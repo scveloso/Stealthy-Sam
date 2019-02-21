@@ -156,7 +156,7 @@ void World::generateEntities(std::string room_path)
 	int id = 0;
 
 	// Generate main player
-	Entity playerEntity = om.makeEntity(id);
+	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
 	tc.add(playerEntity, { 200.f, 150.f }, { 3.125f, 2.63f }, 0.0);
 	dc.add(playerEntity, textures_path("Dungeon/sam.png"));
@@ -190,10 +190,10 @@ void World::generateEntities(std::string room_path)
 			val--; // For some weird reason, the values in JSON are one more than the ones on Tiled
 
 
-			Entity entity;
+			Entity* entity;
 			if (val == WALL)
 			{
-				entity = om.makeEntity(id);
+				entity = om.makeEntity("Wall", id);
 				id++;
 
 				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -202,7 +202,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CLOSET)
 			{
-				entity = om.makeEntity(id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -211,7 +211,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR)
 			{
-				entity = om.makeEntity(id);
+				entity = om.makeEntity("Door", id);
 				id++;
 
 				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
@@ -220,7 +220,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == ENEMY)
 			{
-				entity = om.makeEntity(id);
+				entity = om.makeEntity("Enemy", id);
 				id++;
 
 				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
