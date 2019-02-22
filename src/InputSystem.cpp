@@ -36,9 +36,8 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
             {
                 switch (key) {
                     case GLFW_KEY_A:
-                        if (!collisionComponent.getmap()[it.first]->left) {
                             transformComponent.setDirection(entity, LEFT);
-                        std::cout << transformComponent.getDirection(entity) << std::endl;}
+                        std::cout << transformComponent.getDirection(entity) << std::endl;
                         didMove = true;
                         break;
                     case GLFW_KEY_D:
@@ -55,6 +54,15 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
                         break;
                     case GLFW_KEY_E:
                         // TODO: Implement interactables
+						if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true) {
+							if (transformComponent.getTransform(entity)->visible == false) {
+								transformComponent.getTransform(entity)->visible = true;
+								printf("visible");
+							}
+							else {
+								transformComponent.getTransform(entity)->visible = false;
+							}
+						}
                         didPressE = true;
                         break;
                     case GLFW_KEY_P:
@@ -149,6 +157,8 @@ void InputSystem::update(float elapsed_ms)
 			new_position.y = new_position.y - step;
 		}
 
-		transformComponent.setPosition(entity, new_position);
+		if (transformComponent.getTransform(entity)->visible == true) {
+			transformComponent.setPosition(entity, new_position);
+		}
 	}
 }

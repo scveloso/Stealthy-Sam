@@ -3,6 +3,7 @@
 #include "DrawSystem.hpp"
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
+#include "EnemySystem.hpp"
 #include "TileConstants.hpp"
 #include "UpdateAction.hpp"
 
@@ -18,6 +19,7 @@ using json = nlohmann::json;
 DrawSystem* ds;
 InputSystem* inputSys;
 CollisionSystem* cs;
+EnemySystem* es;
 
 // Same as static in c, local to compilation unit
 namespace
@@ -151,6 +153,7 @@ void World::generateEntities(std::string room_path)
 	TransformCmp transformCmp;
 	InputCmp inputCmp;
 	CollisionCmp cc;
+	EnemyCmp ec;
 
 	int id = 1;
 
@@ -205,7 +208,7 @@ void World::generateEntities(std::string room_path)
 				entity = om.getEntity(SAMS_GUID);
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				drawCmp.add(entity, sam_default_path("Run_01.png"));
+				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
 				inputCmp.add(entity);
 				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
@@ -275,6 +278,7 @@ void World::generateEntities(std::string room_path)
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
+				ec.add(entity, 100, 0);
 			}
 
 			x += TILE_WIDTH;
@@ -282,15 +286,17 @@ void World::generateEntities(std::string room_path)
 	}
 
 	// Proceed to initialize systems
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc);
+
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
 {
 	ds = new DrawSystem(om, dc, tc);
 	inputSys = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
+	es = new EnemySystem(om, cc, tc, ec);
 
 	ds->setup();
 	inputSys->setup(m_window);
@@ -302,6 +308,7 @@ void World::wipeSystems()
 	delete ds;
 	delete inputSys;
 	delete cs;
+	delete es;
 }
 
 // Releases all the associated resources
@@ -325,6 +332,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	inputSys->update(elapsed_ms);
+	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
 	vec2 s_position= ds->s_position;

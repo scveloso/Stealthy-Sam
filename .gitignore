@@ -10,3 +10,4 @@ src/*.gch
 src/project_path.hpp
 CppProperties.json
 *.cbp
+.vs/
