@@ -19,22 +19,19 @@ float circle(vec2 st, float radius){
 void main()
 {
   mat3 transform= mat3(
-    1.0, 0, 0,
-    0, -1.0, 0,
-    0, 0, 1.0
+    1.0, 0,    0,
+    0,  -1.0,  0,
+    0,   0,  1.0
     );
-	vec3 sp= transform* vec3(sam_position,1);
-	//vec2 sp=sam_position;
+	vec3 sp = transform* vec3(sam_position,1);
 	vec4 in_color = texture(screen_texture, uv.xy);
-  //vec3 fcolor = vec3(circle(sp, 0.9));
-	//color= vec4(fcolor, 1.0);
+
 	float d= (gl_FragCoord.x - sp.x)*(gl_FragCoord.x - sp.x)+(gl_FragCoord.y- sp.y)*(gl_FragCoord.y-sp.y);
-	if (d > (100*100)){
+
+	if (d > (100*100))
+	{
 		color= vec4(0,0,0,1);
-	}else{
+	} else {
 		color= (in_color);
-    //color= vec4(1,1,1,1);
 	}
-
-
 }
