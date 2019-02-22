@@ -237,7 +237,6 @@ void World::generateEntities(std::string room_path)
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_2_TO_3)
-<<<<<<< HEAD
 			{
 				entity = om.makeEntity("DoorRoom2To3", id);
 				id++;
@@ -248,18 +247,6 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR_ROOM_3_TO_2)
 			{
-=======
-			{
-				entity = om.makeEntity("DoorRoom2To3", id);
-				id++;
-
-				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/door.png"));
-				cc.add(entity);
-			}
-			else if (val == DOOR_ROOM_3_TO_2)
-			{
->>>>>>> 5bdb92444492a7c30ea43979882ca58936748a4c
 				entity = om.makeEntity("DoorRoom3To2", id);
 				id++;
 
