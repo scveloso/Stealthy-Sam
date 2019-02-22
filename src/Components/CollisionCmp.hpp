@@ -5,7 +5,7 @@ class CollisionCmp : public Cmp
 {
 public:
 	void add(Entity *entity);
-	std::vector<std::pair<Entity*, Collision*>> getmap();
+	std::unordered_map<int, Collision*> getmap();
 private:
-	std::vector<std::pair<Entity*, Collision*>> collision_list;
+	std::unordered_map<int, Collision*> collision_map;
 };

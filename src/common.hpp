@@ -115,3 +115,4 @@ struct Renderable
 	void transform_translate(vec2 pos);
 	void transform_end();
 };
+

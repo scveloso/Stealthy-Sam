@@ -3,6 +3,7 @@
 
 InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc)
 {
+    objectManager = om;
 	inputComponent = ic;
 	transformComponent = tc;
 	collisionComponent = cc;
@@ -20,38 +21,39 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
 	for (auto& it : inputComponent.getmap())
 	{
+	    Entity* entity = objectManager.getEntity(it.first);
 		if (action == GLFW_PRESS)
 		{
 			switch (key)
 			{
 			case GLFW_KEY_A:
-				if (!collisionComponent.getmap().at(it->id).second->left) {
-					transformComponent.setDirection(it, LEFT);
+				if (!collisionComponent.getmap()[it.first]->left) {
+					transformComponent.setDirection(entity, LEFT);
 				}
 				break;
 			case GLFW_KEY_D:
-				transformComponent.setDirection(it, RIGHT);
+				transformComponent.setDirection(entity, RIGHT);
 				break;
 			case GLFW_KEY_S:
-				transformComponent.setDirection(it, DOWN);
+				transformComponent.setDirection(entity, DOWN);
 				break;
 			case GLFW_KEY_W:
-				transformComponent.setDirection(it, UP);
+				transformComponent.setDirection(entity, UP);
 				break;
 			case GLFW_KEY_E:
 				// TODO: Implement interactables
 			case GLFW_KEY_P:
 				//print out current position
-				printf("X:%f , Y:%f \n", transformComponent.getTransform(it)->m_position.x, transformComponent.getTransform(it)->m_position.y);
+				printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x, transformComponent.getTransform(entity)->m_position.y);
 				break;
 			case GLFW_KEY_C:
 				//print out collision stuff
-				Transform *tr1 = transformComponent.getTransform(it);
+				Transform *tr1 = transformComponent.getTransform(entity);
 				vec2 size1 = { tr1->width*tr1->m_scale.x, tr1->height*tr1->m_scale.y };
 
 				printf("%f, %f, \n", tr1->width, tr1->height);
 
-				printf("SIZEX:%f , SIZEY:%f \n", transformComponent.getTransform(it)->m_position.x + size1.x, transformComponent.getTransform(it)->m_position.y + size1.y);
+				printf("SIZEX:%f , SIZEY:%f \n", transformComponent.getTransform(entity)->m_position.x + size1.x, transformComponent.getTransform(entity)->m_position.y + size1.y);
 				break;
 			}
 		}
@@ -61,16 +63,16 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 			switch (key)
 			{
 			case GLFW_KEY_A:
-				transformComponent.removeDirection(it, LEFT);
+				transformComponent.removeDirection(entity, LEFT);
 				break;
 			case GLFW_KEY_D:
-				transformComponent.removeDirection(it, RIGHT);
+				transformComponent.removeDirection(entity, RIGHT);
 				break;
 			case GLFW_KEY_S:
-				transformComponent.removeDirection(it, DOWN);
+				transformComponent.removeDirection(entity, DOWN);
 				break;
 			case GLFW_KEY_W:
-				transformComponent.removeDirection(it, UP);
+				transformComponent.removeDirection(entity, UP);
 				break;
 			default:
 				break;
@@ -86,8 +88,11 @@ void InputSystem::update(float elapsed_ms)
 
 	for (auto& it : inputComponent.getmap())
 	{
-		int direction = transformComponent.getTransform(it)->direction;
-		vec2 new_position = transformComponent.getTransform(it)->m_position;
+		Entity* entity = objectManager.getEntity(it.first);
+
+		int direction = transformComponent.getTransform(entity)->direction;
+
+		vec2 new_position = transformComponent.getTransform(entity)->m_position;
 
 		if (direction % LEFT == 0)
 		{
@@ -109,6 +114,6 @@ void InputSystem::update(float elapsed_ms)
 			new_position.y = new_position.y - step;
 		}
 
-		transformComponent.setPosition(it, new_position);
+		transformComponent.setPosition(entity, new_position);
 	}
 }

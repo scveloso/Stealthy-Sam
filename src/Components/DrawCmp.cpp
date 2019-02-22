@@ -12,19 +12,15 @@ void DrawCmp::add(Entity *entity, const char* file)
 		}
 	}
 
-	//draw->texture = texture;
-
-	//printf("LOADED TEXTURE %d\n", draw->texture.height);
-
-	draw_list.emplace_back(std::make_pair(entity, draw));
+	draw_map[entity->id] = draw;
 }
 
-std::vector<std::pair<Entity*, Draw*>>  DrawCmp::getmap()
+std::unordered_map<int, Draw *> DrawCmp::getmap()
 {
-	return draw_list;
+	return draw_map;
 }
 
 Draw* DrawCmp::getDraw(Entity* entity)
 {
-	return draw_list.at(entity->id).second;
+	return draw_map.at(entity->id);
 }

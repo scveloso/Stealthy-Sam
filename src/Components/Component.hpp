@@ -39,3 +39,4 @@ const int DOWN = 3;
 const int LEFT = 5;
 const int RIGHT = 7;
 const int NO_DIRECTION = 1;
+const int SAMS_GUID = 0;

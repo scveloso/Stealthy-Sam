@@ -8,50 +8,50 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->direction = NO_DIRECTION;
 	tb->width = 0.0f;
 	tb->height = 0.0f;
-	transform_list.emplace_back(entity, tb);
+	transform_map[entity->id] = tb;
 	printf("Entity ID in Transform: %d\n", entity->id);
 }
 
-std::vector<std::pair<Entity*, Transform*>> TransformCmp::getmap()
+std::unordered_map<int, Transform *> TransformCmp::getmap()
 {
-	return transform_list;
+	return transform_map;
 }
 
 Transform* TransformCmp::getTransform(Entity *entity) {
-	return transform_list.at(entity->id).second;
+	return transform_map[entity->id];
 }
 
 void TransformCmp::setPositionX(Entity *entity, float pos)
 {
-	transform_list.at(entity->id).second->m_position.x = pos;
+	transform_map[entity->id]->m_position.x = pos;
 }
 
 void TransformCmp::setPositionY(Entity *entity, float pos)
 {
-	transform_list.at(entity->id).second->m_position.y = pos;
+	transform_map[entity->id]->m_position.y = pos;
 }
 
 void TransformCmp::setPosition(Entity *entity, vec2 pos)
 {
-	transform_list.at(entity->id).second->m_position = pos;
+	transform_map[entity->id]->m_position = pos;
 }
 
 void TransformCmp::setDirection(Entity *entity, int direction)
 {
-	transform_list.at(entity->id).second->direction *= direction;
+	transform_map[entity->id]->direction *= direction;
 }
 
 void TransformCmp::removeDirection(Entity *entity, int direction)
 {
-	transform_list.at(entity->id).second->direction /= direction;
+	transform_map[entity->id]->direction /= direction;
 }
 
 void TransformCmp::setWidth(Entity *entity, float width)
 {
-	transform_list[entity->id].second->width = width;
+	transform_map[entity->id]->width = width;
 }
 
 void TransformCmp::setHeight(Entity *entity, float height)
 {
-	transform_list[entity->id].second->height = height;
+	transform_map[entity->id]->height = height;
 }
