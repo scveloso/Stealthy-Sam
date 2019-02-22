@@ -14,6 +14,7 @@ public:
 struct Draw : public Renderable
 {
 	Texture texture;
+	bool visible;
 };
 
 struct Transform
@@ -24,12 +25,14 @@ struct Transform
 	float direction;
 	float width;
 	float height;
-	bool visible;
 };
 
 struct Collision
 {
-	bool closet;
+	bool top;
+	bool bottom;
+	bool right;
+	bool left;
 };
 
 const int UP = 2;
@@ -37,4 +40,3 @@ const int DOWN = 3;
 const int LEFT = 5;
 const int RIGHT = 7;
 const int NO_DIRECTION = 1;
-const int SAMS_GUID = 0;

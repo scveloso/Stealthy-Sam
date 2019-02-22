@@ -27,9 +27,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 			switch (key)
 			{
 			case GLFW_KEY_A:
-				if (!collisionComponent.getmap()[it.first]->left) {
 					transformComponent.setDirection(entity, LEFT);
-				}
 				break;
 			case GLFW_KEY_D:
 				transformComponent.setDirection(entity, RIGHT);
@@ -42,6 +40,15 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 				break;
 			case GLFW_KEY_E:
 				// TODO: Implement interactables
+				if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true) {
+					if (transformComponent.getTransform(entity)->visible == false) {
+						transformComponent.getTransform(entity)->visible = true;
+					}
+					else {
+						transformComponent.getTransform(entity)->visible = false;
+					}
+				}
+				break;
 			case GLFW_KEY_P:
 				//print out current position
 				printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x, transformComponent.getTransform(entity)->m_position.y);
@@ -114,6 +121,8 @@ void InputSystem::update(float elapsed_ms)
 			new_position.y = new_position.y - step;
 		}
 
-		transformComponent.setPosition(entity, new_position);
+		if (transformComponent.getTransform(entity)->visible == true) {
+			transformComponent.setPosition(entity, new_position);
+		}
 	}
 }

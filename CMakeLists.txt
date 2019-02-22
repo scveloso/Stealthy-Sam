@@ -50,7 +50,7 @@ set(SOURCE_FILES
 	src/InputSystem.hpp
 	src/CollisionSystem.hpp
 
-	src/Components/Component.hpp
+	src/Components/Cmp.hpp
 	src/Components/DrawCmp.hpp
 	src/Components/DrawCmp.cpp
 	src/Components/TransformCmp.hpp

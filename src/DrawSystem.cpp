@@ -67,15 +67,17 @@ bool DrawSystem::setup()
 void DrawSystem::update(const mat3 projection)
 {
 		//printf("START DRAWING\n");
-		for (auto& it : drawComponent.getmap())
-		{
-			Entity *entity = objectManager.getEntity(it.first);
-			Draw *draw = it.second;
+	for (auto& it : drawComponent.getmap())
+	{
+		Entity *entity = objectManager.getEntity(it.first);
+		Draw *draw = it.second;
+
+		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true) {
 
 			//printf("Drawing ID: %d\n", entity.id);
 
 			//vec2 pos = { 200.0f, 200.0f };
-			
+
 			//printf("FWFWEAWF: %d", transformComponent.getmap()[entity.id].second->m_position);
 
 			draw->transform_begin();
@@ -127,4 +129,5 @@ void DrawSystem::update(const mat3 projection)
 
 			//printf("DRAWING\n");
 		}
+	}
 }

@@ -28,7 +28,15 @@ void CollisionSystem::update(float elapsed_ms)
 
 			if (AABB(tr1, tr2))
 			{
-				std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
+				//std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
+				if (objectManager.getEntity(it2.first)->label == "Closet")
+				{
+					collisionComponent.getmap().at(SAMS_GUID)->closet = true;
+				}
+				else
+				{
+					collisionComponent.getmap().at(SAMS_GUID)->closet = false;
+				}
 			}
 		}
 	}
