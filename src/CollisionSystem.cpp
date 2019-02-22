@@ -28,7 +28,7 @@ void CollisionSystem::update(float elapsed_ms)
 
 				if (AABB(entity, tr1, it2.first, tr2))
 				{
-					printf("%s colliding with %s!! \n", entity->label, it2.first->label);
+					std::cout << entity->label << " colliding with " << it2.first->label << std::endl;
 				}
 			}
 		}

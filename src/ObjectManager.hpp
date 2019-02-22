@@ -6,7 +6,7 @@ class ObjectManager
 {
 public:
 	ObjectManager();
-	Entity* makeEntity(char* label, int gameState);
+	Entity* makeEntity(std::string label, int gameState);
 	std::vector<Entity*> getEntities();
 
 private:

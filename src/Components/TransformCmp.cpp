@@ -38,8 +38,12 @@ void TransformCmp::setPosition(Entity *entity, vec2 pos)
 
 void TransformCmp::setDirection(Entity *entity, int direction)
 {
-	//printf("Outside list %d", direction);
-	transform_list.at(entity->id).second->direction = direction;
+	transform_list.at(entity->id).second->direction *= direction;
+}
+
+void TransformCmp::removeDirection(Entity *entity, int direction)
+{
+	transform_list.at(entity->id).second->direction /= direction;
 }
 
 void TransformCmp::setWidth(Entity *entity, float width)

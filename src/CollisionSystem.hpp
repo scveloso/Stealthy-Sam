@@ -2,6 +2,8 @@
 #include "Components/TransformCmp.hpp"
 #include "Components/DrawCmp.hpp"
 #include "ObjectManager.hpp"
+#include <string>
+#include <iostream>
 
 class CollisionSystem
 {

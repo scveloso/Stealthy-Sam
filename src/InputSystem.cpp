@@ -18,7 +18,6 @@ bool InputSystem::setup(GLFWwindow* m_window)
 
 void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-
 	for (auto& it : inputComponent.getmap())
 	{
 		if (action == GLFW_PRESS)
@@ -40,7 +39,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 				transformComponent.setDirection(it, UP);
 				break;
 			case GLFW_KEY_E:
-				transformComponent.setDirection(it, LEFT);
+				// TODO: Implement interactables
 			case GLFW_KEY_P:
 				//print out current position
 				printf("X:%f , Y:%f \n", transformComponent.getTransform(it)->m_position.x, transformComponent.getTransform(it)->m_position.y);
@@ -52,10 +51,9 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 				printf("%f, %f, \n", tr1->width, tr1->height);
 
-				printf("SIZEX:%f , SIZEY:%f \n", transformComponent.getTransform(it)->m_position.x + size1.x, transformComponent.getTransform(it)->m_position.y + size1.y); 
+				printf("SIZEX:%f , SIZEY:%f \n", transformComponent.getTransform(it)->m_position.x + size1.x, transformComponent.getTransform(it)->m_position.y + size1.y);
 				break;
 			}
-
 		}
 
 		if (action == GLFW_RELEASE)
@@ -63,16 +61,21 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 			switch (key)
 			{
 			case GLFW_KEY_A:
+				transformComponent.removeDirection(it, LEFT);
+				break;
 			case GLFW_KEY_D:
+				transformComponent.removeDirection(it, RIGHT);
+				break;
 			case GLFW_KEY_S:
+				transformComponent.removeDirection(it, DOWN);
+				break;
 			case GLFW_KEY_W:
-				transformComponent.setDirection(it, NO_DIRECTION);
+				transformComponent.removeDirection(it, UP);
+				break;
 			default:
 				break;
 			}
 		}
-
-
 	}
 }
 

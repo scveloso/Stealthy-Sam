@@ -4,8 +4,6 @@
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "TileConstants.hpp"
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
 
 // stlib
 #include <string.h>
@@ -13,6 +11,8 @@ using json = nlohmann::json;
 #include <string>
 #include <sstream>
 #include <iostream>
+
+using json = nlohmann::json;
 
 DrawSystem* ds;
 InputSystem* is;
@@ -36,9 +36,7 @@ namespace
 }
 
 World::World() :
-	m_points(0),
-	m_next_turtle_spawn(0.f),
-	m_next_fish_spawn(0.f)
+	m_points(0)
 {
 	// Seeding rng with random device
 	m_rng = std::default_random_engine(std::random_device()());
@@ -140,7 +138,7 @@ bool World::init(vec2 screen)
 	//textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("room_one.json"));
 
-	return m_salmon.init() && m_water.init() && ds->setup() && is->setup(m_window);
+	return m_water.init() && ds->setup() && is->setup(m_window);
 }
 
 // Generate entities from a given path to a JSON map file
@@ -257,14 +255,6 @@ void World::destroy()
 		Mix_FreeChunk(m_salmon_eat_sound);
 
 	Mix_CloseAudio();
-
-	m_salmon.destroy();
-	for (auto& turtle : m_turtles)
-		turtle.destroy();
-	for (auto& fish : m_fish)
-		fish.destroy();
-	m_turtles.clear();
-	m_fish.clear();
 	glfwDestroyWindow(m_window);
 }
 
@@ -319,14 +309,6 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
-	// Drawing entities
-	for (auto& turtle : m_turtles)
-		turtle.draw(projection_2D);
-	for (auto& fish : m_fish)
-		fish.draw(projection_2D);
-
-	m_salmon.draw(projection_2D);
-
 	ds->update(projection_2D);
 
 	/////////////////////
@@ -358,50 +340,14 @@ bool World::is_over()const
 
 }
 
-// Creates a new turtle and if successfull adds it to the list of turtles
-bool World::spawn_turtle()
-{
-	Turtle turtle;
-	if (turtle.init())
-	{
-		m_turtles.emplace_back(turtle);
-		return true;
-	}
-	fprintf(stderr, "Failed to spawn turtle");
-	return false;
-}
-
-// Creates a new fish and if successfull adds it to the list of fish
-bool World::spawn_fish()
-{
-	Fish fish;
-	if (fish.init())
-	{
-		m_fish.emplace_back(fish);
-		return true;
-	}
-	fprintf(stderr, "Failed to spawn fish");
-	return false;
-}
-
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HANDLE SALMON MOVEMENT HERE
-	// key is of 'type' GLFW_KEY_
-	// action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
 	{
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
-		m_salmon.destroy();
-		m_salmon.init();
-		m_turtles.clear();
-		m_fish.clear();
 		m_water.reset_salmon_dead_time();
 		m_current_speed = 1.f;
 	}
