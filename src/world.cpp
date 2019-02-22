@@ -267,9 +267,9 @@ bool World::update(float elapsed_ms)
 {
 
 	is->update(elapsed_ms);
-	cs->update(elapsed_ms);
-	//s_position= ds->transformComponent.getTransform(et)->m_position;
-  s_position= ds->s_position;
+	int updateAction = cs->update(elapsed_ms);
+	handleUpdateAction(updateAction);
+    s_position= ds->s_position;
 	m_water.add_position(s_position);
 
 	return true;
