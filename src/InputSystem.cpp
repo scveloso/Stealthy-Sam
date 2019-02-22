@@ -24,6 +24,7 @@ bool InputSystem::setup(GLFWwindow* m_window)
 void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
     bool didMove = false;
+    bool didPressE = false;
 	for (auto& it : inputComponent.getmap())
 	{
 	    Entity* entity = objectManager.getEntity(it.first);
@@ -54,6 +55,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
                         break;
                     case GLFW_KEY_E:
                         // TODO: Implement interactables
+                        didPressE = true;
                         break;
                     case GLFW_KEY_P:
                         //print out current position
@@ -97,9 +99,21 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
         }
 	}
 
+	// If we move using WASD, remove the text box showing movement directions
 	if (didMove) {
-	    objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL)->active = false;
+	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
+
+	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
+	    if (wasd_text_ent->active) {
+	        wasd_text_ent->active = false;
+            objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
+	    }
 	}
+
+	// Once they press E, we can remove the E text box
+    if (didPressE) {
+        objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
+    }
 }
 
 void InputSystem::update(float elapsed_ms)

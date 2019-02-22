@@ -163,8 +163,14 @@ void World::generateEntities(std::string room_path)
     Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
     drawCmp.add(useWASD, textures_path("text/usewasd.png"));
     inputCmp.add(useWASD);
-    transformCmp.add(useWASD, { 200, 200 }, { 0.2, 0.2 }, 0.0);
-    // we don't need these but since the components use lists instead of hashmaps it crashes the system if we don't add them
+    transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+
+    Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
+    drawCmp.add(useEText, textures_path("text/etointeract.png"));
+    inputCmp.add(useEText);
+    transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+    // Initially the E text box isn't there until we move
+    useEText->active = false;
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -202,7 +208,7 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, sam_default_path("Run_01.png"));
 				inputCmp.add(entity);
 				cc.add(entity);
-				vec2 s_position= transformCmp.getTransform(entity)->m_position;
+				vec2 s_position = transformCmp.getTransform(entity)->m_position;
 				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
 
