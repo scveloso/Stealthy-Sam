@@ -8,6 +8,9 @@
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
 
+// JSON
+#include <../ext/json/json.hpp>
+
 // Simple utility macros to avoid mistyping directory name, name has to be a string literal
 // audio_path("audio.ogg") -> data/audio/audio.ogg
 // Get defintion of PROJECT_SOURCE_DIR from:

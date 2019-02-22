@@ -296,6 +296,7 @@ CMakeFiles/
 cmake_install.cmake
 build/
 src/*.gch
+src/Components/*.gch
 src/project_path.hpp
 CppProperties.json
 *.cbp
