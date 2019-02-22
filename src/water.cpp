@@ -47,6 +47,10 @@ void Water::set_salmon_dead() {
 	m_dead_time = glfwGetTime();
 }
 
+void Water::add_position(vec2 position){
+	sam_position= position;
+}
+
 void Water::reset_salmon_dead_time() {
 	m_dead_time = -1;
 }
@@ -68,6 +72,8 @@ void Water::draw(const mat3& projection) {
 	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
 	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
+	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
+	glUniform2f(s_position, sam_position.x-30.f, sam_position.y-820.f );
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);

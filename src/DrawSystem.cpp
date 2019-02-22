@@ -66,19 +66,19 @@ bool DrawSystem::setup()
 
 void DrawSystem::update(const mat3 projection)
 {
-		//printf("START DRAWING\n");
+
 	for (auto& it : drawComponent.getmap())
 	{
+
 		Entity *entity = objectManager.getEntity(it.first);
 		Draw *draw = it.second;
-
+		// Don't draw inactive entities
 		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true) {
+			
+			if (!entity->active) {
+				continue;
+			}
 
-			//printf("Drawing ID: %d\n", entity.id);
-
-			//vec2 pos = { 200.0f, 200.0f };
-
-			//printf("FWFWEAWF: %d", transformComponent.getmap()[entity.id].second->m_position);
 
 			draw->transform_begin();
 			draw->transform_translate(transformComponent.getTransform(entity)->m_position);
@@ -86,7 +86,10 @@ void DrawSystem::update(const mat3 projection)
 			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
 			draw->transform_end();
 
-			//printf("%d", )
+			if (entity->id == 0) {
+				s_position = transformComponent.getTransform(entity)->m_position;
+				//printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
+			}
 
 			// Setting shaders
 			glUseProgram(draw->effect.program);

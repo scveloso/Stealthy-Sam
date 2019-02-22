@@ -8,6 +8,7 @@ public:
 	DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc);
 	void update(const mat3 projection);
 	bool setup();
+	vec2 s_position;
 private:
 	DrawCmp drawComponent;
 	TransformCmp transformComponent;

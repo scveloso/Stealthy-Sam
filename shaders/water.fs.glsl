@@ -2,40 +2,36 @@
 uniform sampler2D screen_texture;
 uniform float time;
 uniform float dead_timer;
+uniform vec2 sam_position;
 
 in vec2 uv;
 
 layout(location = 0) out vec4 color;
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// HANDLE THE WATER WAVE DISTORTION HERE (you may want to try sin/cos)
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-vec2 distort(vec2 uv) {
-	vec2 coord = uv.xy;
-    return coord;
+float circle(vec2 st, float radius){
+  vec2 dist = st-vec2(0.5);
+	return 1.-smoothstep(radius-(radius*0.01),
+                         radius+(radius*0.01),
+                         dot(dist,dist)*4.0);
 }
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// HANDLE THE COLOR SHIFTING HERE (you may want to make the image slightly blue-ish)
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-vec4 color_shift(vec4 in_color) {
-	vec4 color = in_color;
-	return color;
-}
-
-vec4 fade_color(vec4 in_color) {
-	vec4 color = in_color;
-	if (dead_timer > 0)
-		color -= 0.1 * dead_timer * vec4(0.1, 0.1, 0.1, 0);
-
-	return color;
-}
 
 void main()
 {
-	vec2 coord = distort(uv);
+  mat3 transform= mat3(
+    1.0, 0,    0,
+    0,  -1.0,  0,
+    0,   0,  1.0
+    );
+	vec3 sp = transform* vec3(sam_position,1);
+	vec4 in_color = texture(screen_texture, uv.xy);
 
-    vec4 in_color = texture(screen_texture, coord);
-    color = color_shift(in_color);
-    color = fade_color(color);
+	float d= (gl_FragCoord.x - sp.x)*(gl_FragCoord.x - sp.x)+(gl_FragCoord.y- sp.y)*(gl_FragCoord.y-sp.y);
+
+	if (d > (100*100))
+	{
+		color= vec4(0,0,0,1);
+	} else {
+		color= (in_color);
+	}
 }
