@@ -154,6 +154,7 @@ void World::generateEntities(std::string room_path)
 	int id = 0;
 
 	// Generate main player
+	// main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
 	tc.add(playerEntity, { 200.f, 150.f }, { 3.125f, 2.63f }, 0.0);

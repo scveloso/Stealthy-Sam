@@ -4,6 +4,7 @@
 
 CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc)
 {
+    objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;
 }
@@ -13,28 +14,27 @@ void CollisionSystem::update(float elapsed_ms)
 	Transform *tr1;
 	Transform *tr2;
 
-	//printf("updating");
-	Entity *entity = transformComponent.getmap().at(0).first;
+	// Get Sam and only check his collisions
+	Entity *sam = objectManager.getEntity(SAMS_GUID);
 
-	//printf("update Collision System %s\n", entity->label);
+	// Get Sam's transform
+	tr1 = transformComponent.getTransform(sam);
 
-	tr1 = transformComponent.getTransform(entity);
+	for (auto& it2 : collisionComponent.getmap())
+	{
+		if (it2.first != SAMS_GUID) {
 
-		for (auto& it2 : collisionComponent.getmap())
-		{
-			if (it2.first->id != 0) {
+			tr2 = transformComponent.getTransform(objectManager.getEntity(it2.first));
 
-				tr2 = transformComponent.getTransform(it2.first);
-
-				if (AABB(entity, tr1, it2.first, tr2))
-				{
-					std::cout << entity->label << " colliding with " << it2.first->label << std::endl;
-				}
+			if (AABB(tr1, tr2))
+			{
+				std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
 			}
 		}
+	}
 }
 
-bool CollisionSystem::AABB(Entity *e1, Transform *tr1, Entity *e2, Transform *tr2) {
+bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
 
 	float half_width_obj1 = (tr1->m_scale.x) * (tr1->width / 2);
 	float half_height_obj1 = (tr1->m_scale.y) * (tr1->height / 2);

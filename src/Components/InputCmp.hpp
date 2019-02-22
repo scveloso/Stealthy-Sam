@@ -4,9 +4,8 @@
 class InputCmp : public Cmp
 {
 public:
-	void add(Entity *entity);
-	std::vector<Entity*> getmap();
+	void add(Entity* entity);
+	std::unordered_map<int, Entity *> getmap();
 private:
-	std::vector<Entity*> input_list;
-
+    std::unordered_map<int, Entity*> input_map;
 };

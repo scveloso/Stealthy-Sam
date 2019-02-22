@@ -5,7 +5,7 @@ class TransformCmp : public Cmp
 {
 public:
 	void add(Entity *entity, vec2 m_position, vec2 m_scale, float m_rotation);
-	std::vector<std::pair<Entity*, Transform*>> getmap();
+	std::unordered_map<int, Transform *> getmap();
 	Transform* getTransform(Entity *entity);
 
 	void setPositionX(Entity *entity, float pos);
@@ -19,5 +19,5 @@ public:
 	void setHeight(Entity *entity, float height);
 
 private:
-	std::vector<std::pair<Entity*, Transform*>> transform_list;
+	std::unordered_map<int, Transform*> transform_map;
 };

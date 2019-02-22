@@ -11,4 +11,5 @@ public:
 private:
 	DrawCmp drawComponent;
 	TransformCmp transformComponent;
+	ObjectManager objectManager;
 };

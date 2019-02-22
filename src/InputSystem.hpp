@@ -16,4 +16,5 @@ private:
 	InputCmp inputComponent;
 	TransformCmp transformComponent;
 	CollisionCmp collisionComponent;
+	ObjectManager objectManager;
 };

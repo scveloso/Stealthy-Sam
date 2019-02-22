@@ -4,6 +4,7 @@
 
 DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc)
 {
+	objectManager = om;
 	drawComponent = dc;
 	transformComponent = tc;
 }
@@ -12,16 +13,11 @@ bool DrawSystem::setup()
 {
 	for (auto& it : drawComponent.getmap())
 	{
-		Entity *entity = it.first;
+		Entity *entity = objectManager.getEntity(it.first);
 		Draw *draw = it.second;
 
 		transformComponent.setHeight(entity, draw->texture.height);
 		transformComponent.setWidth(entity, draw->texture.width);
-
-		//printf("HEIGHT: %d\n", draw->texture.height);
-		//printf("WIDTH: %d\n", draw->texture.width);
-
-		//printf("SETUP ID: %d\n", entity.id);
 
 		// The position corresponds to the center of the texture
 		float wr = draw->texture.width * 0.5f;
@@ -73,7 +69,7 @@ void DrawSystem::update(const mat3 projection)
 		//printf("START DRAWING\n");
 		for (auto& it : drawComponent.getmap())
 		{
-			Entity *entity = it.first;
+			Entity *entity = objectManager.getEntity(it.first);
 			Draw *draw = it.second;
 
 			//printf("Drawing ID: %d\n", entity.id);

@@ -15,7 +15,7 @@ Entity* ObjectManager::makeEntity(std::string label, int gameState) {
 	return entity;
 }
 
-std::vector<Entity*> ObjectManager::getEntities()
+Entity* ObjectManager::getEntity(int id)
 {
-	return entities;
+	return entities[id];
 }
