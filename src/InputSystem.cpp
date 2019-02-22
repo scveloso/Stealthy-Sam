@@ -1,9 +1,11 @@
 #include "InputSystem.hpp"
 #include "Components/Component.hpp"
+#include <iostream>
+#include <string>
 
 InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc)
 {
-    objectManager = om;
+  objectManager = om;
 	inputComponent = ic;
 	transformComponent = tc;
 	collisionComponent = cc;
@@ -21,7 +23,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
 	for (auto& it : inputComponent.getmap())
 	{
-	    Entity* entity = objectManager.getEntity(it.first);
+    Entity* entity = objectManager.getEntity(it.first);
 		if (action == GLFW_PRESS)
 		{
 			switch (key)
@@ -29,16 +31,20 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 			case GLFW_KEY_A:
 				if (!collisionComponent.getmap()[it.first]->left) {
 					transformComponent.setDirection(entity, LEFT);
+          std::cout << transformComponent.getDirection(entity) << std::endl;
 				}
 				break;
 			case GLFW_KEY_D:
 				transformComponent.setDirection(entity, RIGHT);
+        std::cout << transformComponent.getDirection(entity) << std::endl;
 				break;
 			case GLFW_KEY_S:
 				transformComponent.setDirection(entity, DOWN);
+        std::cout << transformComponent.getDirection(entity) << std::endl;
 				break;
 			case GLFW_KEY_W:
 				transformComponent.setDirection(entity, UP);
+        std::cout << transformComponent.getDirection(entity) << std::endl;
 				break;
 			case GLFW_KEY_E:
 				// TODO: Implement interactables
