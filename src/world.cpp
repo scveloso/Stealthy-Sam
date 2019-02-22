@@ -228,7 +228,7 @@ void World::generateEntities(std::string room_path)
 				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				dc.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
-				ec.add(entity, 100);
+				ec.add(entity, 100, 0);
 			}
 
 			x += TILE_WIDTH;

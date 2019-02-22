@@ -49,12 +49,12 @@ void EnemySystem::update(float elapsed_ms) {
 					enemy->start = et->m_position;
 				}
 
-				if (et->m_position.x > (enemy->start.x + enemy->patrolX)) {
+				if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
 					et->direction = DOWN;
 					et->m_scale.x *= -1;
 				}
 
-				if (et->m_position.x < enemy->start.x) {
+				if (et->m_position.y < enemy->start.y) {
 					et->direction = UP;
 					et->m_scale.x *= -1;
 				}
