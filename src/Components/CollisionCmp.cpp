@@ -3,6 +3,7 @@
 void CollisionCmp::add(Entity *entity) {
 	Collision *collision = new Collision();
 	collision->closet = false;
+	collision->wall = false;
 	collision_map[entity->id] = collision;
 }
 

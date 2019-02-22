@@ -3,6 +3,7 @@
 #include "DrawSystem.hpp"
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
+#include "EnemySystem.hpp"
 #include "TileConstants.hpp"
 
 // stlib
@@ -17,6 +18,7 @@ using json = nlohmann::json;
 DrawSystem* ds;
 InputSystem* is;
 CollisionSystem* cs;
+EnemySystem* es;
 
 // Same as static in c, local to compilation unit
 namespace
@@ -150,6 +152,7 @@ void World::generateEntities(std::string room_path)
 	TransformCmp tc;
 	InputCmp ic;
 	CollisionCmp cc;
+	EnemyCmp ec;
 
 	int id = 0;
 
@@ -225,6 +228,7 @@ void World::generateEntities(std::string room_path)
 				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				dc.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
+				ec.add(entity, 100);
 			}
 
 			x += TILE_WIDTH;
@@ -232,15 +236,16 @@ void World::generateEntities(std::string room_path)
 	}
 
 	// Proceed to initialize systems
-	initializeSystems(om, dc, tc, ic, cc);
+	initializeSystems(om, dc, tc, ic, cc, ec);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
 {
 	ds = new DrawSystem(om, dc, tc);
 	is = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
+	es = new EnemySystem(om, cc, tc, ec);
 }
 
 // Releases all the associated resources
@@ -265,6 +270,7 @@ bool World::update(float elapsed_ms)
 
 	is->update(elapsed_ms);
 	cs->update(elapsed_ms);
+	es->update(elapsed_ms);
 
 	return true;
 }

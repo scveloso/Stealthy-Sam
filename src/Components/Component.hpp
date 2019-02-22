@@ -30,7 +30,19 @@ struct Transform
 struct Collision
 {
 	bool closet;
+	bool wall;
 };
+
+struct Enemy
+{
+	int type;
+	int patrolX;
+	int patrolY;
+	vec2 start;
+	bool chase;
+};
+
+const int NORMAL = 11;
 
 const int UP = 2;
 const int DOWN = 3;

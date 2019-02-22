@@ -35,7 +35,7 @@ void CollisionSystem::update(float elapsed_ms)
 				}
 				else
 				{
-					collisionComponent.getmap().at(SAMS_GUID)->closet = false;
+					collisionComponent.getmap().at(SAMS_GUID)->closet = true;
 				}
 			}
 		}
