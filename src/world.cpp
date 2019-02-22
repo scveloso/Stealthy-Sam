@@ -17,7 +17,8 @@ using json = nlohmann::json;
 DrawSystem* ds;
 InputSystem* is;
 CollisionSystem* cs;
-
+vec2 s_position;
+Entity* et;
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -158,10 +159,12 @@ void World::generateEntities(std::string room_path)
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
 	tc.add(playerEntity, { 200.f, 150.f }, { 3.125f, 2.63f }, 0.0);
-	dc.add(playerEntity, textures_path("Dungeon/sam.png"));
+	dc.add(playerEntity, sam_default_path("Run_01.png"));
 	ic.add(playerEntity);
 	cc.add(playerEntity);
 
+	s_position= tc.getTransform(playerEntity)->m_position;
+	m_water.add_position(s_position);
 	// Read JSON map file
 	std::ifstream data(room_path);
 	json map = json::parse(data);
@@ -265,6 +268,9 @@ bool World::update(float elapsed_ms)
 
 	is->update(elapsed_ms);
 	cs->update(elapsed_ms);
+	//s_position= ds->transformComponent.getTransform(et)->m_position;
+  s_position= ds->s_position;
+	m_water.add_position(s_position);
 
 	return true;
 }
