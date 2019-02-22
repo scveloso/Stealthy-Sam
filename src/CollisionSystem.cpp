@@ -14,41 +14,48 @@ CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp
 // Returns an UpdateAction back to World
 int CollisionSystem::update(float elapsed_ms)
 {
-	Transform *tr1;
-	Transform *tr2;
+	Transform *samTransform;
+	Transform *entityTransform;
 
 	// Get Sam and only check his collisions
 	Entity *sam = objectManager.getEntity(SAMS_GUID);
-
-	// Get Sam's transform
-	tr1 = transformComponent.getTransform(sam);
-
-  int updateAction = NO_CHANGE;
+	samTransform = transformComponent.getTransform(sam);
 
 	for (auto& it2 : collisionComponent.getmap())
 	{
     int entityId = it2.first;
 		if (entityId != SAMS_GUID)
     {
-			tr2 = transformComponent.getTransform(objectManager.getEntity(entityId));
+			entityTransform = transformComponent.getTransform(objectManager.getEntity(entityId));
 
-      // Check for collisions
-			if (AABB(tr1, tr2))
+      // Check for Sam collisions with other entities
+			if (AABB(samTransform, entityTransform))
 			{
-				std::cout << sam->label << " colliding with " << objectManager.getEntity(entityId)->label << std::endl;
-        updateAction = handleDoors(entityId);
+        Entity* entity = objectManager.getEntity(entityId);
+
+        // Handle door collisions
+        int doorUpdateAction = handleDoors(entity);
+        if (doorUpdateAction != NO_CHANGE)
+        {
+          return doorUpdateAction;
+        }
+
+        // Handle enemy collisions
+        int enemyUpdateAction = handleEnemies(entity);
+        if (enemyUpdateAction != NO_CHANGE)
+        {
+          return enemyUpdateAction;
+        }
 			}
 		}
 	}
 
-  return updateAction;
+  return NO_CHANGE;
 }
 
 // Returns an UpdateAction to change rooms if a door is collided with
-int CollisionSystem::handleDoors(int entityId)
+int CollisionSystem::handleDoors(Entity* entity)
 {
-  Entity* entity = objectManager.getEntity(entityId);
-
   if (entity->label.compare("DoorRoom1To2") == 0)
   {
     return CHANGE_ROOM_ONE_TO_TWO;
@@ -64,6 +71,17 @@ int CollisionSystem::handleDoors(int entityId)
   else if (entity->label.compare("DoorRoom3To2") == 0)
   {
     return CHANGE_ROOM_THREE_TO_TWO;
+  }
+
+  return NO_CHANGE;
+}
+
+// Returns an UpdateAction to trigger death if an enemy is collided with
+int CollisionSystem::handleEnemies(Entity* entity)
+{
+  if (entity->label.compare("Enemy") == 0)
+  {
+    return COLLIDE_WITH_ENEMY;
   }
 
   return NO_CHANGE;

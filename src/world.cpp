@@ -279,7 +279,7 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 	is->setup(m_window);
 }
 
-// Clear the systems
+// Clear the systems for reinitialization of entities when rooms switch
 void World::wipeSystems()
 {
 	delete ds;
@@ -304,40 +304,44 @@ void World::destroy()
 }
 
 // Update our game world
+// Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-
 	is->update(elapsed_ms);
-	int action = cs->update(elapsed_ms);
-	handleAction(action);
+	int updateAction = cs->update(elapsed_ms);
+	handleUpdateAction(updateAction);
 
 	return true;
 }
 
 // Takes in an UpdateAction, handles room changes, death, etc.
-void World::handleAction(int action)
+void World::handleUpdateAction(int updateAction)
 {
-	if (action != NO_CHANGE)
+	if (updateAction != NO_CHANGE)
 	{
-		if (action == CHANGE_ROOM_ONE_TO_TWO)
+		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
 			wipeSystems();
 			generateEntities(map_path("room_one_to_two.json"));
 		}
-		else if (action == CHANGE_ROOM_TWO_TO_ONE)
+		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
 			wipeSystems();
 			generateEntities(map_path("room_two_to_one.json"));
 		}
-		else if (action == CHANGE_ROOM_TWO_TO_THREE)
+		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
 			wipeSystems();
 			generateEntities(map_path("room_two_to_three.json"));
 		}
-		else if (action == CHANGE_ROOM_THREE_TO_TWO)
+		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
 			wipeSystems();
 			generateEntities(map_path("room_three_to_two.json"));
+		}
+		else if (updateAction == COLLIDE_WITH_ENEMY)
+		{
+			// TODO: Implement death mechanic
 		}
 	}
 }

@@ -39,7 +39,7 @@ public:
 	void wipeSystems();
 
 	// Takes in an UpdateAction, handles room changes, death, etc.
-	void handleAction(int action);
+	void handleUpdateAction(int action);
 
 	// Releases all associated resources
 	void destroy();

@@ -11,7 +11,8 @@ public:
 	CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc);
 	int update(float elapsed_ms);
 	bool AABB(Transform *tr1, Transform *tr2);
-	int handleDoors(int entityId);
+	int handleDoors(Entity* entity);
+	int handleEnemies(Entity* entity);
 
 private:
 	CollisionCmp collisionComponent;
