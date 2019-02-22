@@ -21,6 +21,9 @@ InputSystem* inputSys;
 CollisionSystem* cs;
 EnemySystem* es;
 
+// Game State component
+GameStateCmp* gameState;
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -137,6 +140,9 @@ bool World::init(vec2 screen)
 	std::cout << "Screen.x: " << screen.x << std::endl;
 	std::cout << "Screen.y: " << screen.y << std::endl;
 
+	// Create initial game state
+	gameState = new GameStateCmp();
+	gameState->init();
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("room_one.json"));
@@ -162,18 +168,22 @@ void World::generateEntities(std::string room_path)
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
 
-    // Text boxes
-    Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
-    drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-    inputCmp.add(useWASD);
-    transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+	// Create text boxes if we're in room one:
+	if (map_path("room_one.json") == room_path)
+	{
+		// Text boxes
+		Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
+		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
+		inputCmp.add(useWASD);
+		transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
 
-    Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
-    drawCmp.add(useEText, textures_path("text/etointeract.png"));
-    inputCmp.add(useEText);
-    transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
-    // Initially the E text box isn't there until we move
-    useEText->active = false;
+		Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
+		drawCmp.add(useEText, textures_path("text/etointeract.png"));
+		inputCmp.add(useEText);
+		transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+		// Initially the E text box isn't there until we move
+		useEText->active = false;
+	}
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -287,14 +297,15 @@ void World::generateEntities(std::string room_path)
 
 	// Proceed to initialize systems
 
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec, gameState);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+							  GameStateCmp* gameStateCmp)
 {
-	ds = new DrawSystem(om, dc, tc);
-	inputSys = new InputSystem(om, ic, tc, cc);
+	ds = new DrawSystem(om, dc, tc, gameStateCmp);
+	inputSys = new InputSystem(om, ic, tc, cc, gameStateCmp);
 	cs = new CollisionSystem(om, cc, tc);
 	es = new EnemySystem(om, cc, tc, ec);
 
@@ -302,8 +313,8 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 	inputSys->setup(m_window);
 }
 
-// Clear the systems for reinitialization of entities when rooms switch
-void World::wipeSystems()
+// Clear objects in map for reinitialization of entities when rooms switch
+void World::clearMap()
 {
 	delete ds;
 	delete inputSys;
@@ -337,10 +348,10 @@ bool World::update(float elapsed_ms)
 	handleUpdateAction(updateAction);
 	vec2 s_position= ds->s_position;
 	//vec2 s_position= {200.f,200.f};
-  m_water.add_position(s_position);
+    m_water.add_position(s_position);
 
 
-	return true;
+    return true;
 }
 
 // Takes in an UpdateAction, handles room changes, death, etc.
@@ -350,27 +361,27 @@ void World::handleUpdateAction(int updateAction)
 	{
 		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_one_to_two.json"));
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_two_to_one.json"));
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_two_to_three.json"));
 		}
 		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_three_to_two.json"));
 		}
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
-			// TODO: Implement death mechanic
+			gameState->sam_is_alive = false;
 		}
 	}
 }

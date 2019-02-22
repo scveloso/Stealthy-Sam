@@ -5,12 +5,13 @@
 #include <iostream>
 #include <string>
 
-InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc)
+InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;
     transformComponent = tc;
     collisionComponent = cc;
+    gameState = gameStateCmp;
 }
 
 bool InputSystem::setup(GLFWwindow* m_window)
@@ -132,6 +133,11 @@ void InputSystem::update(float elapsed_ms)
 	for (auto& it : inputComponent.getmap())
 	{
 		Entity* entity = objectManager.getEntity(it.first);
+
+		// Don't move sam's position if he's dead
+		if (entity->id == SAMS_GUID && !gameState->sam_is_alive) {
+		    continue;
+		}
 
 		int direction = transformComponent.getTransform(entity)->direction;
 

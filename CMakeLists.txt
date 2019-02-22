@@ -31,40 +31,41 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/main.cpp
-	src/common.cpp
-	src/water.cpp
-	src/world.cpp
-	src/ObjectManager.cpp
-	src/DrawSystem.cpp
-	src/InputSystem.cpp
-	src/CollisionSystem.cpp
-	src/EnemySystem.cpp
+		src/main.cpp
+		src/common.cpp
+		src/water.cpp
+		src/world.cpp
+		src/ObjectManager.cpp
+		src/DrawSystem.cpp
+		src/InputSystem.cpp
+		src/CollisionSystem.cpp
+		src/EnemySystem.cpp
 
-    src/project_path.hpp
-	src/common.hpp
-	src/water.hpp
-	src/world.hpp
-	src/ObjectManager.hpp
-	src/Entity.hpp
-	src/DrawSystem.hpp
-	src/InputSystem.hpp
-	src/CollisionSystem.hpp
-	src/EnemySystem.hpp
+		src/project_path.hpp
+		src/common.hpp
+		src/water.hpp
+		src/world.hpp
+		src/ObjectManager.hpp
+		src/Entity.hpp
+		src/DrawSystem.hpp
+		src/InputSystem.hpp
+		src/CollisionSystem.hpp
+		src/EnemySystem.hpp
 
-	src/Components/Cmp.hpp
-	src/Components/DrawCmp.hpp
-	src/Components/DrawCmp.cpp
-	src/Components/TransformCmp.hpp
-	src/Components/TransformCmp.cpp
-	src/Components/InputCmp.hpp
-	src/Components/InputCmp.cpp
-	src/Components/CollisionCmp.cpp
-	src/Components/CollisionCmp.hpp
-	src/Components/EnemyCmp.hpp
-	src/Components/EnemyCmp.cpp
-
-	)
+		src/Components/Cmp.hpp
+		src/Components/DrawCmp.hpp
+		src/Components/DrawCmp.cpp
+		src/Components/TransformCmp.hpp
+		src/Components/TransformCmp.cpp
+		src/Components/InputCmp.hpp
+		src/Components/InputCmp.cpp
+		src/Components/CollisionCmp.cpp
+		src/Components/CollisionCmp.hpp
+		src/Components/EnemyCmp.hpp
+		src/Components/EnemyCmp.cpp
+		src/Components/GameStateCmp.hpp
+		src/Components/GameStateCmp.cpp
+        )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
