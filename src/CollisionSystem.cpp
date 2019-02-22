@@ -19,6 +19,9 @@ void CollisionSystem::update(float elapsed_ms)
 
 	// Get Sam's transform
 	tr1 = transformComponent.getTransform(sam);
+	Collision *col = collisionComponent.getmap()[SAMS_GUID];
+
+	bool noCol = true;
 
 	for (auto& it2 : collisionComponent.getmap())
 	{
@@ -29,19 +32,17 @@ void CollisionSystem::update(float elapsed_ms)
 
 			if (AABB(tr1, tr2))
 			{
+				noCol = false;
 				//std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
 				if (objectManager.getEntity(it2.first)->label == "Closet")
 				{
-					collisionComponent.getmap()[SAMS_GUID]->closet = true;
+					col->closet = true;
 				}
-				else
-				{
-					collisionComponent.getmap()[SAMS_GUID]->closet = false;
-				}
+				
 			}
-			else
-			{
-				collisionComponent.getmap()[SAMS_GUID]->closet = false;
+
+			if (noCol == true) {
+				col->closet = false;
 			}
 
 		}
