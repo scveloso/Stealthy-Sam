@@ -1,52 +1,118 @@
 #include "CollisionSystem.hpp"
 #include "Components/Component.hpp"
 #include "common.hpp"
+#include "UpdateAction.hpp"
 
 CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc)
 {
-    objectManager = om;
+	objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;
 }
 
-void CollisionSystem::update(float elapsed_ms)
+// Checks for collisions between Sam and other entities
+// Returns an UpdateAction back to World
+int CollisionSystem::update(float elapsed_ms)
 {
-	Transform *tr1;
-	Transform *tr2;
+	Transform *samTransform;
+	Transform *entityTransform;
+	Collision *samCollision;
 
 	// Get Sam and only check his collisions
 	Entity *sam = objectManager.getEntity(SAMS_GUID);
+	samTransform = transformComponent.getTransform(sam);
+	samCollision = collisionComponent.getmap()[SAMS_GUID];
 
-	// Get Sam's transform
-	tr1 = transformComponent.getTransform(sam);
-	Collision *col = collisionComponent.getmap()[SAMS_GUID];
-
-	bool noCol = true;
+	bool collisionEvent = false;
 
 	for (auto& it2 : collisionComponent.getmap())
 	{
-		if (it2.first != SAMS_GUID) {
+		int entityId = it2.first;
+		if (entityId != SAMS_GUID)
+		{
+			entityTransform = transformComponent.getTransform(objectManager.getEntity(entityId));
 
-			tr2 = transformComponent.getTransform(objectManager.getEntity(it2.first));
-
-
-			if (AABB(tr1, tr2))
+			// Check for Sam collisions with other entities
+			if (AABB(samTransform, entityTransform))
 			{
-				noCol = false;
-				//std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
-				if (objectManager.getEntity(it2.first)->label == "Closet")
-				{
-					col->closet = true;
-				}
-				
-			}
+				collisionEvent = true;
+				Entity* entity = objectManager.getEntity(entityId);
 
-			if (noCol == true) {
-				col->closet = false;
+				// Handle door collisions
+				int doorUpdateAction = handleDoors(entity);
+				if (doorUpdateAction != NO_CHANGE)
+				{
+					return doorUpdateAction;
+				}
+
+				// Handle enemy collisions
+				int enemyUpdateAction = handleEnemies(entity);
+				if (enemyUpdateAction != NO_CHANGE)
+				{
+					return enemyUpdateAction;
+				}
+
+				if (handleCloset(entity))
+				{
+					samCollision->closet = true;
+				}
+
 			}
 
 		}
+
 	}
+
+	if (collisionEvent == false)
+	{
+		samCollision->closet = false;
+	}
+
+	return NO_CHANGE;
+}
+
+// Returns an UpdateAction to change rooms if a door is collided with
+int CollisionSystem::handleDoors(Entity* entity)
+{
+	if (entity->label.compare("DoorRoom1To2") == 0)
+	{
+		return CHANGE_ROOM_ONE_TO_TWO;
+	}
+	else if (entity->label.compare("DoorRoom2To1") == 0)
+	{
+		return CHANGE_ROOM_TWO_TO_ONE;
+	}
+	else if (entity->label.compare("DoorRoom2To3") == 0)
+	{
+		return CHANGE_ROOM_TWO_TO_THREE;
+	}
+	else if (entity->label.compare("DoorRoom3To2") == 0)
+	{
+		return CHANGE_ROOM_THREE_TO_TWO;
+	}
+
+	return NO_CHANGE;
+}
+
+// Returns an UpdateAction to trigger death if an enemy is collided with
+int CollisionSystem::handleEnemies(Entity* entity)
+{
+	if (entity->label.compare("Enemy") == 0)
+	{
+		return COLLIDE_WITH_ENEMY;
+	}
+
+	return NO_CHANGE;
+}
+
+bool CollisionSystem::handleCloset(Entity* entity)
+{
+	if (entity->label.compare("Closet") == 0)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {

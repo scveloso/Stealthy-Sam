@@ -5,6 +5,7 @@
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
 #include "TileConstants.hpp"
+#include "UpdateAction.hpp"
 
 // stlib
 #include <string.h>
@@ -70,7 +71,7 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	glfwWindowHint(GLFW_RESIZABLE, 0);
-	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "A1 Assignment", nullptr, nullptr);
+	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Stealthy Sam", nullptr, nullptr);
 	if (m_window == nullptr)
 		return false;
 
@@ -137,10 +138,10 @@ bool World::init(vec2 screen)
 	std::cout << "Screen.y: " << screen.y << std::endl;
 
 
-	//textures_path needs to be sent this way (can't seem to make it work inside the function)
+	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("room_one.json"));
 
-	return m_water.init() && ds->setup() && is->setup(m_window);
+	return m_water.init();
 }
 
 // Generate entities from a given path to a JSON map file
@@ -154,16 +155,12 @@ void World::generateEntities(std::string room_path)
 	CollisionCmp cc;
 	EnemyCmp ec;
 
-	int id = 0;
+	int id = 1;
 
 	// Generate main player
-	// main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
+	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
-	tc.add(playerEntity, { 200.f, 150.f }, { 3.125f, 2.63f }, 0.0);
-	dc.add(playerEntity, textures_path("Dungeon/sam.png"));
-	ic.add(playerEntity);
-	cc.add(playerEntity);
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -189,11 +186,20 @@ void World::generateEntities(std::string room_path)
 
 			// Read tile value
 			int val = (*tile_it).get<int>();
-			val--; // For some weird reason, the values in JSON are one more than the ones on Tiled
-
 
 			Entity* entity;
-			if (val == WALL)
+
+			// Generate main player
+			if (val == SAM)
+			{
+				entity = om.getEntity(SAMS_GUID);
+
+				tc.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/sam.png"));
+				ic.add(entity);
+				cc.add(entity);
+			}
+			else if (val == WALL)
 			{
 				entity = om.makeEntity("Wall", id);
 				id++;
@@ -211,9 +217,36 @@ void World::generateEntities(std::string room_path)
 				dc.add(entity, textures_path("Dungeon/chest_closed.png"));
 				cc.add(entity);
 			}
-			else if (val == DOOR)
+			else if (val == DOOR_ROOM_1_TO_2)
 			{
-				entity = om.makeEntity("Door", id);
+				entity = om.makeEntity("DoorRoom1To2", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_2_TO_1)
+			{
+				entity = om.makeEntity("DoorRoom2To1", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_2_TO_3)
+			{
+				entity = om.makeEntity("DoorRoom2To3", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_3_TO_2)
+			{
+				entity = om.makeEntity("DoorRoom3To2", id);
 				id++;
 
 				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
@@ -246,6 +279,18 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 	is = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
 	es = new EnemySystem(om, cc, tc, ec);
+
+	ds->setup();
+	is->setup(m_window);
+}
+
+// Clear the systems for reinitialization of entities when rooms switch
+void World::wipeSystems()
+{
+	delete ds;
+	delete is;
+	delete cs;
+	delete es;
 }
 
 // Releases all the associated resources
@@ -265,14 +310,47 @@ void World::destroy()
 }
 
 // Update our game world
+// Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-
 	is->update(elapsed_ms);
-	cs->update(elapsed_ms);
 	es->update(elapsed_ms);
+	int updateAction = cs->update(elapsed_ms);
+	handleUpdateAction(updateAction);
 
 	return true;
+}
+
+// Takes in an UpdateAction, handles room changes, death, etc.
+void World::handleUpdateAction(int updateAction)
+{
+	if (updateAction != NO_CHANGE)
+	{
+		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
+		{
+			wipeSystems();
+			generateEntities(map_path("room_one_to_two.json"));
+		}
+		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
+		{
+			wipeSystems();
+			generateEntities(map_path("room_two_to_one.json"));
+		}
+		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
+		{
+			wipeSystems();
+			generateEntities(map_path("room_two_to_three.json"));
+		}
+		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
+		{
+			wipeSystems();
+			generateEntities(map_path("room_three_to_two.json"));
+		}
+		else if (updateAction == COLLIDE_WITH_ENEMY)
+		{
+			// TODO: Implement death mechanic
+		}
+	}
 }
 
 // Render our game world

@@ -9,11 +9,14 @@ class CollisionSystem
 {
 public:
 	CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc);
-	void update(float elapsed_ms);
+	int update(float elapsed_ms);
 	bool AABB(Transform *tr1, Transform *tr2);
+	int handleDoors(Entity* entity);
+	int handleEnemies(Entity* entity);
+	bool CollisionSystem::handleCloset(Entity* entity);
 
 private:
 	CollisionCmp collisionComponent;
 	TransformCmp transformComponent;
-    ObjectManager objectManager;
+  ObjectManager objectManager;
 };

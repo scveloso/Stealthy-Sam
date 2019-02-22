@@ -31,7 +31,6 @@ struct Collision
 {
 	bool closet;
 	bool wall;
-	bool noCol;
 };
 
 struct Enemy
