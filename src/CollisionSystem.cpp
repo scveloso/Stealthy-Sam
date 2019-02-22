@@ -1,15 +1,18 @@
 #include "CollisionSystem.hpp"
 #include "Components/Component.hpp"
 #include "common.hpp"
+#include "UpdateAction.hpp"
 
 CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc)
 {
-    objectManager = om;
+  objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;
 }
 
-void CollisionSystem::update(float elapsed_ms)
+// Checks for collisions between Sam and other entities
+// Returns an UpdateAction back to World
+int CollisionSystem::update(float elapsed_ms)
 {
 	Transform *tr1;
 	Transform *tr2;
@@ -20,18 +23,50 @@ void CollisionSystem::update(float elapsed_ms)
 	// Get Sam's transform
 	tr1 = transformComponent.getTransform(sam);
 
+  int updateAction = NO_CHANGE;
+
 	for (auto& it2 : collisionComponent.getmap())
 	{
-		if (it2.first != SAMS_GUID) {
+    int entityId = it2.first;
+		if (entityId != SAMS_GUID)
+    {
+			tr2 = transformComponent.getTransform(objectManager.getEntity(entityId));
 
-			tr2 = transformComponent.getTransform(objectManager.getEntity(it2.first));
-
+      // Check for collisions
 			if (AABB(tr1, tr2))
 			{
-				std::cout << sam->label << " colliding with " << objectManager.getEntity(it2.first)->label << std::endl;
+				std::cout << sam->label << " colliding with " << objectManager.getEntity(entityId)->label << std::endl;
+        updateAction = handleDoors(entityId);
 			}
 		}
 	}
+
+  return updateAction;
+}
+
+// Returns an UpdateAction to change rooms if a door is collided with
+int CollisionSystem::handleDoors(int entityId)
+{
+  Entity* entity = objectManager.getEntity(entityId);
+
+  if (entity->label.compare("DoorRoom1To2") == 0)
+  {
+    return CHANGE_ROOM_ONE_TO_TWO;
+  }
+  else if (entity->label.compare("DoorRoom2To1") == 0)
+  {
+    return CHANGE_ROOM_TWO_TO_ONE;
+  }
+  else if (entity->label.compare("DoorRoom2To3") == 0)
+  {
+    return CHANGE_ROOM_TWO_TO_THREE;
+  }
+  else if (entity->label.compare("DoorRoom3To2") == 0)
+  {
+    return CHANGE_ROOM_THREE_TO_TWO;
+  }
+
+  return NO_CHANGE;
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {

@@ -9,7 +9,6 @@
 #include "Components/CollisionCmp.hpp"
 #include "ObjectManager.hpp"
 
-
 // stlib
 #include <vector>
 #include <random>
@@ -35,6 +34,12 @@ public:
 
 	// Set-up DrawSystem, InputSystem, CollisionSystem
 	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc);
+
+	// Clear DrawSystem, InputSystem, CollisionSystem
+	void wipeSystems();
+
+	// Takes in an UpdateAction, handles room changes, death, etc.
+	void handleAction(int action);
 
 	// Releases all associated resources
 	void destroy();
@@ -77,4 +82,6 @@ private:
 	// C++ rng
 	std::default_random_engine m_rng;
 	std::uniform_real_distribution<float> m_dist; // default 0..1
+
+	int gameState;
 };

@@ -43,7 +43,16 @@ void TransformCmp::setDirection(Entity *entity, int direction)
 
 void TransformCmp::removeDirection(Entity *entity, int direction)
 {
-	transform_map[entity->id]->direction /= direction;
+	float entityDirection = transform_map[entity->id]->direction;
+	if (entityDirection != NO_DIRECTION)
+	{
+		transform_map[entity->id]->direction /= direction;
+	}
+}
+
+float TransformCmp::getDirection(Entity *entity)
+{
+	return transform_map[entity->id]->direction;
 }
 
 void TransformCmp::setWidth(Entity *entity, float width)
