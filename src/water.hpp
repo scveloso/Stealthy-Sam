@@ -19,8 +19,12 @@ public:
 	void set_salmon_dead();
 	void reset_salmon_dead_time();
 	float get_salmon_dead_time() const;
+	//add sam_position to be pass down into shaders
+	void add_position(vec2 position);
+
 
 private:
 	// When salmon is alive, the time is set to -1
 	float m_dead_time;
+	vec2 sam_position;
 };

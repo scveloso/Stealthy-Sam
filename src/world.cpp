@@ -192,9 +192,13 @@ void World::generateEntities(std::string room_path)
 				entity = om.getEntity(SAMS_GUID);
 
 				tc.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/sam.png"));
+				dc.add(entity, sam_default_path("Run_01.png"));
 				ic.add(entity);
 				cc.add(entity);
+				vec2 s_position= tc.getTransform(entity)->m_position;
+				//vec2 s_position = {200.f, 200.f};
+				m_water.add_position(s_position);
+
 			}
 			else if (val == WALL)
 			{
@@ -233,6 +237,7 @@ void World::generateEntities(std::string room_path)
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_2_TO_3)
+<<<<<<< HEAD
 			{
 				entity = om.makeEntity("DoorRoom2To3", id);
 				id++;
@@ -243,6 +248,18 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR_ROOM_3_TO_2)
 			{
+=======
+			{
+				entity = om.makeEntity("DoorRoom2To3", id);
+				id++;
+
+				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				dc.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_3_TO_2)
+			{
+>>>>>>> 5bdb92444492a7c30ea43979882ca58936748a4c
 				entity = om.makeEntity("DoorRoom3To2", id);
 				id++;
 
@@ -310,6 +327,10 @@ bool World::update(float elapsed_ms)
 	is->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
+	vec2 s_position= ds->s_position;
+	//vec2 s_position= {200.f,200.f};
+  m_water.add_position(s_position);
+
 
 	return true;
 }
