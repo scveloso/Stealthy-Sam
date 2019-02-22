@@ -19,3 +19,13 @@ Entity* ObjectManager::getEntity(int id)
 {
 	return entities[id];
 }
+
+Entity* ObjectManager::getEntityByLabel(std::string label)
+{
+    for (auto& x : entities) {
+    	if (x->label == label) {
+    		return x;
+    	}
+    }
+    return nullptr;
+}

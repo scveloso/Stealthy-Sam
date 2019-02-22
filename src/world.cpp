@@ -16,7 +16,7 @@
 using json = nlohmann::json;
 
 DrawSystem* ds;
-InputSystem* is;
+InputSystem* inputSys;
 CollisionSystem* cs;
 
 // Same as static in c, local to compilation unit
@@ -147,9 +147,9 @@ void World::generateEntities(std::string room_path)
 {
 	// Components and Object Manager
 	ObjectManager om;
-	DrawCmp dc;
-	TransformCmp tc;
-	InputCmp ic;
+	DrawCmp drawCmp;
+	TransformCmp transformCmp;
+	InputCmp inputCmp;
 	CollisionCmp cc;
 
 	int id = 1;
@@ -158,6 +158,13 @@ void World::generateEntities(std::string room_path)
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
+
+    // Text boxes
+    Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
+    drawCmp.add(useWASD, textures_path("text/usewasd.png"));
+    inputCmp.add(useWASD);
+    transformCmp.add(useWASD, { 200, 200 }, { 0.2, 0.2 }, 0.0);
+    // we don't need these but since the components use lists instead of hashmaps it crashes the system if we don't add them
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -191,11 +198,11 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = om.getEntity(SAMS_GUID);
 
-				tc.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				dc.add(entity, sam_default_path("Run_01.png"));
-				ic.add(entity);
+				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
+				drawCmp.add(entity, sam_default_path("Run_01.png"));
+				inputCmp.add(entity);
 				cc.add(entity);
-				vec2 s_position= tc.getTransform(entity)->m_position;
+				vec2 s_position= transformCmp.getTransform(entity)->m_position;
 				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
 
@@ -205,8 +212,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("Wall", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/wall_mid.png"));
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
 				cc.add(entity);
 			}
 			else if (val == CLOSET)
@@ -214,8 +221,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("Closet", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/chest_closed.png"));
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_1_TO_2)
@@ -223,8 +230,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("DoorRoom1To2", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/door.png"));
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_2_TO_1)
@@ -232,8 +239,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("DoorRoom2To1", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/door.png"));
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_2_TO_3)
@@ -241,8 +248,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("DoorRoom2To3", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/door.png"));
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_3_TO_2)
@@ -250,8 +257,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("DoorRoom3To2", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/door.png"));
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
 				cc.add(entity);
 			}
 			else if (val == ENEMY)
@@ -259,8 +266,8 @@ void World::generateEntities(std::string room_path)
 				entity = om.makeEntity("Enemy", id);
 				id++;
 
-				tc.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				dc.add(entity, textures_path("Dungeon/enemy.png"));
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
 			}
 
@@ -269,25 +276,25 @@ void World::generateEntities(std::string room_path)
 	}
 
 	// Proceed to initialize systems
-	initializeSystems(om, dc, tc, ic, cc);
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
 void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc)
 {
 	ds = new DrawSystem(om, dc, tc);
-	is = new InputSystem(om, ic, tc, cc);
+	inputSys = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
 
 	ds->setup();
-	is->setup(m_window);
+	inputSys->setup(m_window);
 }
 
 // Clear the systems for reinitialization of entities when rooms switch
 void World::wipeSystems()
 {
 	delete ds;
-	delete is;
+	delete inputSys;
 	delete cs;
 }
 
@@ -311,7 +318,7 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	is->update(elapsed_ms);
+	inputSys->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
 	vec2 s_position= ds->s_position;
