@@ -8,7 +8,7 @@ void DrawCmp::add(Entity *entity, const char* file)
 	{
 		if (!draw->texture.load_from_file(file))
 		{
-			fprintf(stderr, "Failed to load turtle texture!\n");
+			fprintf(stderr, "Failed to load texture!\n");
 		}
 	}
 
