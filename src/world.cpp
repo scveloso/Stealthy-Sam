@@ -370,6 +370,8 @@ void World::handleUpdateAction(int updateAction)
 		}
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
+			wipeSystems();
+			generateEntities(map_path("room_one.json"));
 			// TODO: Implement death mechanic
 		}
 	}
