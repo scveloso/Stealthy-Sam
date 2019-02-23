@@ -39,6 +39,14 @@ mat3 transform= mat3(
   float s= 10;
   float t=5;
 
+float dimmer(float d) {
+
+	if (pow(d/1000, -0.1) > 1){
+		return 1.0;
+	} else {
+		return pow(d/1000,-0.3);
+	}
+}
 
   // float displace= 0;
   //
@@ -85,18 +93,24 @@ void main()
 
 	float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
 
+  float p = dimmer(d);
+	fcolor = in_color*p;
+
+	if (time < 5*10){
+		fcolor = fcolor*(time/50);
+
   // if (inside_tri(p1p2,p1p3,p2p3)){
   //   color= (in_color);
   // }
 	if (d <= (100*100))
 	{
-		color= (in_color);
+		color= fcolor;
   }
 	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
-    color= (in_color);
+    color= in_color;
   }
   else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
-   color= (in_color);
+   color= in_color;
  }
   else {
     color= vec4(0,0,0,1);
