@@ -342,14 +342,17 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	inputSys->update(elapsed_ms);
-	es->update(elapsed_ms);
-	int updateAction = cs->update(elapsed_ms);
+	int updateAction = inputSys->update(elapsed_ms);
 	handleUpdateAction(updateAction);
-	vec2 s_position= ds->s_position;
-	//vec2 s_position= {200.f,200.f};
-    m_water.add_position(s_position);
 
+	es->update(elapsed_ms);
+
+	updateAction = cs->update(elapsed_ms);
+	handleUpdateAction(updateAction);
+
+	vec2 s_position= ds->s_position;
+
+    m_water.add_position(s_position);
 
     return true;
 }
