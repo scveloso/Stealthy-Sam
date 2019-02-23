@@ -54,6 +54,7 @@ set(SOURCE_FILES
 	src/EnemySystem.hpp
   src/MovementSystem.hpp
 
+  src/common.hpp
 	src/Components/Cmp.hpp
 	src/Components/DrawCmp.hpp
 	src/Components/DrawCmp.cpp

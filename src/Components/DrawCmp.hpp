@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.hpp"
+#include "Cmp.hpp"
 
 class DrawCmp : public Cmp
 {

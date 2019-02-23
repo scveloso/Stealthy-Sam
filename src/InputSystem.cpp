@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include "InputSystem.hpp"
-#include "Components/Component.hpp"
+#include "Components/Cmp.hpp"
 #include <iostream>
 #include <string>
 

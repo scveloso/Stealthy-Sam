@@ -1,5 +1,5 @@
 #include "CollisionSystem.hpp"
-#include "Components/Component.hpp"
+#include "Components/Cmp.hpp"
 #include "common.hpp"
 #include "UpdateAction.hpp"
 
@@ -52,7 +52,7 @@ int CollisionSystem::update(float elapsed_ms)
 					return enemyUpdateAction;
 				}
 
-				if (handleCloset(entity))
+				if (handleClosets(entity))
 				{
 					samCollision->closet = true;
 				}

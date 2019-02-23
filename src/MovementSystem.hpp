@@ -9,8 +9,7 @@ class MovementSystem
 public:
 	MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc);
 	void update(float elapsed_ms);
-  bool is_movement_interrupted(vec2 new_position);
-  bool AABB(Transform *tr1, Transform *tr2, vec2 new_position);
+  bool is_movement_interrupted(int entityId, Transform* entityTransform);
 
 private:
   InputCmp inputComponent;
