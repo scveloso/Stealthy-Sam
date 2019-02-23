@@ -93,8 +93,8 @@ void main()
 
 	float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
 
-  float p = dimmer(d);
-	vec4 fcolor = p*in_color;
+  // float p = dimmer(d);
+	// vec4 fcolor = in_color*p;
 
 	// if (time < 5*10){
 	// 	fcolor = fcolor*(time/50);
@@ -103,13 +103,15 @@ void main()
   //   color= (in_color);
   // }
 	if (d <= (100*100))
-	{
-    if (time < 5*10){
-		fcolor = fcolor*(time/50);
-  }else{
-		color= (fcolor);
-     }
+	{  color= (in_color);
   }
+  // if (time < 5*10){
+	// 	color = color*(time/50);
+  // }
+  // else{
+	// 	color= (fcolor);
+  //    }
+  // }
 	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
     color= (in_color);
   }
