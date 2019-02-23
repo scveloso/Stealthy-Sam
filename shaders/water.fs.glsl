@@ -15,6 +15,14 @@ float circle(vec2 st, float radius){
                          dot(dist,dist)*4.0);
 }
 
+float dimmer(float d) {
+	
+	if (pow(d/1000, -0.1) > 1){
+		return 1.0;
+	} else {
+		return pow(d/1000,-0.3);
+	}
+}
 
 void main()
 {
@@ -26,12 +34,15 @@ void main()
 	vec3 sp = transform* vec3(sam_position,1);
 	vec4 in_color = texture(screen_texture, uv.xy);
 
-	float d= (gl_FragCoord.x - sp.x)*(gl_FragCoord.x - sp.x)+(gl_FragCoord.y- sp.y)*(gl_FragCoord.y-sp.y);
+	float d = (gl_FragCoord.x - sp.x)*(gl_FragCoord.x - sp.x)+(gl_FragCoord.y- sp.y)*(gl_FragCoord.y-sp.y);
 
-	if (d > (100*100))
-	{
-		color= vec4(0,0,0,1);
-	} else {
-		color= (in_color);
+
+
+	float p = dimmer(d);
+	color = in_color*p;
+
+	if (time < 5*10){
+		color = color*(time/50);
 	}
 }
+
