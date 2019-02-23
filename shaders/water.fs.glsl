@@ -25,7 +25,7 @@ mat3 transform= mat3(
   vec3 tp= transform* vec3(text_position,1);
   vec3 ep= transform* vec3(e_position,1);
   //vec3 e= transform* vec3(enemy_position,1);
-  vec2 e[];
+  //vec2 e[];
 	vec4 in_color = texture(screen_texture, uv.xy);
   float h = 16;
   float w = 150;
@@ -94,23 +94,27 @@ void main()
 	float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
 
   float p = dimmer(d);
-	fcolor = in_color*p;
+	vec4 fcolor = p*in_color;
 
-	if (time < 5*10){
-		fcolor = fcolor*(time/50);
+	// if (time < 5*10){
+	// 	fcolor = fcolor*(time/50);
 
   // if (inside_tri(p1p2,p1p3,p2p3)){
   //   color= (in_color);
   // }
 	if (d <= (100*100))
 	{
-		color= fcolor;
+    if (time < 5*10){
+		fcolor = fcolor*(time/50);
+  }else{
+		color= (fcolor);
+     }
   }
 	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
-    color= in_color;
+    color= (in_color);
   }
   else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
-   color= in_color;
+   color= (in_color);
  }
   else {
     color= vec4(0,0,0,1);
