@@ -20,6 +20,7 @@ InputSystem* inputSys;
 CollisionSystem* cs;
 
 Entity* keyE;
+Entity* move;
 
 
 // Same as static in c, local to compilation unit
@@ -166,22 +167,26 @@ void World::generateEntities(std::string room_path)
     Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
     drawCmp.add(useWASD, textures_path("text/usewasd.png"));
     inputCmp.add(useWASD);
-    transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
-    //pass coordinates to shader
-		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
-		m_water.add_text(tp);
-		if (useWASD->active){
-			m_water.removeText=1;
+    transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+		move = useWASD;
+		if (useWASD->active == true){
+			vec2 tp = transformCmp.getTransform(useWASD)->m_position;
+			m_water.add_text(tp);
+			m_water.removeText=false;
 		}
 
     Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
     drawCmp.add(useEText, textures_path("text/etointeract.png"));
     inputCmp.add(useEText);
-    transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+    transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
 		keyE= useEText;
     // Initially the E text box isn't there until we move
     useEText->active = false;
-
+		if (useEText->active == true){
+			vec2 tpe = transformCmp.getTransform(useEText)->m_position;
+			m_water.add_text(tpe);
+			m_water.removeText=false;
+		}
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -338,19 +343,25 @@ bool World::update(float elapsed_ms)
 	inputSys->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
-	if (inputSys->move == 1){
-		m_water.removeText= 0;
-	}
-	if (inputSys->keyE == 1){
-		m_water.removeKey= 0;
-	}
-	if (keyE->active){
-	vec2 tpe= ds->EBox;
-	m_water.add_key(tpe);
-	m_water.removeKey=1;
-}
+	// if (keyE->active == true){
+	// 	vec2 t_position= ds->EBox;
+	// 	m_water.add_text(t_position);
+	// 	printf("%g%n", t_position.x);
+	// 	m_water.removeText= false;
+	// }
+	// if (move->active == true){
+	// 	vec2 t_position= ds->moveBox;
+	// 	m_water.add_text(t_position);
+	// 	//printf("%g\n", t_position.x);
+	// 	m_water.removeText= false;
+	// }
 	vec2 s_position= ds->s_position;
-  m_water.add_position(s_position);
+	//vec2 t_position= {0,0};
+	//printf("%g\n", t_position);
+   m_water.add_position(s_position);
+//	m_water.add_text(t_position);
+//	m_water.removeText= true;
+  //printf("%g\n", t_position);
 
 
 	return true;

@@ -51,6 +51,13 @@ void Water::add_position(vec2 position){
 	sam_position= position;
 }
 
+void Water::add_text(vec2 position){
+	text_position= position;
+}
+void Water::add_key(vec2 position){
+	key_position= position;
+}
+
 void Water::reset_salmon_dead_time() {
 	m_dead_time = -1;
 }
@@ -67,13 +74,23 @@ void Water::draw(const mat3& projection) {
 	// Setting shaders
 	glUseProgram(effect.program);
 
+
 	// Set screen_texture sampling to texture unit 0
 	// Set clock
 	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
 	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
 	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
-	glUniform2f(s_position, sam_position.x-30.f, sam_position.y-820.f );
+	GLint t_position= glGetUniformLocation(effect.program, "text_position");
+	GLint e_position= glGetUniformLocation(effect.program, "e_position");
+	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
+	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
+
+	glUniform1i(text_cond, removeText);
+	glUniform1i(key_cond, removeKey);
+	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
+	glUniform2f(e_position, key_position.x-27.f, key_position.y-812.f );
+	glUniform2f(s_position, sam_position.x-25.f, sam_position.y-820.f );
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);
