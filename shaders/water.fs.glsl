@@ -48,10 +48,10 @@ void main()
 	{
 		color= (in_color);
   }
-	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 1){
+	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
     color= (in_color);
   }
-  else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 1){
+  else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
    color= (in_color);
  }
   else {

@@ -169,13 +169,15 @@ void World::generateEntities(std::string room_path)
     Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
     drawCmp.add(useWASD, textures_path("text/usewasd.png"));
     inputCmp.add(useWASD);
+
     transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
     //pass coordinates to shader
 		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
 		m_water.add_text(tp);
 		if (useWASD->active){
-			m_water.removeText=1;
+			m_water.removeText=0;
 		}
+
 
     Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
     drawCmp.add(useEText, textures_path("text/etointeract.png"));
@@ -346,16 +348,16 @@ bool World::update(float elapsed_ms)
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
-	if (inputSys->move == 1){
-		m_water.removeText= 0;
+	if (inputSys->has_move == 1){
+		m_water.removeText= 1;
 	}
-	if (inputSys->keyE == 1){
-		m_water.removeKey= 0;
+	if (inputSys->press_keyE == 1){
+		m_water.removeKey= 1;
 	}
 	if (keyE->active){
 	vec2 tpe= ds->EBox;
 	m_water.add_key(tpe);
-	m_water.removeKey=1;
+	m_water.removeKey=0;
 }
 	vec2 s_position= ds->s_position;
   m_water.add_position(s_position);

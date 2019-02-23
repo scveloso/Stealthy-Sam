@@ -110,7 +110,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// If we move using WASD, remove the text box showing movement directions
 	if (didMove) {
 	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-      move = 1;
+      has_move = 1;
 	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
 	    if (wasd_text_ent->active) {
 	        wasd_text_ent->active = false;
@@ -120,7 +120,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 	// Once they press E, we can remove the E text box
     if (didPressE) {
-        keyE = 1;
+        press_keyE = 1;
         objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
     }
 }
