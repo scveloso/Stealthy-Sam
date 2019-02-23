@@ -39,6 +39,7 @@ set(SOURCE_FILES
 	src/DrawSystem.cpp
 	src/InputSystem.cpp
 	src/CollisionSystem.cpp
+	src/EnemySystem.cpp
 
     src/project_path.hpp
 	src/common.hpp
@@ -49,8 +50,9 @@ set(SOURCE_FILES
 	src/DrawSystem.hpp
 	src/InputSystem.hpp
 	src/CollisionSystem.hpp
+	src/EnemySystem.hpp
 
-	src/Components/Component.hpp
+	src/Components/Cmp.hpp
 	src/Components/DrawCmp.hpp
 	src/Components/DrawCmp.cpp
 	src/Components/TransformCmp.hpp
@@ -59,6 +61,8 @@ set(SOURCE_FILES
 	src/Components/InputCmp.cpp
 	src/Components/CollisionCmp.cpp
 	src/Components/CollisionCmp.hpp
+	src/Components/EnemyCmp.hpp
+	src/Components/EnemyCmp.cpp
 
 	)
 

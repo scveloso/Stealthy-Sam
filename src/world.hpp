@@ -7,6 +7,7 @@
 #include "Components/TransformCmp.hpp"
 #include "Components/InputCmp.hpp"
 #include "Components/CollisionCmp.hpp"
+#include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
 
 // stlib
@@ -33,7 +34,7 @@ public:
 	void generateEntities(std::string room_path);
 
 	// Set-up DrawSystem, InputSystem, CollisionSystem
-	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc);
+	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec);
 
 	// Clear DrawSystem, InputSystem, CollisionSystem
 	void wipeSystems();

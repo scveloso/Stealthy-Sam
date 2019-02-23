@@ -8,6 +8,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->direction = NO_DIRECTION;
 	tb->width = 0.0f;
 	tb->height = 0.0f;
+	tb->visible = true;
 	transform_map[entity->id] = tb;
 	printf("Entity ID in Transform: %d\n", entity->id);
 }

@@ -14,6 +14,7 @@ public:
 struct Draw : public Renderable
 {
 	Texture texture;
+	bool visible;
 };
 
 struct Transform
@@ -24,29 +25,18 @@ struct Transform
 	float direction;
 	float width;
 	float height;
-	bool visible;
 };
 
 struct Collision
 {
-	bool closet;
-	bool wall;
+	bool top;
+	bool bottom;
+	bool right;
+	bool left;
 };
-
-struct Enemy
-{
-	int type;
-	int patrolX;
-	int patrolY;
-	vec2 start;
-	bool chase;
-};
-
-const int NORMAL = 11;
 
 const int UP = 2;
 const int DOWN = 3;
 const int LEFT = 5;
 const int RIGHT = 7;
 const int NO_DIRECTION = 1;
-const int SAMS_GUID = 0;

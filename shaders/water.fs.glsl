@@ -29,6 +29,7 @@ void main()
     0,   0,  1.0
     );
 	vec3 sp = transform* vec3(sam_position,1);
+<<<<<<< HEAD
   vec3 tp= transform* vec3(text_position,1);
   vec3 ep= transform* vec3(e_position,1);
 	vec4 in_color = texture(screen_texture, uv.xy);
@@ -56,5 +57,16 @@ void main()
  }
   else {
     color= vec4(0,0,0,1);
+=======
+	vec4 in_color = texture(screen_texture, uv.xy);
+
+	float d= (gl_FragCoord.x - sp.x)*(gl_FragCoord.x - sp.x)+(gl_FragCoord.y- sp.y)*(gl_FragCoord.y-sp.y);
+
+	if (d > (100*100))
+	{
+		color= vec4(0,0,0,1);
+	} else {
+		color= (in_color);
+>>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 	}
 }
