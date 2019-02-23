@@ -97,8 +97,8 @@ void Water::draw(const mat3& projection) {
 	//glUniform1i(en_direction, enemy_direction);
 	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
 	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
-	glUniform2f(e_position, key_position.x-27.f, key_position.y-812.f );
-	glUniform2f(s_position, sam_position.x+10.f, sam_position.y-820.f );
+	glUniform2f(e_position, key_position.x-17.f, key_position.y-812.f );
+	glUniform2f(s_position, sam_position.x+12.f, sam_position.y-820.f );
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);

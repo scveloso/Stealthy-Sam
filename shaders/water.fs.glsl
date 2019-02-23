@@ -29,7 +29,7 @@ mat3 transform= mat3(
 	vec4 in_color = texture(screen_texture, uv.xy);
   float h = 16;
   float w = 150;
-  float we = 210;
+  float we = 240;
   float x= gl_FragCoord.x;
   float y= gl_FragCoord.y;
   float x0= tp.x;
@@ -93,7 +93,7 @@ void main()
 
 	float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
 
-  // float p = dimmer(d);
+  float p = dimmer(d);
 	// vec4 fcolor = in_color*p;
 
 	// if (time < 5*10){
@@ -103,15 +103,14 @@ void main()
   //   color= (in_color);
   // }
 	if (d <= (100*100))
-	{  color= (in_color);
+	{  //color= (in_color);
+  if (time < 5*10){
+		color = in_color*p*(time/50);
   }
-  // if (time < 5*10){
-	// 	color = color*(time/50);
-  // }
-  // else{
-	// 	color= (fcolor);
-  //    }
-  // }
+  else{
+		color= (in_color*p);
+     }
+  }
 	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
     color= (in_color);
   }
