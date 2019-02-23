@@ -24,6 +24,7 @@ EnemySystem* es;
 Entity* keyE;
 
 
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -348,6 +349,7 @@ bool World::update(float elapsed_ms)
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
+	//inputSys->has_move == 1
 	if (inputSys->has_move == 1){
 		m_water.removeText= 1;
 	}
