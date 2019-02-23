@@ -169,7 +169,6 @@ void World::generateEntities(std::string room_path)
     Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
     drawCmp.add(useWASD, textures_path("text/usewasd.png"));
     inputCmp.add(useWASD);
-<<<<<<< HEAD
     transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
     //pass coordinates to shader
 		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
@@ -177,26 +176,16 @@ void World::generateEntities(std::string room_path)
 		if (useWASD->active){
 			m_water.removeText=1;
 		}
-=======
-    transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 
     Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
     drawCmp.add(useEText, textures_path("text/etointeract.png"));
     inputCmp.add(useEText);
-<<<<<<< HEAD
     transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
 		keyE= useEText;
     // Initially the E text box isn't there until we move
     useEText->active = false;
 
 
-=======
-    transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
-    // Initially the E text box isn't there until we move
-    useEText->active = false;
-
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 	// Read JSON map file
 	std::ifstream data(room_path);
 	json map = json::parse(data);
@@ -230,11 +219,7 @@ void World::generateEntities(std::string room_path)
 				entity = om.getEntity(SAMS_GUID);
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-<<<<<<< HEAD
-				drawCmp.add(entity, sam_default_path("Run_01.png"));
-=======
 				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 				inputCmp.add(entity);
 				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
@@ -312,12 +297,8 @@ void World::generateEntities(std::string room_path)
 	}
 
 	// Proceed to initialize systems
-<<<<<<< HEAD
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc);
-=======
 
 	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
@@ -362,10 +343,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	inputSys->update(elapsed_ms);
-<<<<<<< HEAD
-=======
 	es->update(elapsed_ms);
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
 	if (inputSys->move == 1){

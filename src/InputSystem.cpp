@@ -36,14 +36,8 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
             {
                 switch (key) {
                     case GLFW_KEY_A:
-<<<<<<< HEAD
-                        if (!collisionComponent.getmap()[it.first]->left) {
-                            transformComponent.setDirection(entity, LEFT);
-                        std::cout << transformComponent.getDirection(entity) << std::endl;}
-=======
                             transformComponent.setDirection(entity, LEFT);
                         std::cout << transformComponent.getDirection(entity) << std::endl;
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
                         didMove = true;
                         break;
                     case GLFW_KEY_D:
@@ -60,8 +54,6 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
                         break;
                     case GLFW_KEY_E:
                         // TODO: Implement interactables
-<<<<<<< HEAD
-=======
 						if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true) {
 							if (transformComponent.getTransform(entity)->visible == false) {
 								transformComponent.getTransform(entity)->visible = true;
@@ -71,7 +63,6 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 								transformComponent.getTransform(entity)->visible = false;
 							}
 						}
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
                         didPressE = true;
                         break;
                     case GLFW_KEY_P:
@@ -114,7 +105,6 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
                 }
             }
         }
-<<<<<<< HEAD
 	}
 
 	// If we move using WASD, remove the text box showing movement directions
@@ -131,23 +121,6 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// Once they press E, we can remove the E text box
     if (didPressE) {
         keyE = 1;
-=======
-	}
-
-	// If we move using WASD, remove the text box showing movement directions
-	if (didMove) {
-	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-
-	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
-	    if (wasd_text_ent->active) {
-	        wasd_text_ent->active = false;
-            objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
-	    }
-	}
-
-	// Once they press E, we can remove the E text box
-    if (didPressE) {
->>>>>>> e06218ff58fb4ad84070409b7f668472c84ef270
         objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
     }
 }
