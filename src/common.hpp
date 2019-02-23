@@ -23,7 +23,7 @@
 #define audio_path(name) data_path  "/audio/" name
 #define mesh_path(name) data_path  "/meshes/" name
 #define map_path(name) data_path "/maps/" name
-#define sam_default_path(name) data_path "/textures/CartoonDetective/Run/" name
+#define sam_default_path(name) data_path "/textures/sam/" name
 
 // Not much math is needed and there are already way too many libraries linked (:
 // If you want to do some overloads..

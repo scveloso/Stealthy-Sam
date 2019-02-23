@@ -221,8 +221,9 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = om.getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				transformCmp.add(entity, { x, y }, { 1.2f, 1.0f }, 0.0);
+				//drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
 				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;

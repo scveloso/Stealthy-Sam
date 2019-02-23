@@ -13,12 +13,10 @@ in vec2 uv;
 
 layout(location = 0) out vec4 color;
 
-float circle(vec2 st, float radius){
-  vec2 dist = st-vec2(0.5);
-	return 1.-smoothstep(radius-(radius*0.01),
-                         radius+(radius*0.01),
-                         dot(dist,dist)*4.0);
-}
+// float sign (fPoint p1, fPoint p2, fPoint p3)
+// {
+//     return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+// }
 
 
 void main()
