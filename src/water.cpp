@@ -57,6 +57,10 @@ void Water::add_text(vec2 position){
 void Water::add_key(vec2 position){
 	key_position= position;
 }
+// void Water::add_enemy_position(vec2 position){
+// 	enemy_position.push_back(position);
+// 	//printf("%g\n", enemy_position.x );
+// }
 
 void Water::reset_salmon_dead_time() {
 	m_dead_time = -1;
@@ -83,12 +87,16 @@ void Water::draw(const mat3& projection) {
 	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
+	//GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
+	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
 
 	glUniform1i(text_cond, removeText);
 	glUniform1i(key_cond, removeKey);
+	//glUniform1i(en_direction, enemy_direction);
 	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
+	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
 	glUniform2f(e_position, key_position.x-27.f, key_position.y-812.f );
 	glUniform2f(s_position, sam_position.x+10.f, sam_position.y-820.f );
 	glUniform1i(screen_text_uloc, 0);

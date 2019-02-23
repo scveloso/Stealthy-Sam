@@ -88,12 +88,15 @@ void DrawSystem::update(const mat3 projection)
 			s_position= transformComponent.getTransform(entity)->m_position;
 			//printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
 		}
-		// if (entity->label == USE_WASD_TEXT_LABEL ){
-		// 	moveBox= transformComponent.getTransform(entity)->m_position;
-		// }
+
 		if (entity->label == USE_E_INTERACT_LABEL){
 			EBox= transformComponent.getTransform(entity)->m_position;
 		}
+
+		// if (entity->label == "Enemy"){
+		// 	en_position= transformComponent.getTransform(entity)->m_position;
+		// 	en_direction= transformComponent.getTransform(entity)->direction;
+		// }
 
 		// Setting shaders
 		glUseProgram(draw->effect.program);

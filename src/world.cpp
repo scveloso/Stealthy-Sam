@@ -227,7 +227,6 @@ void World::generateEntities(std::string room_path)
 				inputCmp.add(entity);
 				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
 
 			}
@@ -294,6 +293,9 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
 				ec.add(entity, 100, 0);
+				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
+				// m_water.add_enemy_position(en_position);
+				// m_water.enemy_direction=5;
 			}
 
 			x += TILE_WIDTH;
@@ -364,6 +366,9 @@ bool World::update(float elapsed_ms)
 }
 	vec2 s_position= ds->s_position;
   m_water.add_position(s_position);
+	// vec2 en_position= ds->en_position;
+	// m_water.add_enemy_position(en_position);
+	// m_water.enemy_direction= ds->en_direction;
 
 
 	return true;

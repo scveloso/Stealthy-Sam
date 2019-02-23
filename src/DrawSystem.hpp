@@ -9,8 +9,9 @@ public:
 	void update(const mat3 projection);
 	bool setup();
 	vec2 s_position;
-	// vec2 moveBox;
 	vec2 EBox;
+	// vec2 en_position;
+	// int en_direction;
 private:
 	DrawCmp drawComponent;
 	TransformCmp transformComponent;
