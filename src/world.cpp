@@ -352,12 +352,13 @@ bool World::update(float elapsed_ms)
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
-	//inputSys->has_move == 1
 	if (inputSys->has_move == 1){
 		m_water.removeText= 1;
+		m_water.removeKey=0;
 	}
 	if (inputSys->press_keyE == 1){
 		m_water.removeKey= 1;
+		
 	}
 	if (keyE->active){
 	vec2 tpe= ds->EBox;

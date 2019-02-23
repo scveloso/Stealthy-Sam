@@ -25,6 +25,7 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
     bool didMove = false;
     bool didPressE = false;
+
 	for (auto& it : inputComponent.getmap())
 	{
 	    Entity* entity = objectManager.getEntity(it.first);

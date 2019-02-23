@@ -102,22 +102,34 @@ void main()
   // if (inside_tri(p1p2,p1p3,p2p3)){
   //   color= (in_color);
   // }
-	if (d <= (100*100))
-	{  //color= (in_color);
+	// if (d <= (100*100))
+	// {  //color= (in_color);
+ //  if (time < 5*10){
+	// 	color = in_color*p*(time/50);
+ //  }
+ //  else{
+	// 	color= (in_color*p);
+ //     }
+ //  }
+	//  else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
+ //    color= (in_color);
+ //  }
+ //  else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
+ //   color= (in_color);
+ // }
+ //  else {
+ //    color= vec4(0,0,0,1);
+	// }
   if (time < 5*10){
-		color = in_color*p*(time/50);
-  }
-  else{
-		color= (in_color*p);
-     }
-  }
-	 else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
-    color= (in_color);
-  }
-  else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
+        color = in_color*p*(time/50);
+ }
+ else{
+        color= (in_color*p);
+    }
+if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
    color= (in_color);
  }
-  else {
-    color= vec4(0,0,0,1);
-	}
+ else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
+  color= (in_color);
+}
 }
