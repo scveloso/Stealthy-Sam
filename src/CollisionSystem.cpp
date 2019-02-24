@@ -104,7 +104,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 
 bool CollisionSystem::handleClosets(Entity* entity)
 {
-	if (entity->label.compare("Closet") == 0)
+	if (entity->label.compare("ClosetArea") == 0)
 	{
 		return true;
 	}
