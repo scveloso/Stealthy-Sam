@@ -9,3 +9,6 @@ const int CHANGE_ROOM_THREE_TO_TWO = 4;
 
 // Enemy collision
 const int COLLIDE_WITH_ENEMY = 5;
+
+// Resetting game
+const int RESET_GAME = 6;

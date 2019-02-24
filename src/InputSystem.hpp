@@ -1,3 +1,4 @@
+#include <Components/GameStateCmp.hpp>
 #include "Components/TransformCmp.hpp"
 #include "Components/InputCmp.hpp"
 #include "Components/CollisionCmp.hpp"
@@ -7,8 +8,8 @@
 class InputSystem
 {
 public:
-	InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc);
-	void on_key(GLFWwindow*, int key, int, int action, int mod);
+	InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp);
+	int on_key(GLFWwindow *, int key, int _, int action, int mod);
 	bool setup(GLFWwindow* m_window);
 	void update(float elapsed_ms);
 	int has_move;
@@ -19,4 +20,5 @@ private:
 	TransformCmp transformComponent;
 	CollisionCmp collisionComponent;
 	ObjectManager objectManager;
+	GameStateCmp* gameState;
 };

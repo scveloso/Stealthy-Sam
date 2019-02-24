@@ -23,6 +23,9 @@ CollisionSystem* cs;
 EnemySystem* es;
 MovementSystem* ms;
 
+// Game State component
+GameStateCmp* gameState;
+
 Entity* keyE;
 
 
@@ -90,10 +93,7 @@ bool World::init(vec2 screen)
 	// Setting callbacks to member functions (that's why the redirect is needed)
 	// Input is handled using GLFW, for more info see
 	// http://www.glfw.org/docs/latest/input_guide.html
-	//glfwSetWindowUserPointer(m_window, this);
-	//auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	//auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
-	//glfwSetKeyCallback(m_window, key_redirect);
 	//glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
 	// Create a frame buffer
@@ -143,6 +143,9 @@ bool World::init(vec2 screen)
 	std::cout << "Screen.x: " << screen.x << std::endl;
 	std::cout << "Screen.y: " << screen.y << std::endl;
 
+	// Create initial game state
+	gameState = new GameStateCmp();
+	gameState->init();
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("room_one.json"));
@@ -168,27 +171,29 @@ void World::generateEntities(std::string room_path)
 	Entity* playerEntity = om.makeEntity("Player", id);
 	id++;
 
-    // Text boxes
-    Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
-    drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-    inputCmp.add(useWASD);
-
-    transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
-    //pass coordinates to shader
+	// Create text boxes if we're in room one:
+	if (map_path("room_one.json") == room_path)
+	{
+		// Text boxes
+		Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
+		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
+		inputCmp.add(useWASD);
+		transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		//pass coordinates to shader
 		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
 		m_water.add_text(tp);
 		if (useWASD->active){
 			m_water.removeText=0;
 		}
 
-
-    Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
-    drawCmp.add(useEText, textures_path("text/etointeract.png"));
-    inputCmp.add(useEText);
-    transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
+		drawCmp.add(useEText, textures_path("text/etointeract.png"));
+		inputCmp.add(useEText);
+		transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
 		keyE= useEText;
-    // Initially the E text box isn't there until we move
-    useEText->active = false;
+		// Initially the E text box isn't there until we move
+		useEText->active = false;
+	}
 
 
 	// Read JSON map file
@@ -306,24 +311,29 @@ void World::generateEntities(std::string room_path)
 
 	// Proceed to initialize systems
 
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec, gameState);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+							  GameStateCmp* gameStateCmp)
 {
-	ds = new DrawSystem(om, dc, tc);
-	inputSys = new InputSystem(om, ic, tc, cc);
+	ds = new DrawSystem(om, dc, tc, gameStateCmp);
+	inputSys = new InputSystem(om, ic, tc, cc, gameStateCmp);
 	cs = new CollisionSystem(om, cc, tc);
 	es = new EnemySystem(om, cc, tc, ec);
-	ms = new MovementSystem(om, ic, tc, cc);
+	ms = new MovementSystem(om, ic, tc, cc, gameStateCmp);
 
 	ds->setup();
 	inputSys->setup(m_window);
+
+	glfwSetWindowUserPointer(m_window, this);
+	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+	glfwSetKeyCallback(m_window, key_redirect);
 }
 
-// Clear the systems for reinitialization of entities when rooms switch
-void World::wipeSystems()
+// Clear objects in map for reinitialization of entities when rooms switch
+void World::clearMap()
 {
 	delete ds;
 	delete inputSys;
@@ -354,6 +364,7 @@ bool World::update(float elapsed_ms)
 {
 	// Update Systems
 	es->update(elapsed_ms);
+
 	int updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
 
@@ -368,6 +379,7 @@ bool World::update(float elapsed_ms)
 	if (inputSys->press_keyE == 1)
 	{
 		m_water.removeKey= 1;
+
 	}
 
 	if (keyE->active)
@@ -384,7 +396,7 @@ bool World::update(float elapsed_ms)
 	// m_water.add_enemy_position(en_position);
 	// m_water.enemy_direction= ds->en_direction;
 
-	return true;
+    return true;
 }
 
 // Takes in an UpdateAction, handles room changes, death, etc.
@@ -394,29 +406,37 @@ void World::handleUpdateAction(int updateAction)
 	{
 		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_one_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_two_to_one.json"));
+			gameState->current_room = ROOM_ONE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_two_to_three.json"));
+			gameState->current_room = ROOM_THREE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
-			wipeSystems();
+			clearMap();
 			generateEntities(map_path("room_three_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
-			wipeSystems();
+			gameState->sam_is_alive = false;
+		}
+		else if (updateAction == RESET_GAME)
+		{
+			gameState->init();
+			clearMap();
 			generateEntities(map_path("room_one.json"));
-			// TODO: Implement death mechanic
 		}
 	}
 }
@@ -494,22 +514,8 @@ bool World::is_over()const
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow*, int key, int _, int action, int mod)
 {
-	// Resetting game
-	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
-	{
-		int w, h;
-		glfwGetWindowSize(m_window, &w, &h);
-		m_water.reset_salmon_dead_time();
-		m_current_speed = 1.f;
-	}
-
-	// Control the current speed with `<` `>`
-	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&  key == GLFW_KEY_COMMA)
-		m_current_speed -= 0.1f;
-	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
-		m_current_speed += 0.1f;
-
-	m_current_speed = fmax(0.f, m_current_speed);
+    int resultingAction = inputSys->on_key(m_window, key, _, action, mod);
+    handleUpdateAction(resultingAction);
 }

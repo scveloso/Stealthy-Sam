@@ -1,12 +1,14 @@
+#include <Components/GameStateCmp.hpp>
 #include "DrawSystem.hpp"
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 
-DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc)
+DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
 	transformComponent = tc;
+	gameState = gameStateCmp;
 }
 
 bool DrawSystem::setup()
@@ -90,6 +92,12 @@ void DrawSystem::update(const mat3 projection)
 			if (entity->label == "Player"){
 			  s_position= transformComponent.getTransform(entity)->m_position;
 			  //printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
+
+				// If sam is dead, we should also rotate him sideways:
+				if (!gameState->sam_is_alive)
+				{
+					draw->transform_rotate(1.5708f);
+				}
 			}
 
 			if (entity->label == USE_E_INTERACT_LABEL){

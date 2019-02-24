@@ -18,6 +18,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <Components/GameStateCmp.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
@@ -34,10 +35,11 @@ public:
 	void generateEntities(std::string room_path);
 
 	// Set-up DrawSystem, InputSystem, CollisionSystem
-	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec);
+	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+						   GameStateCmp *gameStateCmp);
 
 	// Clear DrawSystem, InputSystem, CollisionSystem
-	void wipeSystems();
+	void clearMap();
 
 	// Takes in an UpdateAction, handles room changes, death, etc.
 	void handleUpdateAction(int action);
@@ -83,6 +85,4 @@ private:
 	// C++ rng
 	std::default_random_engine m_rng;
 	std::uniform_real_distribution<float> m_dist; // default 0..1
-
-	int gameState;
 };
