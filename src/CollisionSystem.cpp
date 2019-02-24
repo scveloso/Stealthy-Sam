@@ -56,11 +56,8 @@ int CollisionSystem::update(float elapsed_ms)
 				{
 					samCollision->closet = true;
 				}
-
 			}
-
 		}
-
 	}
 
 	if (collisionEvent == false)
@@ -105,7 +102,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 	return NO_CHANGE;
 }
 
-bool CollisionSystem::handleCloset(Entity* entity)
+bool CollisionSystem::handleClosets(Entity* entity)
 {
 	if (entity->label.compare("Closet") == 0)
 	{
@@ -124,7 +121,6 @@ bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
 	float half_height_obj2 = (tr2->m_scale.y) * (tr2->height / 2);
 
 	// Grab object's edges
-	// (Note: we don't want the edges of the texture but rather the edges of the actual sprite)
 	float obj1_x1 = tr1->m_position.x - half_width_obj1;
 	float obj1_x2 = tr1->m_position.x + half_width_obj1;
 	float obj1_y1 = tr1->m_position.y - half_height_obj1;

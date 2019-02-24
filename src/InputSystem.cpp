@@ -23,92 +23,100 @@ bool InputSystem::setup(GLFWwindow* m_window)
 
 void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
+<<<<<<< HEAD
     bool didMove = false;
     bool didPressE = false;
+=======
+  bool didMove = false;
+  bool didPressE = false;
+>>>>>>> Implemented MovementSystem, moves Sam and checks for wall collisions.
 
 	for (auto& it : inputComponent.getmap())
 	{
-	    Entity* entity = objectManager.getEntity(it.first);
-	    if (entity->label == USE_WASD_TEXT_LABEL || entity->label == USE_E_INTERACT_LABEL)
-        {
-	        // skip
-        } else {
-            if (action == GLFW_PRESS)
+    Entity* entity = objectManager.getEntity(it.first);
+	  if (entity->label == USE_WASD_TEXT_LABEL || entity->label == USE_E_INTERACT_LABEL)
+    {
+      // NO-OP
+    }
+    else
+    {
+      if (action == GLFW_PRESS)
+      {
+        switch (key) {
+          case GLFW_KEY_A:
+            transformComponent.setDirection(entity, LEFT);
+            didMove = true;
+            break;
+          case GLFW_KEY_D:
+            transformComponent.setDirection(entity, RIGHT);std::cout << transformComponent.getDirection(entity) << std::endl;
+            didMove = true;
+            break;
+          case GLFW_KEY_S:
+            transformComponent.setDirection(entity, DOWN);std::cout << transformComponent.getDirection(entity) << std::endl;
+            didMove = true;
+            break;
+          case GLFW_KEY_W:
+            transformComponent.setDirection(entity, UP);std::cout << transformComponent.getDirection(entity) << std::endl;
+            didMove = true;
+            break;
+          case GLFW_KEY_E:
+            // TODO: Implement interactables
+  					if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true)
             {
-                switch (key) {
-                    case GLFW_KEY_A:
-                            transformComponent.setDirection(entity, LEFT);
-                        std::cout << transformComponent.getDirection(entity) << std::endl;
-                        didMove = true;
-                        break;
-                    case GLFW_KEY_D:
-                        transformComponent.setDirection(entity, RIGHT);std::cout << transformComponent.getDirection(entity) << std::endl;
-                        didMove = true;
-                        break;
-                    case GLFW_KEY_S:
-                        transformComponent.setDirection(entity, DOWN);std::cout << transformComponent.getDirection(entity) << std::endl;
-                        didMove = true;
-                        break;
-                    case GLFW_KEY_W:
-                        transformComponent.setDirection(entity, UP);std::cout << transformComponent.getDirection(entity) << std::endl;
-                        didMove = true;
-                        break;
-                    case GLFW_KEY_E:
-                        // TODO: Implement interactables
-						if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true) {
-							if (transformComponent.getTransform(entity)->visible == false) {
-								transformComponent.getTransform(entity)->visible = true;
-								printf("visible");
-							}
-							else {
-								transformComponent.getTransform(entity)->visible = false;
-							}
-						}
-                        didPressE = true;
-                        break;
-                    case GLFW_KEY_P:
-                        //print out current position
-                        printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x,
-                               transformComponent.getTransform(entity)->m_position.y);
-                        break;
-                    case GLFW_KEY_C:
-                        //print out collision stuff
-                        Transform *tr1 = transformComponent.getTransform(entity);
-                        vec2 size1 = {tr1->width * tr1->m_scale.x, tr1->height * tr1->m_scale.y};
+  						if (transformComponent.getTransform(entity)->visible == false)
+              {
+  							transformComponent.getTransform(entity)->visible = true;
+  						}
+  						else
+              {
+  							transformComponent.getTransform(entity)->visible = false;
+  						}
+  					}
+            didPressE = true;
+            break;
+          case GLFW_KEY_P:
+            //print out current position
+            printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x,
+            transformComponent.getTransform(entity)->m_position.y);
+            break;
+          case GLFW_KEY_C:
+            //print out collision stuff
+            Transform *tr1 = transformComponent.getTransform(entity);
+            vec2 size1 = {tr1->width * tr1->m_scale.x, tr1->height * tr1->m_scale.y};
 
-                        printf("%f, %f, \n", tr1->width, tr1->height);
+            printf("%f, %f, \n", tr1->width, tr1->height);
 
-                        printf("SIZEX:%f , SIZEY:%f \n",
+            printf("SIZEX:%f , SIZEY:%f \n",
                                transformComponent.getTransform(entity)->m_position.x + size1.x,
                                transformComponent.getTransform(entity)->m_position.y + size1.y);
-                        break;
-                }
-
-            }
-
-            if (action == GLFW_RELEASE)
-            {
-                switch (key)
-                {
-                    case GLFW_KEY_A:
-                        transformComponent.removeDirection(entity, LEFT);
-                        break;
-                    case GLFW_KEY_D:
-                        transformComponent.removeDirection(entity, RIGHT);
-                        break;
-                    case GLFW_KEY_S:transformComponent.removeDirection(entity, DOWN);
-                        break;
-                    case GLFW_KEY_W:
-                        transformComponent.removeDirection(entity, UP);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            break;
+          }
         }
+
+        if (action == GLFW_RELEASE)
+        {
+          switch (key) {
+            case GLFW_KEY_A:
+              transformComponent.removeDirection(entity, LEFT);
+              break;
+            case GLFW_KEY_D:
+              transformComponent.removeDirection(entity, RIGHT);
+              break;
+            case GLFW_KEY_S:
+              transformComponent.removeDirection(entity, DOWN);
+              break;
+            case GLFW_KEY_W:
+              transformComponent.removeDirection(entity, UP);
+              break;
+            default:
+              break;
+        }
+      }
+    }
 	}
 
 	// If we move using WASD, remove the text box showing movement directions
+<<<<<<< HEAD
 	if (didMove) {
 	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
       has_move = 1;
@@ -163,4 +171,23 @@ void InputSystem::update(float elapsed_ms)
 			transformComponent.setPosition(entity, new_position);
 		}
 	}
+=======
+	if (didMove)
+  {
+    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
+
+	  // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
+	  if (wasd_text_ent->active)
+    {
+      wasd_text_ent->active = false;
+      objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
+	  }
+	}
+
+	// Once they press E, we can remove the E text box
+  if (didPressE)
+  {
+    objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
+  }
+>>>>>>> Implemented MovementSystem, moves Sam and checks for wall collisions.
 }

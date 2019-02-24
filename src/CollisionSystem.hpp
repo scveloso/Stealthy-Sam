@@ -13,7 +13,7 @@ public:
 	bool AABB(Transform *tr1, Transform *tr2);
 	int handleDoors(Entity* entity);
 	int handleEnemies(Entity* entity);
-	bool handleCloset(Entity* entity);
+	bool handleClosets(Entity* entity);
 
 private:
 	CollisionCmp collisionComponent;
