@@ -10,7 +10,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->height = 0.0f;
 	tb->visible = true;
 	transform_map[entity->id] = tb;
-	printf("Entity ID in Transform: %d\n", entity->id);
+	//printf("Entity ID in Transform: %d\n", entity->id);
 }
 
 std::unordered_map<int, Transform *> TransformCmp::getmap()
@@ -45,7 +45,7 @@ void TransformCmp::setDirection(Entity *entity, int direction)
 void TransformCmp::removeDirection(Entity *entity, int direction)
 {
 	float entityDirection = transform_map[entity->id]->direction;
-	if (entityDirection != NO_DIRECTION)
+	if ((int) entityDirection % direction == 0)
 	{
 		transform_map[entity->id]->direction /= direction;
 	}
