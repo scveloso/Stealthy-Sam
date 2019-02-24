@@ -13,11 +13,11 @@ void EnemySystem::update(float elapsed_ms) {
 	float step = ENEMY_SPEED * (elapsed_ms / 1000);
 
 	for (auto& it : enemyComponent.getmap()) {
-		
+
 		Enemy *enemy = it.second;
 
 			Transform *et =  transformComponent.getTransform(objectManager.getEntity(it.first));
-			
+
 			if (enemy->patrolX != 0) {
 				if (et->direction == NO_DIRECTION) {
 					et->direction = RIGHT;
@@ -67,7 +67,6 @@ void EnemySystem::update(float elapsed_ms) {
 					et->m_position.x = et->m_position.x - step;
 				}
 			}
-		
+
 	}
 }
-

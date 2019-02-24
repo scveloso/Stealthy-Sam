@@ -40,8 +40,9 @@ set(SOURCE_FILES
 	src/InputSystem.cpp
 	src/CollisionSystem.cpp
 	src/EnemySystem.cpp
+  src/MovementSystem.cpp
 
-    src/project_path.hpp
+  src/project_path.hpp
 	src/common.hpp
 	src/water.hpp
 	src/world.hpp
@@ -51,7 +52,9 @@ set(SOURCE_FILES
 	src/InputSystem.hpp
 	src/CollisionSystem.hpp
 	src/EnemySystem.hpp
+  src/MovementSystem.hpp
 
+  src/common.hpp
 	src/Components/Cmp.hpp
 	src/Components/DrawCmp.hpp
 	src/Components/DrawCmp.cpp

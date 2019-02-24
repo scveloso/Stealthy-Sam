@@ -4,6 +4,7 @@
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
+#include "MovementSystem.hpp"
 #include "TileConstants.hpp"
 #include "UpdateAction.hpp"
 
@@ -20,6 +21,7 @@ DrawSystem* ds;
 InputSystem* inputSys;
 CollisionSystem* cs;
 EnemySystem* es;
+MovementSystem* ms;
 
 Entity* keyE;
 
@@ -314,6 +316,7 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 	inputSys = new InputSystem(om, ic, tc, cc);
 	cs = new CollisionSystem(om, cc, tc);
 	es = new EnemySystem(om, cc, tc, ec);
+	ms = new MovementSystem(om, ic, tc, cc);
 
 	ds->setup();
 	inputSys->setup(m_window);
@@ -326,6 +329,7 @@ void World::wipeSystems()
 	delete inputSys;
 	delete cs;
 	delete es;
+	delete ms;
 }
 
 // Releases all the associated resources
@@ -348,29 +352,37 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	inputSys->update(elapsed_ms);
+	// Update Systems
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
+	ms->update(elapsed_ms);
+
+	// Handle UpdateAction
 	handleUpdateAction(updateAction);
-	if (inputSys->has_move == 1){
+	if (inputSys->has_move == 1)
+	{
 		m_water.removeText= 1;
 		m_water.removeKey=0;
 	}
-	if (inputSys->press_keyE == 1){
+
+	if (inputSys->press_keyE == 1)
+	{
 		m_water.removeKey= 1;
-		
 	}
-	if (keyE->active){
-	vec2 tpe= ds->EBox;
-	m_water.add_key(tpe);
-	m_water.removeKey=0;
-}
+
+	if (keyE->active)
+	{
+		vec2 tpe = ds->EBox;
+		m_water.add_key(tpe);
+		m_water.removeKey = 0;
+	}
+
+	// Update sam position for circle of light
 	vec2 s_position= ds->s_position;
   m_water.add_position(s_position);
 	// vec2 en_position= ds->en_position;
 	// m_water.add_enemy_position(en_position);
 	// m_water.enemy_direction= ds->en_direction;
-
 
 	return true;
 }

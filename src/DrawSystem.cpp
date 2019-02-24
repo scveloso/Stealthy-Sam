@@ -1,5 +1,5 @@
 #include "DrawSystem.hpp"
-#include "Components/Component.hpp"
+#include "Components/Cmp.hpp"
 #include "common.hpp"
 
 DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc)

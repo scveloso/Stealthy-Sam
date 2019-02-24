@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.hpp"
+#include "Cmp.hpp"
 
 class TransformCmp : public Cmp
 {
