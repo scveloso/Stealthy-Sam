@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.hpp"
+#include "Cmp.hpp"
 
 class GameStateCmp : public Cmp
 {

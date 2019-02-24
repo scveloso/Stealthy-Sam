@@ -98,9 +98,9 @@ Texture::~Texture()
 
 bool Texture::load_from_file(const char* path)
 {
-	if (path == nullptr) 
+	if (path == nullptr)
 		return false;
-	
+
 	stbi_uc* data = stbi_load(path, &width, &height, NULL, 4);
 	if (data == NULL)
 		return false;
