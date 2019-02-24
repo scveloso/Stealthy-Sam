@@ -91,10 +91,7 @@ bool World::init(vec2 screen)
 	// Setting callbacks to member functions (that's why the redirect is needed)
 	// Input is handled using GLFW, for more info see
 	// http://www.glfw.org/docs/latest/input_guide.html
-	glfwSetWindowUserPointer(m_window, this);
-	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	//auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
-	glfwSetKeyCallback(m_window, key_redirect);
 	//glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
 	// Create a frame buffer
@@ -326,6 +323,10 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 
 	ds->setup();
 	inputSys->setup(m_window);
+
+	glfwSetWindowUserPointer(m_window, this);
+	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+	glfwSetKeyCallback(m_window, key_redirect);
 }
 
 // Clear objects in map for reinitialization of entities when rooms switch
@@ -394,21 +395,25 @@ void World::handleUpdateAction(int updateAction)
 		{
 			clearMap();
 			generateEntities(map_path("room_one_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
 			clearMap();
 			generateEntities(map_path("room_two_to_one.json"));
+			gameState->current_room = ROOM_ONE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
 			clearMap();
 			generateEntities(map_path("room_two_to_three.json"));
+			gameState->current_room = ROOM_THREE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
 			clearMap();
 			generateEntities(map_path("room_three_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
@@ -416,7 +421,6 @@ void World::handleUpdateAction(int updateAction)
 		}
 		else if (updateAction == RESET_GAME)
 		{
-			printf("hi world");
 			gameState->init();
 			clearMap();
 			generateEntities(map_path("room_one.json"));

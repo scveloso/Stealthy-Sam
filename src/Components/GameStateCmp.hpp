@@ -7,4 +7,5 @@ public:
     void init();
     bool sam_is_alive;
     int keys;
+    std::string current_room;
 };

@@ -58,7 +58,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 						if (it.first == SAMS_GUID && collisionComponent.getmap().at(SAMS_GUID)->closet == true) {
 							if (transformComponent.getTransform(entity)->visible == false) {
 								transformComponent.getTransform(entity)->visible = true;
-								printf("visible");
 							}
 							else {
 								transformComponent.getTransform(entity)->visible = false;
@@ -105,27 +104,31 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 						break;
                     default:
                         break;
-                }
-            }
-        }
+				}
+			}
+		}
 	}
 
-	// If we move using WASD, remove the text box showing movement directions
-	if (didMove) {
-	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-      has_move = 1;
-	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
-	    if (wasd_text_ent->active) {
-	        wasd_text_ent->active = false;
-            objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
-	    }
-	}
 
-	// Once they press E, we can remove the E text box
-    if (didPressE) {
-        press_keyE = 1;
-        objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
-    }
+	// Deal with textboxes only if we're in room one:
+	if (gameState->current_room == ROOM_ONE_GUID) {
+		// If we move using WASD, remove the text box showing movement directions
+		if (didMove) {
+			Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
+			has_move = 1;
+			// If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
+			if (wasd_text_ent->active) {
+				wasd_text_ent->active = false;
+				objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
+			}
+		}
+
+		// Once they press E, we can remove the E text box
+		if (didPressE) {
+			press_keyE = 1;
+			objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
+		}
+	}
 
     return returnAction;
 }
