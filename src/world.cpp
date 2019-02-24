@@ -359,24 +359,25 @@ bool World::update(float elapsed_ms)
 
 	// Handle UpdateAction
 	handleUpdateAction(updateAction);
-<<<<<<< HEAD
-	if (inputSys->has_move == 1){
+	if (inputSys->has_move == 1)
+	{
 		m_water.removeText= 1;
 		m_water.removeKey=0;
 	}
-	if (inputSys->press_keyE == 1){
+
+	if (inputSys->press_keyE == 1)
+	{
 		m_water.removeKey= 1;
-		
 	}
-	if (keyE->active){
-	vec2 tpe= ds->EBox;
-	m_water.add_key(tpe);
-	m_water.removeKey=0;
-}
-=======
+
+	if (keyE->active)
+	{
+		vec2 tpe = ds->EBox;
+		m_water.add_key(tpe);
+		m_water.removeKey = 0;
+	}
 
 	// Update sam position for circle of light
->>>>>>> Implemented MovementSystem, moves Sam and checks for wall collisions.
 	vec2 s_position= ds->s_position;
   m_water.add_position(s_position);
 	// vec2 en_position= ds->en_position;

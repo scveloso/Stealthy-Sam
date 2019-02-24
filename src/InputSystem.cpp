@@ -23,13 +23,8 @@ bool InputSystem::setup(GLFWwindow* m_window)
 
 void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-<<<<<<< HEAD
-    bool didMove = false;
-    bool didPressE = false;
-=======
   bool didMove = false;
   bool didPressE = false;
->>>>>>> Implemented MovementSystem, moves Sam and checks for wall collisions.
 
 	for (auto& it : inputComponent.getmap())
 	{
@@ -116,65 +111,10 @@ void InputSystem::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 
 	// If we move using WASD, remove the text box showing movement directions
-<<<<<<< HEAD
-	if (didMove) {
-	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-      has_move = 1;
-	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
-	    if (wasd_text_ent->active) {
-	        wasd_text_ent->active = false;
-            objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
-	    }
-	}
-
-	// Once they press E, we can remove the E text box
-    if (didPressE) {
-        press_keyE = 1;
-        objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
-    }
-}
-
-void InputSystem::update(float elapsed_ms)
-{
-	const float SAM_SPEED = 200.f;
-	float step = SAM_SPEED * (elapsed_ms / 1000);
-
-	for (auto& it : inputComponent.getmap())
-	{
-		Entity* entity = objectManager.getEntity(it.first);
-
-		int direction = transformComponent.getTransform(entity)->direction;
-
-		vec2 new_position = transformComponent.getTransform(entity)->m_position;
-
-		if (direction % LEFT == 0)
-		{
-			new_position.x = new_position.x - step;
-		}
-
-		if (direction % RIGHT == 0)
-		{
-			new_position.x = new_position.x + step;
-		}
-
-		if (direction % DOWN == 0)
-		{
-			new_position.y = new_position.y + step;
-		}
-
-		if (direction % UP == 0)
-		{
-			new_position.y = new_position.y - step;
-		}
-
-		if (transformComponent.getTransform(entity)->visible == true) {
-			transformComponent.setPosition(entity, new_position);
-		}
-	}
-=======
 	if (didMove)
   {
     Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
+    has_move = 1;
 
 	  // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
 	  if (wasd_text_ent->active)
@@ -187,7 +127,7 @@ void InputSystem::update(float elapsed_ms)
 	// Once they press E, we can remove the E text box
   if (didPressE)
   {
+    press_keyE = 1;
     objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
   }
->>>>>>> Implemented MovementSystem, moves Sam and checks for wall collisions.
 }
