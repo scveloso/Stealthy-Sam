@@ -1,5 +1,5 @@
 #include "DrawSystem.hpp"
-#include "Components/Component.hpp"
+#include "Components/Cmp.hpp"
 #include "common.hpp"
 
 DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc)
@@ -74,7 +74,7 @@ void DrawSystem::update(const mat3 projection)
 		Draw *draw = it.second;
 		// Don't draw inactive entities
 		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true) {
-			
+
 			if (!entity->active) {
 				continue;
 			}
@@ -86,10 +86,20 @@ void DrawSystem::update(const mat3 projection)
 			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
 			draw->transform_end();
 
-			if (entity->id == 0) {
-				s_position = transformComponent.getTransform(entity)->m_position;
-				//printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
+
+			if (entity->label == "Player"){
+			  s_position= transformComponent.getTransform(entity)->m_position;
+			  //printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
 			}
+
+			if (entity->label == USE_E_INTERACT_LABEL){
+			  EBox= transformComponent.getTransform(entity)->m_position;
+			}
+
+			// if (entity->label == "Enemy"){
+			// 	en_position= transformComponent.getTransform(entity)->m_position;
+			// 	en_direction= transformComponent.getTransform(entity)->direction;
+			// }
 
 			// Setting shaders
 			glUseProgram(draw->effect.program);

@@ -4,6 +4,7 @@
 #include "InputSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
+#include "MovementSystem.hpp"
 #include "TileConstants.hpp"
 #include "UpdateAction.hpp"
 
@@ -20,6 +21,11 @@ DrawSystem* ds;
 InputSystem* inputSys;
 CollisionSystem* cs;
 EnemySystem* es;
+MovementSystem* ms;
+
+Entity* keyE;
+
+
 
 // Same as static in c, local to compilation unit
 namespace
@@ -152,7 +158,7 @@ void World::generateEntities(std::string room_path)
 	DrawCmp drawCmp;
 	TransformCmp transformCmp;
 	InputCmp inputCmp;
-	CollisionCmp collisionCmp;
+	CollisionCmp cc;
 	EnemyCmp ec;
 
 	int id = 1;
@@ -166,14 +172,24 @@ void World::generateEntities(std::string room_path)
     Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
     drawCmp.add(useWASD, textures_path("text/usewasd.png"));
     inputCmp.add(useWASD);
-    transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+
+    transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+    //pass coordinates to shader
+		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
+		m_water.add_text(tp);
+		if (useWASD->active){
+			m_water.removeText=0;
+		}
+
 
     Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
     drawCmp.add(useEText, textures_path("text/etointeract.png"));
     inputCmp.add(useEText);
-    transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+    transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		keyE= useEText;
     // Initially the E text box isn't there until we move
     useEText->active = false;
+
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -208,12 +224,12 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = om.getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				transformCmp.add(entity, { x, y }, { 1.2f, 1.0f }, 0.0);
+				//drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
-				collisionCmp.add(entity);
+				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
 			}
 			else if (val == TOP_LEFT_CORNER)
@@ -223,7 +239,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == TOP_RIGHT_CORNER)
 			{
@@ -232,7 +248,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/top_right_corner.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == BOTTOM_LEFT_CORNER)
 			{
@@ -241,7 +257,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/bottom_left_corner.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == BOTTOM_RIGHT_CORNER)
 			{
@@ -250,7 +266,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/bottom_right_corner.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == TOP_WALL)
 			{
@@ -259,7 +275,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/top_wall.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == BOTTOM_WALL)
 			{
@@ -268,7 +284,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/bottom_wall.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == LEFT_WALL)
 			{
@@ -277,7 +293,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == RIGHT_WALL)
 			{
@@ -286,7 +302,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/right_wall.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == BLACK_TILE)
 			{
@@ -295,7 +311,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/black_tile.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == FLOOR_TILE)
 			{
@@ -304,7 +320,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == CLOSET)
 			{
@@ -313,7 +329,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/closet.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == CHEST)
 			{
@@ -322,7 +338,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_1_TO_2)
 			{
@@ -331,7 +347,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 			}
 			else if (val == ENEMY)
 			{
@@ -340,8 +356,11 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
-				collisionCmp.add(entity);
+				cc.add(entity);
 				ec.add(entity, 100, 0);
+				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
+				// m_water.add_enemy_position(en_position);
+				// m_water.enemy_direction=5;
 			}
 //			if (val == SAM)
 //			{
@@ -427,16 +446,17 @@ void World::generateEntities(std::string room_path)
 
 	// Proceed to initialize systems
 
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, collisionCmp, ec);
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp collisionCmp, EnemyCmp ec)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
 {
 	ds = new DrawSystem(om, dc, tc);
-	inputSys = new InputSystem(om, ic, tc, collisionCmp);
-	cs = new CollisionSystem(om, collisionCmp, tc);
-	es = new EnemySystem(om, collisionCmp, tc, ec);
+	inputSys = new InputSystem(om, ic, tc, cc);
+	cs = new CollisionSystem(om, cc, tc);
+	es = new EnemySystem(om, cc, tc, ec);
+	ms = new MovementSystem(om, ic, tc, cc);
 
 	ds->setup();
 	inputSys->setup(m_window);
@@ -449,6 +469,7 @@ void World::wipeSystems()
 	delete inputSys;
 	delete cs;
 	delete es;
+	delete ms;
 }
 
 // Releases all the associated resources
@@ -471,14 +492,37 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	inputSys->update(elapsed_ms);
+	// Update Systems
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
-	handleUpdateAction(updateAction);
-	vec2 s_position= ds->s_position;
-	//vec2 s_position= {200.f,200.f};
-  m_water.add_position(s_position);
+	ms->update(elapsed_ms);
 
+	// Handle UpdateAction
+	handleUpdateAction(updateAction);
+	if (inputSys->has_move == 1)
+	{
+		m_water.removeText= 1;
+		m_water.removeKey=0;
+	}
+
+	if (inputSys->press_keyE == 1)
+	{
+		m_water.removeKey= 1;
+	}
+
+	if (keyE->active)
+	{
+		vec2 tpe = ds->EBox;
+		m_water.add_key(tpe);
+		m_water.removeKey = 0;
+	}
+
+	// Update sam position for circle of light
+	vec2 s_position= ds->s_position;
+  m_water.add_position(s_position);
+	// vec2 en_position= ds->en_position;
+	// m_water.add_enemy_position(en_position);
+	// m_water.enemy_direction= ds->en_direction;
 
 	return true;
 }
