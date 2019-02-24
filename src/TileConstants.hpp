@@ -20,7 +20,7 @@ const int BLACK_TILE = 345;
 const int CHEST = 18;
 const int ENEMY = 132;
 const int DOOR_ROOM_1_TO_2 = 1345;
-const int CLOSET = 830;
+const int CLOSET = 381;
 const int FLOOR_TILE = 76;
 
 

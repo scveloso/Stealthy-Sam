@@ -183,6 +183,7 @@ void World::generateEntities(std::string room_path)
 	// Go through layers
 	for (json::iterator layer_it = layers.begin(); layer_it != layers.end(); ++layer_it)
 	{
+		std::cout << "layer: " << std::endl;
 		json tiles = (*layer_it)["data"];
 
 		float y = TILE_HEIGHT / 2;
