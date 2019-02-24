@@ -101,9 +101,15 @@ bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTran
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
+<<<<<<< HEAD
             if (otherEntity->label.compare("Wall") == 0)
             {
                 Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+=======
+      if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+      {
+        Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+>>>>>>> Made enemies shorter and Sam collides with closets now.
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
