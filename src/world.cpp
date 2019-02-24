@@ -139,7 +139,7 @@ bool World::init(vec2 screen)
 
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
-	generateEntities(map_path("room_one.json"));
+	generateEntities(map_path("level_one.json"));
 
 	return m_water.init();
 }
@@ -152,7 +152,7 @@ void World::generateEntities(std::string room_path)
 	DrawCmp drawCmp;
 	TransformCmp transformCmp;
 	InputCmp inputCmp;
-	CollisionCmp cc;
+	CollisionCmp collisionCmp;
 	EnemyCmp ec;
 
 	int id = 1;
@@ -210,20 +210,100 @@ void World::generateEntities(std::string room_path)
 				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
 				inputCmp.add(entity);
-				cc.add(entity);
+				collisionCmp.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
 				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
-
 			}
-			else if (val == WALL)
+			else if (val == TOP_LEFT_CORNER)
 			{
 				entity = om.makeEntity("Wall", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
-				cc.add(entity);
+				drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == TOP_RIGHT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/top_right_corner.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == BOTTOM_LEFT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/bottom_left_corner.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == BOTTOM_RIGHT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/bottom_right_corner.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == TOP_WALL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/top_wall.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == BOTTOM_WALL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/bottom_wall.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == LEFT_WALL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == RIGHT_WALL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/right_wall.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == BLACK_TILE)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/black_tile.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == FLOOR_TILE)
+			{
+				entity = om.makeEntity("Floor_Tile", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
+				collisionCmp.add(entity);
 			}
 			else if (val == CLOSET)
 			{
@@ -231,8 +311,17 @@ void World::generateEntities(std::string room_path)
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/closet.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == CHEST)
+			{
+				entity = om.makeEntity("Chest", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
-				cc.add(entity);
+				collisionCmp.add(entity);
 			}
 			else if (val == DOOR_ROOM_1_TO_2)
 			{
@@ -241,34 +330,7 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				cc.add(entity);
-			}
-			else if (val == DOOR_ROOM_2_TO_1)
-			{
-				entity = om.makeEntity("DoorRoom2To1", id);
-				id++;
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				cc.add(entity);
-			}
-			else if (val == DOOR_ROOM_2_TO_3)
-			{
-				entity = om.makeEntity("DoorRoom2To3", id);
-				id++;
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				cc.add(entity);
-			}
-			else if (val == DOOR_ROOM_3_TO_2)
-			{
-				entity = om.makeEntity("DoorRoom3To2", id);
-				id++;
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				cc.add(entity);
+				collisionCmp.add(entity);
 			}
 			else if (val == ENEMY)
 			{
@@ -277,9 +339,86 @@ void World::generateEntities(std::string room_path)
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
-				cc.add(entity);
+				collisionCmp.add(entity);
 				ec.add(entity, 100, 0);
 			}
+//			if (val == SAM)
+//			{
+//				entity = om.getEntity(SAMS_GUID);
+//
+//				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+//				inputCmp.add(entity);
+//				collisionCmp.add(entity);
+//				vec2 s_position = transformCmp.getTransform(entity)->m_position;
+//				//vec2 s_position = {200.f, 200.f};
+//				m_water.add_position(s_position);
+//
+//			}
+//			else if (val == WALL)
+//			{
+//				entity = om.makeEntity("Wall", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == CLOSET)
+//			{
+//				entity = om.makeEntity("Closet", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == DOOR_ROOM_1_TO_2)
+//			{
+//				entity = om.makeEntity("DoorRoom1To2", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == DOOR_ROOM_2_TO_1)
+//			{
+//				entity = om.makeEntity("DoorRoom2To1", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == DOOR_ROOM_2_TO_3)
+//			{
+//				entity = om.makeEntity("DoorRoom2To3", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == DOOR_ROOM_3_TO_2)
+//			{
+//				entity = om.makeEntity("DoorRoom3To2", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+//				collisionCmp.add(entity);
+//			}
+//			else if (val == ENEMY)
+//			{
+//				entity = om.makeEntity("Enemy", id);
+//				id++;
+//
+//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
+//				collisionCmp.add(entity);
+//				ec.add(entity, 100, 0);
+//			}
 
 			x += TILE_WIDTH;
 		}
@@ -287,16 +426,16 @@ void World::generateEntities(std::string room_path)
 
 	// Proceed to initialize systems
 
-	initializeSystems(om, drawCmp, transformCmp, inputCmp, cc, ec);
+	initializeSystems(om, drawCmp, transformCmp, inputCmp, collisionCmp, ec);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
+void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp collisionCmp, EnemyCmp ec)
 {
 	ds = new DrawSystem(om, dc, tc);
-	inputSys = new InputSystem(om, ic, tc, cc);
-	cs = new CollisionSystem(om, cc, tc);
-	es = new EnemySystem(om, cc, tc, ec);
+	inputSys = new InputSystem(om, ic, tc, collisionCmp);
+	cs = new CollisionSystem(om, collisionCmp, tc);
+	es = new EnemySystem(om, collisionCmp, tc, ec);
 
 	ds->setup();
 	inputSys->setup(m_window);
