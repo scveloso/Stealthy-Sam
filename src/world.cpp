@@ -24,6 +24,10 @@ EnemySystem* es;
 // Game State component
 GameStateCmp* gameState;
 
+Entity* keyE;
+
+
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -175,15 +179,23 @@ void World::generateEntities(std::string room_path)
 		Entity* useWASD = om.makeEntity(USE_WASD_TEXT_LABEL, 1);
 		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
 		inputCmp.add(useWASD);
-		transformCmp.add(useWASD, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+		transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		//pass coordinates to shader
+		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
+		m_water.add_text(tp);
+		if (useWASD->active){
+			m_water.removeText=0;
+		}
 
 		Entity* useEText = om.makeEntity(USE_E_INTERACT_LABEL, 1);
 		drawCmp.add(useEText, textures_path("text/etointeract.png"));
 		inputCmp.add(useEText);
-		transformCmp.add(useEText, { 600, 100 }, { 0.2, 0.2 }, 0.0);
+		transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		keyE= useEText;
 		// Initially the E text box isn't there until we move
 		useEText->active = false;
 	}
+
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -217,12 +229,12 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = om.getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				transformCmp.add(entity, { x, y }, { 1.2f, 1.0f }, 0.0);
+				//drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
 				cc.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-				//vec2 s_position = {200.f, 200.f};
 				m_water.add_position(s_position);
 
 			}
@@ -289,6 +301,9 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
 				cc.add(entity);
 				ec.add(entity, 100, 0);
+				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
+				// m_water.add_enemy_position(en_position);
+				// m_water.enemy_direction=5;
 			}
 
 			x += TILE_WIDTH;
@@ -348,10 +363,24 @@ bool World::update(float elapsed_ms)
 
 	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
+	if (inputSys->has_move == 1){
+		m_water.removeText= 1;
+		m_water.removeKey=0;
+	}
+	if (inputSys->press_keyE == 1){
+		m_water.removeKey= 1;
 
+	}
+	if (keyE->active){
+	vec2 tpe= ds->EBox;
+	m_water.add_key(tpe);
+	m_water.removeKey=0;
+}
 	vec2 s_position= ds->s_position;
-
-    m_water.add_position(s_position);
+  m_water.add_position(s_position);
+	// vec2 en_position= ds->en_position;
+	// m_water.add_enemy_position(en_position);
+	// m_water.enemy_direction= ds->en_direction;
 
     return true;
 }

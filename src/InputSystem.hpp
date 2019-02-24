@@ -12,6 +12,8 @@ public:
 	int on_key(GLFWwindow *, int key, int _, int action, int mod);
 	bool setup(GLFWwindow* m_window);
 	void update(float elapsed_ms);
+	int has_move;
+	int press_keyE;
 
 private:
 	InputCmp inputComponent;

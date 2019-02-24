@@ -25,6 +25,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
     int returnAction = NO_CHANGE;
     bool didMove = false;
     bool didPressE = false;
+
 	for (auto& it : inputComponent.getmap())
 	{
 	    Entity* entity = objectManager.getEntity(it.first);
@@ -112,7 +113,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 	// If we move using WASD, remove the text box showing movement directions
 	if (didMove) {
 	    Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-
+      has_move = 1;
 	    // If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
 	    if (wasd_text_ent->active) {
 	        wasd_text_ent->active = false;
@@ -122,6 +123,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 
 	// Once they press E, we can remove the E text box
     if (didPressE) {
+        press_keyE = 1;
         objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
     }
 
