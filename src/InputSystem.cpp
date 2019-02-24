@@ -17,16 +17,10 @@ InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, Collisi
 
 bool InputSystem::setup(GLFWwindow* m_window)
 {
-	glfwSetWindowUserPointer(m_window, this);
-	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3)
-    {
-        ((InputSystem*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3);
-    };
-	glfwSetKeyCallback(m_window, key_redirect);
 	return true;
 }
 
-int InputSystem::on_key(GLFWwindow *, int key, int, int action, int mod)
+int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 {
     int returnAction = NO_CHANGE;
     bool didMove = false;
@@ -76,9 +70,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int, int action, int mod)
                         printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x,
                                transformComponent.getTransform(entity)->m_position.y);
                         break;
-					case GLFW_KEY_R:
-						returnAction = RESET_GAME;
-						break;
                     case GLFW_KEY_C:
                         //print out collision stuff
                         Transform *tr1 = transformComponent.getTransform(entity);
@@ -108,6 +99,9 @@ int InputSystem::on_key(GLFWwindow *, int key, int, int action, int mod)
                     case GLFW_KEY_W:
                         transformComponent.removeDirection(entity, UP);
                         break;
+					case GLFW_KEY_R:
+						returnAction = RESET_GAME;
+						break;
                     default:
                         break;
                 }

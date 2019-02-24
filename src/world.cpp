@@ -87,10 +87,10 @@ bool World::init(vec2 screen)
 	// Setting callbacks to member functions (that's why the redirect is needed)
 	// Input is handled using GLFW, for more info see
 	// http://www.glfw.org/docs/latest/input_guide.html
-	//glfwSetWindowUserPointer(m_window, this);
-	//auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+	glfwSetWindowUserPointer(m_window, this);
+	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	//auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
-	//glfwSetKeyCallback(m_window, key_redirect);
+	glfwSetKeyCallback(m_window, key_redirect);
 	//glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
 	// Create a frame buffer
@@ -342,12 +342,11 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	int updateAction = inputSys->update(elapsed_ms);
-	handleUpdateAction(updateAction);
+	inputSys->update(elapsed_ms);
 
 	es->update(elapsed_ms);
 
-	updateAction = cs->update(elapsed_ms);
+	int updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
 
 	vec2 s_position= ds->s_position;
@@ -385,6 +384,13 @@ void World::handleUpdateAction(int updateAction)
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
 			gameState->sam_is_alive = false;
+		}
+		else if (updateAction == RESET_GAME)
+		{
+			printf("hi world");
+			gameState->init();
+			clearMap();
+			generateEntities(map_path("room_one.json"));
 		}
 	}
 }
@@ -462,22 +468,8 @@ bool World::is_over()const
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow*, int key, int _, int action, int mod)
 {
-	// Resetting game
-	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
-	{
-		int w, h;
-		glfwGetWindowSize(m_window, &w, &h);
-		m_water.reset_salmon_dead_time();
-		m_current_speed = 1.f;
-	}
-
-	// Control the current speed with `<` `>`
-	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&  key == GLFW_KEY_COMMA)
-		m_current_speed -= 0.1f;
-	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
-		m_current_speed += 0.1f;
-
-	m_current_speed = fmax(0.f, m_current_speed);
+    int resultingAction = inputSys->on_key(m_window, key, _, action, mod);
+    handleUpdateAction(resultingAction);
 }
