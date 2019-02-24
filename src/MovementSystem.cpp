@@ -24,12 +24,12 @@ void MovementSystem::update(float elapsed_ms)
 	for (auto& it : inputComponent.getmap())
     {
         Entity* entity = objectManager.getEntity(it.first);
-        
+
         if (entity->id == SAMS_GUID && !gameState->sam_is_alive)
         {
             continue;
         }
-        
+
         Transform* entityTransform = transformComponent.getTransform(entity);
         int direction = entityTransform->direction;
         vec2 oldPosition = entityTransform->m_position;
@@ -101,15 +101,9 @@ bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTran
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-<<<<<<< HEAD
-            if (otherEntity->label.compare("Wall") == 0)
-            {
-                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
-=======
       if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
       {
         Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
->>>>>>> Made enemies shorter and Sam collides with closets now.
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
