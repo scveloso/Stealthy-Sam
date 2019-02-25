@@ -26,7 +26,9 @@ void EnemySystem::update(float elapsed_ms) {
 
 				if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
 					et->movementDirection = LEFT;
-					et->m_scale.x *= -1;
+					if (et->m_scale.x > 0) {
+						et->m_scale.x *= -1;
+					}
 				}
 
 				if (et->m_position.x < enemy->start.x) {
@@ -39,7 +41,9 @@ void EnemySystem::update(float elapsed_ms) {
 
 				if (et->movementDirection == RIGHT) {
 					et->m_position.x = et->m_position.x + step;
-					et->m_scale.x = abs(et->m_scale.x);
+					if (et->m_scale.x < 0) {
+						et->m_scale.x *= -1;
+					}
 				}
 
 			}
