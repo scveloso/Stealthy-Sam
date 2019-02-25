@@ -12,12 +12,21 @@ public:
 	void setPositionY(Entity *entity, float pos);
 	void setPosition(Entity *entity, vec2 pos);
 
-	void setDirection(Entity *entity, int direction);
-	float getDirection(Entity *entity);
-	void removeDirection(Entity *entity, int direction);
+	// Movement Direction
+	void setMovementDirection(Entity *entity, int movementDirection);
+	int getMovementDirection(Entity *entity);
+	void removeMovementDirection(Entity *entity, int movementDirection);
 
 	void setWidth(Entity *entity, float width);
 	void setHeight(Entity *entity, float height);
+
+	bool isGoingLeft(Entity *entity);
+	bool isGoingRight(Entity *entity);
+	bool isGoingUp(Entity *entity);
+	bool isGoingDown(Entity *entity);
+
+	void faceLeft(Entity *entity);
+	void faceRight(Entity *entity);
 
 private:
 	std::unordered_map<int, Transform*> transform_map;

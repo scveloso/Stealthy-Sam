@@ -19,51 +19,51 @@ void EnemySystem::update(float elapsed_ms) {
 			Transform *et =  transformComponent.getTransform(objectManager.getEntity(it.first));
 
 			if (enemy->patrolX != 0) {
-				if (et->direction == NO_DIRECTION) {
-					et->direction = RIGHT;
+				if (et->movementDirection == NO_DIRECTION) {
+					et->movementDirection = RIGHT;
 					enemy->start = et->m_position;
 				}
 
 				if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
-					et->direction = LEFT;
+					et->movementDirection = LEFT;
 					et->m_scale.x *= -1;
 				}
 
 				if (et->m_position.x < enemy->start.x) {
-					et->direction = RIGHT;
+					et->movementDirection = RIGHT;
 				}
 
-				if (et->direction == LEFT) {
+				if (et->movementDirection == LEFT) {
 					et->m_position.x = et->m_position.x - step;
 				}
 
-				if (et->direction == RIGHT) {
+				if (et->movementDirection == RIGHT) {
 					et->m_position.x = et->m_position.x + step;
 					et->m_scale.x = abs(et->m_scale.x);
 				}
 
 			}
 			else {
-				if (et->direction == NO_DIRECTION) {
-					et->direction = UP;
+				if (et->movementDirection == NO_DIRECTION) {
+					et->movementDirection = UP;
 					enemy->start = et->m_position;
 				}
 
 				if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
-					et->direction = DOWN;
+					et->movementDirection = DOWN;
 					et->m_scale.x *= -1;
 				}
 
 				if (et->m_position.y < enemy->start.y) {
-					et->direction = UP;
+					et->movementDirection = UP;
 					et->m_scale.x *= -1;
 				}
 
-				if (et->direction == DOWN) {
+				if (et->movementDirection == DOWN) {
 					et->m_position.x = et->m_position.x + step;
 				}
 
-				if (et->direction == UP) {
+				if (et->movementDirection == UP) {
 					et->m_position.x = et->m_position.x - step;
 				}
 			}

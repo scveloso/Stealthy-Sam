@@ -14,7 +14,7 @@ MovementSystem::MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, C
     gameState = gameStateCmp;
 }
 
-// Attempt moving the relevant entities to a new position based on their direction,
+// Attempt moving the relevant entities to a new position based on their movementDirection,
 // If movement to a new position will be interrupted, cancel movement
 void MovementSystem::update(float elapsed_ms)
 {
@@ -31,12 +31,12 @@ void MovementSystem::update(float elapsed_ms)
         }
 
         Transform* entityTransform = transformComponent.getTransform(entity);
-        int direction = entityTransform->direction;
+        int movementDirection = entityTransform->movementDirection;
         vec2 oldPosition = entityTransform->m_position;
 
         if (transformComponent.getTransform(entity)->visible)
         {
-            if (direction % LEFT == 0)
+            if (movementDirection % LEFT == 0)
             {
                 entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
                 if (is_movement_interrupted(entity->id, entityTransform))
@@ -49,7 +49,7 @@ void MovementSystem::update(float elapsed_ms)
                 }
             }
 
-            if (direction % RIGHT == 0)
+            if (movementDirection % RIGHT == 0)
             {
                 entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
                 if (is_movement_interrupted(entity->id, entityTransform))
@@ -62,7 +62,7 @@ void MovementSystem::update(float elapsed_ms)
                 }
             }
 
-            if (direction % DOWN == 0)
+            if (movementDirection % DOWN == 0)
             {
                 entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
                 if (is_movement_interrupted(entity->id, entityTransform))
@@ -75,7 +75,7 @@ void MovementSystem::update(float elapsed_ms)
                 }
             }
 
-            if (direction % UP == 0)
+            if (movementDirection % UP == 0)
             {
                 entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
                 if (is_movement_interrupted(entity->id, entityTransform))

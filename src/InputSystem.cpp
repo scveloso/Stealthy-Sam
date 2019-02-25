@@ -37,21 +37,30 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
     {
       if (action == GLFW_PRESS)
       {
+        float direction = transformComponent.getMovementDirection(entity);
         switch (key) {
           case GLFW_KEY_A:
-            transformComponent.setDirection(entity, LEFT);
-            didMove = true;
+            if (!transformComponent.isGoingLeft(entity))
+            {
+              transformComponent.setMovementDirection(entity, LEFT);
+              transformComponent.faceLeft(entity);
+              didMove = true;
+            }
             break;
           case GLFW_KEY_D:
-            transformComponent.setDirection(entity, RIGHT);std::cout << transformComponent.getDirection(entity) << std::endl;
+          if (!transformComponent.isGoingRight(entity))
+          {
+            transformComponent.setMovementDirection(entity, RIGHT);
+            transformComponent.faceRight(entity);
             didMove = true;
+          }
             break;
           case GLFW_KEY_S:
-            transformComponent.setDirection(entity, DOWN);std::cout << transformComponent.getDirection(entity) << std::endl;
+            transformComponent.setMovementDirection(entity, DOWN);
             didMove = true;
             break;
           case GLFW_KEY_W:
-            transformComponent.setDirection(entity, UP);std::cout << transformComponent.getDirection(entity) << std::endl;
+            transformComponent.setMovementDirection(entity, UP);
             didMove = true;
             break;
           case GLFW_KEY_E:
@@ -93,15 +102,16 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           switch (key) {
 
                     case GLFW_KEY_A:
-                        transformComponent.removeDirection(entity, LEFT);
+                        transformComponent.removeMovementDirection(entity, LEFT);
                         break;
                     case GLFW_KEY_D:
-                        transformComponent.removeDirection(entity, RIGHT);
+                        transformComponent.removeMovementDirection(entity, RIGHT);
                         break;
-                    case GLFW_KEY_S:transformComponent.removeDirection(entity, DOWN);
+                    case GLFW_KEY_S:
+                        transformComponent.removeMovementDirection(entity, DOWN);
                         break;
                     case GLFW_KEY_W:
-                        transformComponent.removeDirection(entity, UP);
+                        transformComponent.removeMovementDirection(entity, UP);
                         break;
 					case GLFW_KEY_R:
 						returnAction = RESET_GAME;
@@ -135,48 +145,4 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 	}
 
 	return returnAction;
-}
-
-void InputSystem::update(float elapsed_ms)
-{
-	const float SAM_SPEED = 200.f;
-	float step = SAM_SPEED * (elapsed_ms / 1000);
-
-	for (auto& it : inputComponent.getmap())
-	{
-		Entity* entity = objectManager.getEntity(it.first);
-
-		// Don't move sam's position if he's dead
-		if (entity->id == SAMS_GUID && !gameState->sam_is_alive) {
-		    continue;
-		}
-
-		int direction = transformComponent.getTransform(entity)->direction;
-
-		vec2 new_position = transformComponent.getTransform(entity)->m_position;
-
-		if (direction % LEFT == 0)
-		{
-			new_position.x = new_position.x - step;
-		}
-
-		if (direction % RIGHT == 0)
-		{
-			new_position.x = new_position.x + step;
-		}
-
-		if (direction % DOWN == 0)
-		{
-			new_position.y = new_position.y + step;
-		}
-
-		if (direction % UP == 0)
-		{
-			new_position.y = new_position.y - step;
-		}
-
-		if (transformComponent.getTransform(entity)->visible == true) {
-			transformComponent.setPosition(entity, new_position);
-		}
-	}
 }
