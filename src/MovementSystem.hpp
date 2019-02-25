@@ -1,3 +1,4 @@
+#include <Components/GameStateCmp.hpp>
 #include "Components/InputCmp.hpp"
 #include "Components/TransformCmp.hpp"
 #include "Components/CollisionCmp.hpp"
@@ -7,13 +8,14 @@
 class MovementSystem
 {
 public:
-	MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc);
+	MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp);
 	void update(float elapsed_ms);
   bool is_movement_interrupted(int entityId, Transform* entityTransform);
 
 private:
-  InputCmp inputComponent;
+	InputCmp inputComponent;
 	TransformCmp transformComponent;
-  CollisionCmp collisionComponent;
+	CollisionCmp collisionComponent;
 	ObjectManager objectManager;
+	GameStateCmp *gameState;
 };
