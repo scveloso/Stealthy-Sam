@@ -107,7 +107,7 @@ const int KEY = 3806;
 //const int ENEMY = 376;
 
 // Doors
-//const int DOOR_ROOM_1_TO_2 = 48412;
-//const int DOOR_ROOM_2_TO_1 = 48421;
-//const int DOOR_ROOM_2_TO_3 = 48423;
-//const int DOOR_ROOM_3_TO_2 = 48432;
+const int DOOR_ROOM_1_TO_2 = 48412;
+const int DOOR_ROOM_2_TO_1 = 48421;
+const int DOOR_ROOM_2_TO_3 = 48423;
+const int DOOR_ROOM_3_TO_2 = 48432;

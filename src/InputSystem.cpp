@@ -43,7 +43,9 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             if (!transformComponent.isGoingLeft(entity))
             {
               transformComponent.setMovementDirection(entity, LEFT);
-              transformComponent.faceLeft(entity);
+              if (gameState->sam_is_alive) {
+                transformComponent.faceLeft(entity);
+              }
               didMove = true;
             }
             break;
@@ -51,7 +53,9 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           if (!transformComponent.isGoingRight(entity))
           {
             transformComponent.setMovementDirection(entity, RIGHT);
-            transformComponent.faceRight(entity);
+            if (gameState->sam_is_alive) {
+              transformComponent.faceRight(entity);
+            }
             didMove = true;
           }
             break;
@@ -72,7 +76,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   				    transformComponent.getTransform(entity)->visible = true;
   				}
   				else
-                {
+          {
   				    transformComponent.getTransform(entity)->visible = false;
   				}
   			}

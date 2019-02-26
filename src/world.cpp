@@ -1068,12 +1068,12 @@ void World::generateEntities(std::string room_path)
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
+				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
 				cc.add(entity);
 				ec.add(entity, 100, 0);
-//				vec2 en_position = transformCmp.getTransform(entity)->m_position;
-//				m_water.add_enemy_position(en_position);
-//				m_water.enemy_direction=5;
+				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
+				// m_water.add_enemy_position(en_position);
+				// m_water.enemy_direction=5;
 			}
 //			if (val == SAM)
 //			{
@@ -1168,7 +1168,7 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 {
 	ds = new DrawSystem(om, dc, tc, gameStateCmp);
 	inputSys = new InputSystem(om, ic, tc, cc, gameStateCmp);
-	cs = new CollisionSystem(om, cc, tc);
+	cs = new CollisionSystem(om, cc, tc, gameStateCmp);
 	es = new EnemySystem(om, cc, tc, ec);
 	ms = new MovementSystem(om, ic, tc, cc, gameStateCmp);
 

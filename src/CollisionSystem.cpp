@@ -3,11 +3,12 @@
 #include "common.hpp"
 #include "UpdateAction.hpp"
 
-CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc)
+CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;
+	gameStateComponent = gsc;
 }
 
 // Checks for collisions between Sam and other entities
@@ -51,6 +52,9 @@ int CollisionSystem::update(float elapsed_ms)
 				{
 					return enemyUpdateAction;
 				}
+
+				// Handle key collisions
+                int keyUpdateAction = handleKeys(entity);
 
 				if (handleClosets(entity))
 				{
@@ -97,6 +101,18 @@ int CollisionSystem::handleEnemies(Entity* entity)
 	if (entity->label.compare("Enemy") == 0)
 	{
 		return COLLIDE_WITH_ENEMY;
+	}
+
+	return NO_CHANGE;
+}
+
+// Returns an UpdateAction to trigger death if an enemy is collided with
+int CollisionSystem::handleKeys(Entity* entity)
+{
+	if (entity->label.compare("Key") == 0)
+	{
+		entity->active = false;
+		gameStateComponent->keys++;
 	}
 
 	return NO_CHANGE;
