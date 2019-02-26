@@ -59,8 +59,6 @@ bool DrawSystem::setup()
 		// Loading shaders
 		if (!draw->effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 			return false;
-
-		//printf("SETUP\n");
 	}
 
 	return true;
@@ -68,12 +66,11 @@ bool DrawSystem::setup()
 
 void DrawSystem::update(const mat3 projection)
 {
-
 	for (auto& it : drawComponent.getmap())
 	{
-
 		Entity *entity = objectManager.getEntity(it.first);
 		Draw *draw = it.second;
+
 		// Don't draw inactive entities
 		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true) {
 
@@ -81,17 +78,15 @@ void DrawSystem::update(const mat3 projection)
 				continue;
 			}
 
-
 			draw->transform_begin();
 			draw->transform_translate(transformComponent.getTransform(entity)->m_position);
 			draw->transform_rotate(transformComponent.getTransform(entity)->m_rotation);
 			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
 			draw->transform_end();
 
-
-			if (entity->label == "Player"){
-			  s_position= transformComponent.getTransform(entity)->m_position;
-			  //printf("shader movement: %g\n", transformComponent.getTransform(entity)->m_position.y);
+			if (entity->label == "Player") {
+				Transform* samTransform = transformComponent.getTransform(entity);
+			  s_position = samTransform->m_position;
 
 				// If sam is dead, we should also rotate him sideways:
 				if (!gameState->sam_is_alive)
@@ -100,8 +95,8 @@ void DrawSystem::update(const mat3 projection)
 				}
 			}
 
-			if (entity->label == USE_E_INTERACT_LABEL){
-			  EBox= transformComponent.getTransform(entity)->m_position;
+			if (entity->label == USE_E_INTERACT_LABEL) {
+			  EBox = transformComponent.getTransform(entity)->m_position;
 			}
 
 			// if (entity->label == "Enemy"){
