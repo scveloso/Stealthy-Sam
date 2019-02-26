@@ -6,16 +6,17 @@ EnemySystem::EnemySystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, Ene
 	transformComponent = tc;
 	enemyComponent = ec;
 
-	// Initialize decision tree
 	DecisionNode* decisionNode = new DecisionNode(1, 2);
+	decision_tree.emplace_back(decisionNode);
+	decisionNode = new DecisionNode(3, 5);
+	decision_tree.emplace_back(decisionNode);
+	decisionNode = new DecisionNode(4, 5);
 	decision_tree.emplace_back(decisionNode);
 	decisionNode = new DecisionNode(RETURN_TO_PATROL);
 	decision_tree.emplace_back(decisionNode);
-	decisionNode = new DecisionNode(3, 4);
-	decision_tree.emplace_back(decisionNode);
 	decisionNode = new DecisionNode(CHASE_SAM);
 	decision_tree.emplace_back(decisionNode);
-	decisionNode = new DecisionNode(PATROL);
+	decisionNode = new DecisionNode(MAINTAIN_ACTION);
 	decision_tree.emplace_back(decisionNode);
 }
 
@@ -128,25 +129,33 @@ void EnemySystem::chaseSam(Enemy* enemy, Transform* et, Transform* st, float ste
 // Set the enemy to return to starting position
 void EnemySystem::returnToPatrolPosition(Enemy* enemy, Transform* et, float step) {
 	vec2 enemyPosition = et->m_position;
-	vec2 startPosition = et->start;
+	vec2 startPosition = enemy->start;
+
+	bool changedPos = false;
 
 	if (enemyPosition.x > startPosition.x) {
 		enemyPosition = { enemyPosition.x - step, enemyPosition.y };
+		changedPos = true;
 	}
 
 	if (enemyPosition.x < startPosition.x) {
 		enemyPosition = { enemyPosition.x + step, enemyPosition.y };
+		changedPos = true;
 	}
 
 	if (enemyPosition.y > startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y - step };
+		changedPos = true;
 	}
 
 	if (enemyPosition.y < startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y + step };
+		changedPos = true;
 	}
 
-	if (enemyPosition.x == startPosition.x && enemyPosition.y == startPosition.y) {
+	// If position will no longer change (as close to starting position as possible),
+	// Set back to patrol
+	if (enemyPosition.x == et->m_position.x && enemyPosition.y == et->m_position.y) {
 		enemy->action = PATROL;
 	}
 
@@ -210,30 +219,23 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Transform* et, float step) {
 // Given an enemy and where Sam is, decide what the next action of the
 // enemy should be
 void EnemySystem::handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform) {
-	int action;
+	int action = RETURN_TO_PATROL; // default action
 	DecisionNode* currNode = decision_tree.at(0); 	// Root node
-	int nextNodePos = currNode->getNextNode(!enemy->chase);
-
-	// Traverse enemy decision tree
+	int nextNodePos = currNode->getNextNode(!samTransform->visible);
 	currNode = decision_tree.at(nextNodePos);
-	if (currNode->m_isEndNode) {
+
+	if (nextNodePos == 1) {
+		nextNodePos = currNode->getNextNode(enemy->action == CHASE_SAM);
+		currNode = decision_tree.at(nextNodePos);
 		action = currNode->getAction();
 	}
-	else {			// Find next next node
-		// Is Sam on the right side of screen?
-		nextNodePos = currNode->getNextNode(samTransform->m_position.x >= 600);
+	else if (nextNodePos == 2) {
+		nextNodePos = currNode->getNextNode(samTransform->m_position.x <= 600);
 		currNode = decision_tree.at(nextNodePos);
-
-		if (currNode->m_isEndNode) {
-			action = currNode->getAction();
-		}
+		action = currNode->getAction();
 	}
 
-	// Set enemy to chase or patrol depending on decision found
-	if (action == PATROL) {
-		enemy->chase = false;
-	}
-	if (action == CHASE_SAM) {
-		enemy->chase = true;
+	if (action != MAINTAIN_ACTION) {
+		enemy->action = action;
 	}
 }

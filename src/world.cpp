@@ -322,7 +322,7 @@ void World::generateEntities(std::string room_path)
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
+				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
 				cc.add(entity);
 				ec.add(entity, 100, 0);
 				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
