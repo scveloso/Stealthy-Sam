@@ -228,6 +228,7 @@ void World::generateEntities(std::string room_path)
 			if (val == SAM)
 			{
 				entity = om.getEntity(SAMS_GUID);
+				// entity->depth = 1;
 
 				transformCmp.add(entity, { x, y }, { 1.2f, 1.0f }, 0.0);
 				//drawCmp.add(entity, textures_path("Dungeon/sam.png"));
@@ -338,7 +339,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CHEST)
 			{
-				entity = om.makeEntity("Chest", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -491,7 +492,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CHAIR_TL)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Chair", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -500,7 +501,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CHAIR_TR)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Chair", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -689,7 +690,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CAB_TL)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -698,7 +699,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CAB_TR)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -707,7 +708,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CAB_BL)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -716,7 +717,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == CAB_BR)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -725,7 +726,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == SIDE_CAB_T)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -734,7 +735,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == SIDE_CAB_M)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -743,7 +744,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == SIDE_CAB_ML)
 			{
-				entity = om.makeEntity("Wall", id);
+				entity = om.makeEntity("Closet", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
@@ -813,6 +814,186 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, textures_path("Dungeon/CLOCK_BR.png"));
 				cc.add(entity);
 			}
+			else if (val == LEFT_COUNTER_BL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BL.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_BML)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BML.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_BMR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BMR.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_BR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BR.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_LEFT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_LEFT_CORNER.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_ML)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_LEFT.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_MR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_RIGHT.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_RIGHT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_RIGHT_CORNER.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_TL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_LEFT.png"));
+				cc.add(entity);
+			}
+			else if (val == LEFT_COUNTER_TR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_RIGHT.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_BL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BL.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_BML)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BML.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_BMR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BMR.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_BR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BR.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_LEFT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_LEFT_CORNER.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_ML)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_ML.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_MR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_MR.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_RIGHT_CORNER)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_RIGHT_CORNER.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_TL)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TL.png"));
+				cc.add(entity);
+			}
+			else if (val == RIGHT_COUNTER_TR)
+			{
+				entity = om.makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TR.png"));
+				cc.add(entity);
+			}
 			else if (val == KEY)
 			{
 				entity = om.makeEntity("Key", id);
@@ -843,6 +1024,15 @@ void World::generateEntities(std::string room_path)
 			else if (val == DOOR_ROOM_2_TO_3)
 			{
 				entity = om.makeEntity("DoorRoom2To3", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_3_TO_2)
+			{
+				entity = om.makeEntity("DoorRoom3To2", id);
 				id++;
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
@@ -1042,25 +1232,25 @@ void World::handleUpdateAction(int updateAction)
         if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
             clearMap();
-            generateEntities(map_path("level_two.json"));
+            generateEntities(map_path("level_one_to_two.json"));
 			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
 			clearMap();
-			generateEntities(map_path("room_two_to_one.json"));
+			generateEntities(map_path("level_two_to_one.json"));
 			gameState->current_room = ROOM_ONE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
 			clearMap();
-			generateEntities(map_path("room_two_to_three.json"));
+			generateEntities(map_path("level_two_to_three.json"));
 			gameState->current_room = ROOM_THREE_GUID;
 		}
 		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
 			clearMap();
-			generateEntities(map_path("room_three_to_two.json"));
+			generateEntities(map_path("level_three_to_two.json"));
 			gameState->current_room = ROOM_TWO_GUID;
 		}
 		else if (updateAction == COLLIDE_WITH_ENEMY)
