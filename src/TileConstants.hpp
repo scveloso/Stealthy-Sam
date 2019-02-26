@@ -9,6 +9,7 @@ const int NUM_ROWS = 16;	// Screen height divided by pixel height
 // Tile values created by Tiled
 const int SAM = 105;
 const int WALL = 34;
+const int KEY = 494;
 const int CLOSET = 496;
 const int DOOR = 484;
 const int ENEMY = 376;

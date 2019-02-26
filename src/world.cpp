@@ -246,6 +246,15 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
 				cc.add(entity);
 			}
+			else if (val == KEY)
+            {
+                entity = om.makeEntity("Key", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/key.png"));
+                cc.add(entity);
+            }
 			else if (val == CLOSET)
 			{
 				entity = om.makeEntity("Closet", id);
@@ -345,7 +354,7 @@ void World::initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, Inp
 {
 	ds = new DrawSystem(om, dc, tc, gameStateCmp);
 	inputSys = new InputSystem(om, ic, tc, cc, gameStateCmp);
-	cs = new CollisionSystem(om, cc, tc);
+	cs = new CollisionSystem(om, cc, tc, gameStateCmp);
 	es = new EnemySystem(om, cc, tc, ec);
 	ms = new MovementSystem(om, ic, tc, cc, gameStateCmp);
 
