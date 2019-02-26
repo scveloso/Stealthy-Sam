@@ -30,64 +30,6 @@ void EnemySystem::update(float elapsed_ms) {
 	for (auto& it : enemyComponent.getmap()) {
 
 		Enemy *enemy = it.second;
-
-<<<<<<< HEAD
-			Transform *et =  transformComponent.getTransform(objectManager.getEntity(it.first));
-
-			if (enemy->patrolX != 0) {
-				if (et->movementDirection == NO_DIRECTION) {
-					et->movementDirection = RIGHT;
-					enemy->start = et->m_position;
-				}
-
-				if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
-					et->movementDirection = LEFT;
-					if (et->m_scale.x > 0) {
-						et->m_scale.x *= -1;
-					}
-				}
-
-				if (et->m_position.x < enemy->start.x) {
-					et->movementDirection = RIGHT;
-				}
-
-				if (et->movementDirection == LEFT) {
-					et->m_position.x = et->m_position.x - step;
-				}
-
-				if (et->movementDirection == RIGHT) {
-					et->m_position.x = et->m_position.x + step;
-					if (et->m_scale.x < 0) {
-						et->m_scale.x *= -1;
-					}
-				}
-
-			}
-			else {
-				if (et->movementDirection == NO_DIRECTION) {
-					et->movementDirection = UP;
-					enemy->start = et->m_position;
-				}
-
-				if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
-					et->movementDirection = DOWN;
-					et->m_scale.x *= -1;
-				}
-
-				if (et->m_position.y < enemy->start.y) {
-					et->movementDirection = UP;
-					et->m_scale.x *= -1;
-				}
-
-				if (et->movementDirection == DOWN) {
-					et->m_position.x = et->m_position.x + step;
-				}
-
-				if (et->movementDirection == UP) {
-					et->m_position.x = et->m_position.x - step;
-				}
-			}
-=======
 		// Set enemy to either chase or patrol depending on decision tree
 		handleEnemyDecisionTree(enemy, samTransform);
 		Transform *et =  transformComponent.getTransform(objectManager.getEntity(it.first));
@@ -178,7 +120,6 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Transform* et, float step) {
 		if (et->m_position.x < enemy->start.x) {
 			et->movementDirection = RIGHT;
 		}
->>>>>>> Checkpoint for enemy decision tree
 
 		if (et->movementDirection == LEFT) {
 			et->m_position.x = et->m_position.x - step;
