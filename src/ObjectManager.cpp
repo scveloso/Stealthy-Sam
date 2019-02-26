@@ -6,12 +6,11 @@ ObjectManager::ObjectManager()
 	num_of_entities = 0;
 }
 
-Entity* ObjectManager::makeEntity(std::string label, int gameState) {
+Entity* ObjectManager::makeEntity(std::string label) {
 	Entity *entity = new Entity();
 	entity->id = num_of_entities;
 	entity->label = label;
-	entity->gameState = gameState;
-    entity->active = true;
+  entity->active = true;
 	entities.emplace_back(entity);
 	num_of_entities++;
 	return entity;

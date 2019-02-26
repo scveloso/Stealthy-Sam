@@ -42,6 +42,7 @@ set(SOURCE_FILES
 		src/EnemySystem.cpp
 		src/MovementSystem.cpp
     src/DecisionNode.cpp
+    src/EntityGenerator.cpp
 
 		src/project_path.hpp
 		src/common.hpp
@@ -55,6 +56,7 @@ set(SOURCE_FILES
 		src/EnemySystem.hpp
     src/MovementSystem.hpp
     src/DecisionNode.hpp
+    src/EntityGenerator.hpp
 
 		src/common.hpp
 		src/Components/Cmp.hpp

@@ -162,18 +162,15 @@ void World::generateEntities(std::string room_path)
 	CollisionCmp cc;
 	EnemyCmp ec;
 
-	int id = 1;
-
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
-	Entity* playerEntity = objectManager->makeEntity("Player", id);
-	id++;
+	Entity* playerEntity = objectManager->makeEntity("Player");
 
 	// Create text boxes if we're in room one:
 	if (map_path("room_one.json") == room_path)
 	{
 		// Text boxes
-		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL, 1);
+		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
 		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
 		inputCmp.add(useWASD);
 		transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
@@ -181,10 +178,10 @@ void World::generateEntities(std::string room_path)
 		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
 		m_water.add_text(tp);
 		if (useWASD->active){
-			m_water.removeText=0;
+			m_water.removeText = 0;
 		}
 
-		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL, 1);
+		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
 		drawCmp.add(useEText, textures_path("text/etointeract.png"));
 		inputCmp.add(useEText);
 		transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
@@ -195,7 +192,7 @@ void World::generateEntities(std::string room_path)
 
 
 	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART, 1);
+	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
 	drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
 	transformCmp.add(rToRestart, { 300, 150 }, { 0.2, 0.2 }, 0.0);
 	// Initially the you died textbox isn't there until you're dead
@@ -245,8 +242,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == WALL)
 			{
-				entity = objectManager->makeEntity("Wall", id);
-				id++;
+				entity = objectManager->makeEntity("Wall");
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
@@ -254,8 +250,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == KEY)
             {
-                entity = objectManager->makeEntity("Key", id);
-                id++;
+                entity = objectManager->makeEntity("Key");
 
                 transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
                 drawCmp.add(entity, textures_path("Dungeon/key.png"));
@@ -263,42 +258,36 @@ void World::generateEntities(std::string room_path)
             }
 			else if (val == CLOSET)
 			{
-				entity = objectManager->makeEntity("Closet", id);
-				id++;
+				entity = objectManager->makeEntity("Closet");
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
 				cc.add(entity);
 
 				// Make interactable areas around the closet
-				entity = objectManager->makeEntity("ClosetArea", id);
-				id++;
+				entity = objectManager->makeEntity("ClosetArea");
 				transformCmp.add(entity, { x + (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
 				cc.add(entity);
 
-				entity = objectManager->makeEntity("ClosetArea", id);
-				id++;
+				entity = objectManager->makeEntity("ClosetArea");
 				transformCmp.add(entity, { x - (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
 				cc.add(entity);
 
-				entity = objectManager->makeEntity("ClosetArea", id);
-				id++;
+				entity = objectManager->makeEntity("ClosetArea");
 				transformCmp.add(entity, { x, y + (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
 				cc.add(entity);
 
-				entity = objectManager->makeEntity("ClosetArea", id);
-				id++;
+				entity = objectManager->makeEntity("ClosetArea");
 				transformCmp.add(entity, { x, y - (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
 				cc.add(entity);
 			}
 			else if (val == DOOR_ROOM_1_TO_2)
 			{
-				entity = objectManager->makeEntity("DoorRoom1To2", id);
-				id++;
+				entity = objectManager->makeEntity("DoorRoom1To2");
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
@@ -306,8 +295,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR_ROOM_2_TO_1)
 			{
-				entity = objectManager->makeEntity("DoorRoom2To1", id);
-				id++;
+				entity = objectManager->makeEntity("DoorRoom2To1");
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
@@ -315,8 +303,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR_ROOM_2_TO_3)
 			{
-				entity = objectManager->makeEntity("DoorRoom2To3", id);
-				id++;
+				entity = objectManager->makeEntity("DoorRoom2To3");
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
@@ -324,8 +311,7 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == DOOR_ROOM_3_TO_2)
 			{
-				entity = objectManager->makeEntity("DoorRoom3To2", id);
-				id++;
+				entity = objectManager->makeEntity("DoorRoom3To2");
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/door.png"));
@@ -333,16 +319,12 @@ void World::generateEntities(std::string room_path)
 			}
 			else if (val == ENEMY)
 			{
-				entity = objectManager->makeEntity("Enemy", id);
-				id++;
+				entity = objectManager->makeEntity("Enemy");
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
 				cc.add(entity);
 				ec.add(entity, 100, 0);
-				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
-				// m_water.add_enemy_position(en_position);
-				// m_water.enemy_direction=5;
 			}
 
 			x += TILE_WIDTH;
