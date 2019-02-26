@@ -35,7 +35,7 @@ public:
 	void generateEntities(std::string room_path);
 
 	// Set-up DrawSystem, InputSystem, CollisionSystem
-	void initializeSystems(ObjectManager om, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
 						   GameStateCmp *gameStateCmp);
 
 	// Clear DrawSystem, InputSystem, CollisionSystem
