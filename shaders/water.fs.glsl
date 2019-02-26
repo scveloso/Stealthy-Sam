@@ -130,6 +130,9 @@ else if (time < 5*10){
 }
 else if (death_cond == 1) {
   color= vec4(1,0,0,0.5);
+  //if (x <= x2+we && x >= x2-we && y <= y2+h && y >= y2-h && re_cond == 0){
+//color= in_color;
+//}
 }
 
 }
