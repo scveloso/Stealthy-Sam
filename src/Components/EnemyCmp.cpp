@@ -1,9 +1,10 @@
 #include "EnemyCmp.hpp"
+#include "EnemyAction.hpp"
 
 void EnemyCmp::add(Entity* entity, int patrolX, int patrolY) {
 	Enemy *enemy = new Enemy();
 	enemy->type = NORMAL;
-	enemy->chase = false;
+	enemy->action = PATROL;
 	enemy->patrolX = patrolX;
 	enemy->patrolY = patrolY;
 	enemy->start = { 0,0 };

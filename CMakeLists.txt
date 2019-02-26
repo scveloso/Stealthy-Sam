@@ -41,6 +41,7 @@ set(SOURCE_FILES
 		src/CollisionSystem.cpp
 		src/EnemySystem.cpp
 		src/MovementSystem.cpp
+    src/DecisionNode.cpp
 
 		src/project_path.hpp
 		src/common.hpp
@@ -52,7 +53,8 @@ set(SOURCE_FILES
 		src/InputSystem.hpp
 		src/CollisionSystem.hpp
 		src/EnemySystem.hpp
-        src/MovementSystem.hpp
+    src/MovementSystem.hpp
+    src/DecisionNode.hpp
 
 		src/common.hpp
 		src/Components/Cmp.hpp
