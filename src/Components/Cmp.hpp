@@ -39,7 +39,8 @@ struct Enemy
 	int patrolX;
 	int patrolY;
 	vec2 start;
-	bool chase;
+	int action;
+	//bool chase;
 };
 
 const int NORMAL = 11;
