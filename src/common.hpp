@@ -120,6 +120,7 @@ struct Renderable
 
 const std::string USE_WASD_TEXT_LABEL = "Textbox.UseWASD";
 const std::string USE_E_INTERACT_LABEL = "Textbox.UseE";
+const std::string USE_R_RESTART = "Textbox.RtoRestart";
 
 const std::string ROOM_ONE_GUID = "ROOM_ONE";
 const std::string ROOM_TWO_GUID = "ROOM_TWO";
