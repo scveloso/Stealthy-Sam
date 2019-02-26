@@ -228,7 +228,7 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = om.getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 2.5f }, 0.0);
+				transformCmp.add(entity, { x, y }, { 1.125f, 1.5f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
 				//drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
@@ -465,12 +465,15 @@ void World::handleUpdateAction(int updateAction)
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
 			gameState->sam_is_alive = false;
+			m_water.death=1;
 		}
 		else if (updateAction == RESET_GAME)
 		{
 			gameState->init();
+			m_water.removeKey=1;
 			clearMap();
 			generateEntities(map_path("room_one.json"));
+			m_water.death=0;
 		}
 	}
 }
