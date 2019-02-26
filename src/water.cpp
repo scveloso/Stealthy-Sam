@@ -4,6 +4,8 @@
 
 bool Water::init() {
 	m_dead_time = -1;
+	death= 0;
+	removeKey=1;
 
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
@@ -91,6 +93,8 @@ void Water::draw(const mat3& projection) {
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
 	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
+	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
+	glUniform1i(death_cond, death);
 
 	glUniform1i(text_cond, removeText);
 	glUniform1i(key_cond, removeKey);
@@ -98,7 +102,7 @@ void Water::draw(const mat3& projection) {
 	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
 	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
 	glUniform2f(e_position, key_position.x-17.f, key_position.y-812.f );
-	glUniform2f(s_position, sam_position.x+12.f, sam_position.y-820.f );
+	glUniform2f(s_position, sam_position.x, sam_position.y);
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);
