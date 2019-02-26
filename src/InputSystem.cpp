@@ -128,8 +128,8 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 	}
 
 
-	// Deal with textboxes only if we're in room one:
-	if (gameState->current_room == ROOM_ONE_GUID) {
+	// Deal with tutorial textboxes only if we're in room one:
+	if (gameState->current_room == ROOM_ONE_GUID && objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL) != nullptr) {
 		// If we move using WASD, remove the text box showing movement directions
 		if (didMove)
 			{Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
