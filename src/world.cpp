@@ -234,7 +234,7 @@ void World::generateEntities(std::string room_path)
 			{
 				entity = objectManager->getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 2.5f }, 0.0);
+				transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
 				//drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
