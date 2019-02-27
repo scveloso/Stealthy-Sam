@@ -8,4 +8,7 @@ public:
     bool sam_is_alive;
     int keys;
     std::string current_room;
+
+    bool has_moved;
+    bool has_pressed_E;
 };

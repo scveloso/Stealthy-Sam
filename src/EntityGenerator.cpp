@@ -2,11 +2,12 @@
 #include "EntityGenerator.hpp"
 #include "TileConstants.hpp"
 #include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
-	EnemySystem* es, InputSystem* is, MovementSystem* ms, GameStateCmp* gs)
+	EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, GameStateCmp* gs)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -14,10 +15,11 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	enemySystem = es;
 	inputSystem = is;
 	movementSystem = ms;
+	textSystem = ts;
 	gameState = gs;
 }
 
-void EntityGenerator::generateEntities(std::string room_path, Water m_water)
+void EntityGenerator::generateEntities(std::string room_path, Water* water)
 {
 	// Components
 	DrawCmp drawCmp;
@@ -26,49 +28,31 @@ void EntityGenerator::generateEntities(std::string room_path, Water m_water)
 	CollisionCmp collisionCmp;
 	EnemyCmp enemyCmp;
 
-	std::cout << "Starting to make entities" << std::endl;
-
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = objectManager->makeEntity("Player");
 
-	// // Create text boxes if we're in room one:
-	// if (map_path("room_one.json") == room_path)
-	// {
-	// 	// Text boxes
-	// 	Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
-	// 	drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-	// 	inputCmp.add(useWASD);
-	// 	transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
-	//
-	// 	// Pass coordinates to shader
-	// 	vec2 tp = transformCmp.getTransform(useWASD)->m_position;
-	// 	m_water.add_text(tp);
-	// 	if (useWASD->active) {
-	// 		m_water.removeText = 0;
-	// 	}
-	//
-	// 	Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
-	// 	drawCmp.add(useEText, textures_path("text/etointeract.png"));
-	// 	inputCmp.add(useEText);
-	// 	transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
-	// 	// TODO: Reimplement text stuff
-	// 	//keyE = useEText;
-	//
-	// 	// Initially the E text box isn't there until we move
-	// 	useEText->active = false;
-	// }
-	//
-	//
-	// // Text box if you're dead
-	// Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
-	// drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
-	// transformCmp.add(rToRestart, { 300, 150 }, { 0.2, 0.2 }, 0.0);
-	//
-	// // Initially the you died textbox isn't there until you're dead
-	// rToRestart->active = false;
+	// Create text boxes if we're in room one:
+	if (map_path("room_one.json") == room_path)
+	{
+		// Text boxes
+		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
+		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
+		inputCmp.add(useWASD);
+		transformCmp.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 
-	std::cout << "Finished text stuff" << std::endl;
+		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
+		drawCmp.add(useEText, textures_path("text/etointeract.png"));
+		inputCmp.add(useEText);
+		transformCmp.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+		useEText->active = false; // E text initially invisible
+	}
+
+	// Text box if you're dead
+	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
+	drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
+	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+	rToRestart->active = false; // Died text initially invisible
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -108,8 +92,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water m_water)
 				inputCmp.add(entity);
 				collisionCmp.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-				m_water.add_position(s_position);
-
+				water->add_position(s_position);
 			}
 			else if (val == WALL)
 			{
@@ -202,19 +185,18 @@ void EntityGenerator::generateEntities(std::string room_path, Water m_water)
 		}
 	}
 
-	std::cout << "Finished making entities" << std::endl;
-
-	initializeSystems(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp);
+	initializeSystems(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, water);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec)
+void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, Water* water)
 {
 	drawSystem->init(*objectManager, dc, tc, gameState);
 	inputSystem->init(*objectManager, ic, tc, cc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, gameState);
 	enemySystem->init(*objectManager, cc, tc, ec);
 	movementSystem->init(*objectManager, ic, tc, cc, gameState);
+	textSystem->init(*objectManager, gameState, water);
 
 	drawSystem->setup();
 }

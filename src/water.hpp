@@ -23,8 +23,8 @@ public:
 	void add_position(vec2 position);
 	void add_text(vec2 position);
 	void add_keyE(vec2 position);
-	int removeText;
-	int removeKey;
+	int showWASDText;
+	int showEText;
 	int death;
 	//int enemy_direction;
 //	void add_enemy_position(vec2 position);

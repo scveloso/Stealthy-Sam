@@ -46,7 +46,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
               if (gameState->sam_is_alive) {
                 transformComponent.faceLeft(entity);
               }
-              didMove = true;
+              gameState->has_moved = true;
             }
             break;
           case GLFW_KEY_D:
@@ -56,16 +56,16 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             if (gameState->sam_is_alive) {
               transformComponent.faceRight(entity);
             }
-            didMove = true;
+            gameState->has_moved = true;
           }
             break;
           case GLFW_KEY_S:
             transformComponent.setMovementDirection(entity, DOWN);
-            didMove = true;
+            gameState->has_moved = true;
             break;
           case GLFW_KEY_W:
             transformComponent.setMovementDirection(entity, UP);
-            didMove = true;
+            gameState->has_moved = true;
             break;
           case GLFW_KEY_E:
             // TODO: Implement interactables
@@ -80,7 +80,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   				    transformComponent.getTransform(entity)->visible = false;
   				}
   			}
-            didPressE = true;
+            gameState->has_pressed_E = true;
             break;
           case GLFW_KEY_P:
             //print out current position
@@ -124,27 +124,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
                         break;
 				}
 			}
-		}
-	}
-
-
-	// Deal with tutorial textboxes only if we're in room one:
-	if (gameState->current_room == ROOM_ONE_GUID && objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL) != nullptr) {
-		// If we move using WASD, remove the text box showing movement directions
-		if (didMove)
-			{Entity* wasd_text_ent = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
-			has_move = 1;
-			// If we've moved and haven't already made this inactive, trigger the second text box (press E) to appear
-			if (wasd_text_ent->active) {
-				wasd_text_ent->active = false;
-				objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = true;
-			}
-		}
-
-		// Once they press E, we can remove the E text box
-		if (didPressE)
-			{press_keyE = 1;
-			objectManager.getEntityByLabel(USE_E_INTERACT_LABEL)->active = false;
 		}
 	}
 

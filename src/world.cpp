@@ -20,13 +20,10 @@ InputSystem* inputSys;
 CollisionSystem* cs;
 EnemySystem* es;
 MovementSystem* ms;
+TextSystem* ts;
 
 // Game State component
 GameStateCmp* gameState;
-
-Entity* keyE;
-
-
 
 // Same as static in c, local to compilation unit
 namespace
@@ -142,10 +139,13 @@ bool World::init(vec2 screen)
 	gameState = new GameStateCmp();
 	gameState->init();
 
+	m_water = new Water();
+	m_water->init();
+
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("room_one.json"));
 
-	return m_water.init();
+	return true;
 }
 
 // Generate entities from a given path to a JSON map file
@@ -153,11 +153,9 @@ void World::generateEntities(std::string room_path)
 {
 	makeSystems();
 
-	// TODO: EntityGenerator create entities and init systems
+	// EntityGenerator create entities and init systems
 	entityGenerator->generateEntities(room_path, m_water);
-
-	// Proceed to initialize systems
-	windowStuff();
+	setupWindow();
 }
 
 void World::makeSystems()
@@ -168,11 +166,12 @@ void World::makeSystems()
 	cs = new CollisionSystem();
 	es = new EnemySystem();
 	ms = new MovementSystem();
+	ts = new TextSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, gameState);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, gameState);
 }
 
-void World::windowStuff()
+void World::setupWindow()
 {
 	inputSys->setup(m_window);
 
@@ -184,12 +183,14 @@ void World::windowStuff()
 // Clear objects in map for reinitialization of entities when rooms switch
 void World::clearMap()
 {
+	delete entityGenerator;
 	delete objectManager;
 	delete ds;
 	delete inputSys;
 	delete cs;
 	delete es;
 	delete ms;
+	delete ts;
 }
 
 // Releases all the associated resources
@@ -218,36 +219,16 @@ bool World::update(float elapsed_ms)
 	int updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
 
+	ts->update();
+
 	// Handle UpdateAction
 	handleUpdateAction(updateAction);
 
-	// TODO: Reimplement text stuff
-	// if (inputSys->has_move == 1)
-	// {
-	// 	m_water.removeText = 1;
-	// 	m_water.removeKey = 0;
-	// }
-	//
-	// if (inputSys->press_keyE == 1)
-	// {
-	// 	m_water.removeKey = 1;
-	// }
-	//
-	// if (keyE->active)
-	// {
-	// 	vec2 tpe = ds->EBox;
-	// 	m_water.add_keyE(tpe);
-	// 	m_water.removeKey = 0;
-	// }
-
 	// Update sam position for circle of light
 	vec2 s_position= ds->s_position;
-    m_water.add_position(s_position);
-	// vec2 en_position= ds->en_position;
-	// m_water.add_enemy_position(en_position);
-	// m_water.enemy_direction= ds->en_direction;
+  m_water->add_position(s_position);
 
-    return true;
+  return true;
 }
 
 // Takes in an UpdateAction, handles room changes, death, etc.
@@ -284,16 +265,17 @@ void World::handleUpdateAction(int updateAction)
 			gameState->sam_is_alive = false;
 
 			// Trigger the death textbox
-			m_water.death=1;
+			m_water->death=1;
 			objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
 		}
 		else if (updateAction == RESET_GAME)
 		{
 			gameState->init();
-			m_water.removeKey=1;
+			m_water->showWASDText = 1;
+			m_water->showEText = 0;
 			clearMap();
 			generateEntities(map_path("room_one.json"));
-			m_water.death=0;
+			m_water->death=0;
 		}
 	}
 }
@@ -356,7 +338,7 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_water.draw(projection_2D);
+	m_water->draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -367,7 +349,6 @@ void World::draw()
 bool World::is_over()const
 {
 	return glfwWindowShouldClose(m_window);
-
 }
 
 // On key callback

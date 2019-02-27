@@ -59,7 +59,7 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
-	void windowStuff();
+	void setupWindow();
 
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
@@ -76,7 +76,7 @@ private:
 	Texture m_screen_tex;
 
 	// Water effect
-	Water m_water;
+	Water* m_water;
 
 	// Number of fish eaten by the salmon, displayed in the window title
 	unsigned int m_points;

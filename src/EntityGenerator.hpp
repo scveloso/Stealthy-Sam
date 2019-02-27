@@ -14,6 +14,7 @@
 #include "CollisionSystem.hpp"
 #include "EnemySystem.hpp"
 #include "MovementSystem.hpp"
+#include "TextSystem.hpp"
 #include "Entity.hpp"
 #include "water.hpp"
 
@@ -24,9 +25,9 @@ class EntityGenerator
 {
 public:
 	EntityGenerator(ObjectManager* objectManager, CollisionSystem* collisionSystem, DrawSystem* drawSystem,
-		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, GameStateCmp* gameState);
-	void generateEntities(std::string room_path, Water m_water);
-	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec);
+		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, TextSystem* textSystem, GameStateCmp* gameState);
+	void generateEntities(std::string room_path, Water* water);
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, Water* water);
 
 private:
 	ObjectManager* objectManager;
@@ -35,5 +36,6 @@ private:
 	EnemySystem* enemySystem;
 	InputSystem* inputSystem;
 	MovementSystem* movementSystem;
+	TextSystem* textSystem;
 	GameStateCmp* gameState;
 };
