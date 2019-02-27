@@ -38,4 +38,11 @@ void TextSystem::update()
       water->showEText = 0;
     }
   }
+
+  // If player leaves room 1, stop shader from showing text
+  if (gameState->current_room.compare(ROOM_ONE_GUID) != 0)
+  {
+    water->showEText = 0;
+    water->showWASDText = 0;
+  }
 }
