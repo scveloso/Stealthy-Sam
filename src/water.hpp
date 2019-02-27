@@ -15,6 +15,9 @@ public:
 	// Renders the water
 	void draw(const mat3& projection);
 
+	// Game is restarted, change to default values
+	void restart();
+
 	// Set dead time
 	void set_salmon_dead();
 	void reset_salmon_dead_time();

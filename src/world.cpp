@@ -128,12 +128,9 @@ bool World::init(vec2 screen)
 
 	// Playing background music undefinitely
 	Mix_PlayMusic(m_background_music, -1);
-
 	fprintf(stderr, "Loaded music\n");
-
 	m_current_speed = 1.f;
 
-	Texture turtle;
 
 	// Create initial game state
 	gameState = new GameStateCmp();
@@ -215,13 +212,11 @@ bool World::update(float elapsed_ms)
 {
 	// Update Systems
 	es->update(elapsed_ms);
-
 	int updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
-
 	ts->update();
 
-	// Handle UpdateAction
+	// Handle UpdateAction from Systems
 	handleUpdateAction(updateAction);
 
 	// Update sam position for circle of light
@@ -231,7 +226,7 @@ bool World::update(float elapsed_ms)
   return true;
 }
 
-// Takes in an UpdateAction, handles room changes, death, etc.
+// Takes in an UpdateAction, handles room changes, restarts, etc.
 void World::handleUpdateAction(int updateAction)
 {
 	if (updateAction != NO_CHANGE)
@@ -263,11 +258,9 @@ void World::handleUpdateAction(int updateAction)
 		else if (updateAction == RESET_GAME)
 		{
 			gameState->init();
-			m_water->showWASDText = 1;
-			m_water->showEText = 0;
 			clearMap();
 			generateEntities(map_path("room_one.json"));
-			m_water->death=0;
+			m_water->restart();
 		}
 	}
 }
