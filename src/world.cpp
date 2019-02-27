@@ -1118,9 +1118,20 @@ void World::generateEntities(std::string room_path)
 				entity = objectManager->makeEntity("Key", id);
 				id++;
 
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
-				cc.add(entity);
+				if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+				{
+					std::cout << "Level 2 key is still active" << std::endl;
+					transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+					cc.add(entity);
+				}
+				else if (gameState->current_room == ROOM_THREE_GUID && !gameState->level_three_key)
+				{
+					std::cout << "Level 3 key is still active" << std::endl;
+					transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+					cc.add(entity);
+				}
 			}
 			else if (val == DOOR_ROOM_1_TO_2)
 			{
@@ -1274,36 +1285,36 @@ void World::handleUpdateAction(int updateAction)
         if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
             clearMap();
+            gameState->current_room = ROOM_TWO_GUID;
             generateEntities(map_path("level_one_to_two.json"));
-			gameState->current_room = ROOM_TWO_GUID;
-		}
+        }
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
-			if (gameState->keys == 2)
+			if (gameState->level_two_key && gameState->level_three_key)
 			{
 				clearMap();
-				generateEntities(map_path("level_two_to_one_with_key.json"));
-				gameState->current_room = ROOM_ONE_GUID;
-			}
+                gameState->current_room = ROOM_ONE_GUID;
+                generateEntities(map_path("level_two_to_one_with_key.json"));
+            }
 			else
 			{
 				clearMap();
-				generateEntities(map_path("level_two_to_one.json"));
-				gameState->current_room = ROOM_ONE_GUID;
-			}
+                gameState->current_room = ROOM_ONE_GUID;
+                generateEntities(map_path("level_two_to_one.json"));
+            }
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
 			clearMap();
-			generateEntities(map_path("level_two_to_three.json"));
-			gameState->current_room = ROOM_THREE_GUID;
-		}
+            gameState->current_room = ROOM_THREE_GUID;
+            generateEntities(map_path("level_two_to_three.json"));
+        }
 		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
 		{
 			clearMap();
-			generateEntities(map_path("level_three_to_two.json"));
-			gameState->current_room = ROOM_TWO_GUID;
-		}
+            gameState->current_room = ROOM_TWO_GUID;
+            generateEntities(map_path("level_three_to_two.json"));
+        }
 		else if (updateAction == COLLIDE_WITH_ENEMY)
 		{
 			gameState->sam_is_alive = false;
@@ -1317,8 +1328,9 @@ void World::handleUpdateAction(int updateAction)
 			gameState->init();
 			m_water.removeKey=1;
 			clearMap();
-			generateEntities(map_path("level_one.json"));
-		}
+            gameState->current_room = ROOM_ONE_GUID;
+            generateEntities(map_path("level_one.json"));
+        }
 	}
 }
 

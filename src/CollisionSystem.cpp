@@ -107,13 +107,20 @@ int CollisionSystem::handleEnemies(Entity* entity)
 	return NO_CHANGE;
 }
 
-// Returns an UpdateAction to trigger death if an enemy is collided with
+// Updates key count or returns NO_CHANGE if not a key
 int CollisionSystem::handleKeys(Entity* entity)
 {
 	if (entity->label.compare("Key") == 0 && entity->active)
 	{
 		entity->active = false;
-		gameStateComponent->keys++;
+		if (gameStateComponent->current_room == ROOM_TWO_GUID)
+		{
+			gameStateComponent->level_two_key = true;
+		}
+		else if (gameStateComponent->current_room == ROOM_THREE_GUID)
+		{
+			gameStateComponent->level_three_key = true;
+		}
 	}
 
 	return NO_CHANGE;
