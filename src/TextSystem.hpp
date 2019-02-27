@@ -11,6 +11,9 @@ class TextSystem
 public:
 	void init(ObjectManager om, GameStateCmp* gameStateCmp, Water* water);
 	void update();
+	void enableEText();
+	void disableEText();
+	void disableWASDText();
 
 private:
 	ObjectManager objectManager;

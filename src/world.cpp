@@ -260,14 +260,6 @@ void World::handleUpdateAction(int updateAction)
 			generateEntities(map_path("room_three_to_two.json"));
 			gameState->current_room = ROOM_TWO_GUID;
 		}
-		else if (updateAction == COLLIDE_WITH_ENEMY)
-		{
-			gameState->sam_is_alive = false;
-
-			// Trigger the death textbox
-			m_water->death=1;
-			objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
-		}
 		else if (updateAction == RESET_GAME)
 		{
 			gameState->init();

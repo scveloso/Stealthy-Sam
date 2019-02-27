@@ -7,8 +7,9 @@ bool Water::init() {
 	death = 0;
 	showWASDText = 1;
 	showEText = 0;
-	text_position = TEXT_POSITION;
-	key_position = TEXT_POSITION;
+	textWASD_position = TEXT_POSITION;
+	textE_position = TEXT_POSITION;
+	textR_position = TEXT_POSITION;
 
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
@@ -55,13 +56,6 @@ void Water::set_salmon_dead() {
 void Water::add_position(vec2 position){
 	sam_position= position;
 }
-
-void Water::add_text(vec2 position){
-	text_position= position;
-}
-void Water::add_keyE(vec2 position){
-	key_position= position;
-}
 // void Water::add_enemy_position(vec2 position){
 // 	enemy_position.push_back(position);
 // 	//printf("%g\n", enemy_position.x );
@@ -92,6 +86,7 @@ void Water::draw(const mat3& projection) {
 	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
+	GLint r_position= glGetUniformLocation(effect.program, "r_position");
 	//GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
@@ -102,10 +97,11 @@ void Water::draw(const mat3& projection) {
 	glUniform1i(text_cond, showWASDText);
 	glUniform1i(key_cond, showEText);
 	//glUniform1i(en_direction, enemy_direction);
-	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
+	glUniform2f(t_position, textWASD_position.x-15.f, textWASD_position.y-812.f );
 	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
-	glUniform2f(e_position, key_position.x-17.f, key_position.y-812.f );
+	glUniform2f(e_position, textE_position.x-17.f, textE_position.y-812.f );
 	glUniform2f(s_position, sam_position.x, sam_position.y);
+	glUniform2f(r_position, textR_position.x-15.f, textR_position.y-812.f );
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);

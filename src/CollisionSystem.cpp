@@ -100,7 +100,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 {
 	if (entity->label.compare("Enemy") == 0)
 	{
-		return COLLIDE_WITH_ENEMY;
+		gameStateComponent->sam_is_alive = false;
 	}
 
 	return NO_CHANGE;
