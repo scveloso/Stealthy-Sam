@@ -1081,83 +1081,6 @@ void World::generateEntities(std::string room_path)
 				// m_water.add_enemy_position(en_position);
 				// m_water.enemy_direction=5;
 			}
-//			if (val == SAM)
-//			{
-//				entity = objectManager->getEntity(SAMS_GUID);
-//
-//				transformCmp.add(entity, { x, y }, { 3.125f, 2.63f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
-//				inputCmp.add(entity);
-//				collisionCmp.add(entity);
-//				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-//				//vec2 s_position = {200.f, 200.f};
-//				m_water.add_position(s_position);
-//
-//			}
-//			else if (val == WALL)
-//			{
-//				entity = objectManager->makeEntity("Wall", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == CLOSET)
-//			{
-//				entity = objectManager->makeEntity("Closet", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == DOOR_ROOM_1_TO_2)
-//			{
-//				entity = objectManager->makeEntity("DoorRoom1To2", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == DOOR_ROOM_2_TO_1)
-//			{
-//				entity = objectManager->makeEntity("DoorRoom2To1", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == DOOR_ROOM_2_TO_3)
-//			{
-//				entity = objectManager->makeEntity("DoorRoom2To3", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == DOOR_ROOM_3_TO_2)
-//			{
-//				entity = objectManager->makeEntity("DoorRoom3To2", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-//				collisionCmp.add(entity);
-//			}
-//			else if (val == ENEMY)
-//			{
-//				entity = objectManager->makeEntity("Enemy", id);
-//				id++;
-//
-//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/enemy.png"));
-//				collisionCmp.add(entity);
-//				ec.add(entity, 100, 0);
-//			}
 
 			x += TILE_WIDTH;
 		}
@@ -1287,11 +1210,13 @@ void World::handleUpdateAction(int updateAction)
 			gameState->sam_is_alive = false;
 
 			// Trigger the death textbox
+			m_water.death=1;
 			objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
 		}
 		else if (updateAction == RESET_GAME)
 		{
 			gameState->init();
+			m_water.removeKey=1;
 			clearMap();
 			generateEntities(map_path("level_one.json"));
 		}

@@ -7,35 +7,48 @@ uniform vec2 text_position;
 uniform int text_cond;
 uniform vec2 e_position;
 uniform int key_cond;
+uniform int death_cond;
+uniform int re_cond;
+uniform vec2 r_position;
 
 // uniform vec2 enemy_position;
 // uniform int enemy_direction;
 
 
 in vec2 uv;
+in vec2 s_position;
+//in float d;
 
 layout(location = 0) out vec4 color;
+//layout(origin_upper_left, pixel_center_integer) in vec4 gl_FragCoord;
 
 mat3 transform= mat3(
   1.0, 0,    0,
   0,  -1.0,  0,
   0,   0,  1.0
   );
-  vec3 sp = transform* vec3(sam_position,1);
+  vec3 sp = vec3(s_position,1);
   vec3 tp= transform* vec3(text_position,1);
   vec3 ep= transform* vec3(e_position,1);
+  vec3 rp= transform* vec3(r_position,1);
   //vec3 e= transform* vec3(enemy_position,1);
   //vec2 e[];
 	vec4 in_color = texture(screen_texture, uv.xy);
+
+
   float h = 16;
   float w = 150;
   float we = 240;
+  // float x= gl_FragCoord.x;
+  // float y= 800.0-gl_FragCoord.y;
   float x= gl_FragCoord.x;
   float y= gl_FragCoord.y;
   float x0= tp.x;
   float y0= tp.y;
   float x1= ep.x;
   float y1= ep.y;
+  float x2= ep.x;
+  float y2= ep.y;
   float s= 10;
   float t=5;
 
@@ -94,42 +107,32 @@ void main()
 	float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
 
   float p = dimmer(d);
-	// vec4 fcolor = in_color*p;
 
-	// if (time < 5*10){
-	// 	fcolor = fcolor*(time/50);
-
-  // if (inside_tri(p1p2,p1p3,p2p3)){
-  //   color= (in_color);
-  // }
-	// if (d <= (100*100))
-	// {  //color= (in_color);
- //  if (time < 5*10){
-	// 	color = in_color*p*(time/50);
- //  }
- //  else{
-	// 	color= (in_color*p);
- //     }
- //  }
-	//  else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
- //    color= (in_color);
- //  }
- //  else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
- //   color= (in_color);
- // }
- //  else {
- //    color= vec4(0,0,0,1);
-	// }
-  if (time < 5*10){
+//   if (d <= 100*100){
+//   color= in_color;
+// }
+if (death_cond ==0){
+ if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
+   color= (in_color);
+ }
+else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
+  color= (in_color);
+}
+// else if (x <= x2+we && x >= x2-we && y <= y2+h && y >= y2-h && re_cond == 0){
+//   color= (in_color);
+// }
+else if (time < 5*10){
         color = in_color*p*(time/50);
  }
  else{
         color= (in_color*p);
     }
-if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
-   color= (in_color);
- }
- else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
-  color= (in_color);
 }
+else if (death_cond == 1) {
+  color= vec4(1,0,0,0.5);
+  //if (x <= x2+we && x >= x2-we && y <= y2+h && y >= y2-h && re_cond == 0){
+//color= in_color;
+//}
+}
+
 }

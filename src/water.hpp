@@ -25,6 +25,7 @@ public:
 	void add_key(vec2 position);
 	int removeText;
 	int removeKey;
+	int death;
 	//int enemy_direction;
 //	void add_enemy_position(vec2 position);
 
