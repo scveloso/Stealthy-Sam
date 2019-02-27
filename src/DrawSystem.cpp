@@ -3,7 +3,7 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 
-DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;

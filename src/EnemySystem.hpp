@@ -11,7 +11,7 @@
 class EnemySystem
 {
 public:
-	EnemySystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, EnemyCmp ec);
+	void init(ObjectManager om, CollisionCmp cc, TransformCmp tc, EnemyCmp ec);
 	void update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
 	void patrolEnemy(Enemy* enemy, Transform* et, float step);

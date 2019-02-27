@@ -3,7 +3,7 @@
 #include "common.hpp"
 #include "UpdateAction.hpp"
 
-CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
+void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;

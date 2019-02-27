@@ -8,7 +8,7 @@
 class MovementSystem
 {
 public:
-	MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp);
 	void update(float elapsed_ms);
   bool is_movement_interrupted(int entityId, Transform* entityTransform);
 

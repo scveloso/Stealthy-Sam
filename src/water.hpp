@@ -22,7 +22,7 @@ public:
 	//add sam_position to be pass down into shaders
 	void add_position(vec2 position);
 	void add_text(vec2 position);
-	void add_key(vec2 position);
+	void add_keyE(vec2 position);
 	int removeText;
 	int removeKey;
 	int death;

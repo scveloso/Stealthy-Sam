@@ -9,6 +9,7 @@
 #include "Components/CollisionCmp.hpp"
 #include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
+#include "EntityGenerator.hpp"
 
 // stlib
 #include <vector>
@@ -38,6 +39,8 @@ public:
 	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
 						   GameStateCmp *gameStateCmp);
 
+	void makeSystems();
+
 	// Clear DrawSystem, InputSystem, CollisionSystem
 	void clearMap();
 
@@ -55,6 +58,8 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+
+	void windowStuff();
 
 private:
 	// !!! INPUT CALLBACK FUNCTIONS

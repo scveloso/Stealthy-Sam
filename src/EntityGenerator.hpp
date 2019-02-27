@@ -1,23 +1,39 @@
 #pragma once
 #include "common.hpp"
-#include "water.hpp"
-#include "ObjectManager.hpp"
 #include "Components/Cmp.hpp"
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"
+#include "Components/GameStateCmp.hpp"
 #include "Components/InputCmp.hpp"
 #include "Components/CollisionCmp.hpp"
 #include "Components/EnemyCmp.hpp"
+#include "water.hpp"
+#include "ObjectManager.hpp"
+#include "DrawSystem.hpp"
+#include "InputSystem.hpp"
+#include "CollisionSystem.hpp"
+#include "EnemySystem.hpp"
+#include "MovementSystem.hpp"
 #include "Entity.hpp"
+#include "water.hpp"
+
 #include <vector>
 #include <string>
 
 class EntityGenerator
 {
 public:
-	//EntityGenerator(vec2 sam_position);
-	void generateEntities(ObjectManager* objectManager, DrawCmp drawCmp, TransformCmp transformCmp,
-    InputCmp inputCmp, CollisionCmp cc, EnemyCmp ec, std::string room_path, Water m_water);
+	EntityGenerator(ObjectManager* objectManager, CollisionSystem* collisionSystem, DrawSystem* drawSystem,
+		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, GameStateCmp* gameState);
+	void generateEntities(std::string room_path, Water m_water);
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec);
+
 private:
-	//vec2 m_sam_position;
+	ObjectManager* objectManager;
+	CollisionSystem* collisionSystem;
+	DrawSystem* drawSystem;
+	EnemySystem* enemySystem;
+	InputSystem* inputSystem;
+	MovementSystem* movementSystem;
+	GameStateCmp* gameState;
 };

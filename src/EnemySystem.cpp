@@ -1,6 +1,6 @@
 #include "EnemySystem.hpp"
 
-EnemySystem::EnemySystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, EnemyCmp ec) {
+void EnemySystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, EnemyCmp ec) {
 	objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;

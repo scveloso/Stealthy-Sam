@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-InputSystem::InputSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
+void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;

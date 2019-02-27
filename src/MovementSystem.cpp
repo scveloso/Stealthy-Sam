@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Components/GameStateCmp.hpp>
 
-MovementSystem::MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
+void MovementSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;

@@ -56,7 +56,7 @@ void Water::add_position(vec2 position){
 void Water::add_text(vec2 position){
 	text_position= position;
 }
-void Water::add_key(vec2 position){
+void Water::add_keyE(vec2 position){
 	key_position= position;
 }
 // void Water::add_enemy_position(vec2 position){

@@ -9,7 +9,7 @@
 class CollisionSystem
 {
 public:
-	CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc);
+	void init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc);
 	int update(float elapsed_ms);
 	static bool AABB(Transform *tr1, Transform *tr2);
 	int handleDoors(Entity* entity);
