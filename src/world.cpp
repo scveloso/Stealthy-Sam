@@ -251,6 +251,60 @@ void World::generateEntities(std::string room_path)
 				drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
 				cc.add(entity);
 			}
+            else if (val == DOOR_TL)
+            {
+                entity = objectManager->makeEntity("Special_Door", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
+                cc.add(entity);
+            }
+            else if (val == DOOR_TR)
+            {
+                entity = objectManager->makeEntity("Special_Door", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_TR.png"));
+                cc.add(entity);
+            }
+            else if (val == DOOR_ML)
+            {
+                entity = objectManager->makeEntity("Wall", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_ML.png"));
+                cc.add(entity);
+            }
+            else if (val == DOOR_MR)
+            {
+                entity = objectManager->makeEntity("Wall", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
+                cc.add(entity);
+            }
+            else if (val == DOOR_BL)
+            {
+                entity = objectManager->makeEntity("Wall", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_BL.png"));
+                cc.add(entity);
+            }
+            else if (val == DOOR_BR)
+            {
+                entity = objectManager->makeEntity("Wall", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/DOOR_BR.png"));
+                cc.add(entity);
+            }
 			else if (val == TOP_RIGHT_CORNER)
 			{
 				entity = objectManager->makeEntity("Wall", id);
