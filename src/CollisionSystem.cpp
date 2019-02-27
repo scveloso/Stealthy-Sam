@@ -56,6 +56,7 @@ int CollisionSystem::update(float elapsed_ms)
 				// Handle key collisions
                 int keyUpdateAction = handleKeys(entity);
 
+
 				if (handleClosets(entity))
 				{
 					samCollision->closet = true;
@@ -109,7 +110,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 // Returns an UpdateAction to trigger death if an enemy is collided with
 int CollisionSystem::handleKeys(Entity* entity)
 {
-	if (entity->label.compare("Key") == 0)
+	if (entity->label.compare("Key") == 0 && entity->active)
 	{
 		entity->active = false;
 		gameStateComponent->keys++;

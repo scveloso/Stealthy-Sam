@@ -305,6 +305,42 @@ void World::generateEntities(std::string room_path)
                 drawCmp.add(entity, textures_path("Dungeon/DOOR_BR.png"));
                 cc.add(entity);
             }
+			else if (val == OPEN_DOOR_TL)
+			{
+				entity = objectManager->makeEntity("Open_Door", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TL.png"));
+				cc.add(entity);
+			}
+			else if (val == OPEN_DOOR_TR)
+			{
+				entity = objectManager->makeEntity("Open_Door", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TR.png"));
+				cc.add(entity);
+			}
+			else if (val == OPEN_DOOR_BL)
+			{
+				entity = objectManager->makeEntity("Open_Door", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BL.png"));
+				cc.add(entity);
+			}
+			else if (val == OPEN_DOOR_BR)
+			{
+				entity = objectManager->makeEntity("Open_Door", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BR.png"));
+				cc.add(entity);
+			}
 			else if (val == TOP_RIGHT_CORNER)
 			{
 				entity = objectManager->makeEntity("Wall", id);
@@ -1243,9 +1279,18 @@ void World::handleUpdateAction(int updateAction)
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
-			clearMap();
-			generateEntities(map_path("level_two_to_one.json"));
-			gameState->current_room = ROOM_ONE_GUID;
+			if (gameState->keys == 2)
+			{
+				clearMap();
+				generateEntities(map_path("level_two_to_one_with_key.json"));
+				gameState->current_room = ROOM_ONE_GUID;
+			}
+			else
+			{
+				clearMap();
+				generateEntities(map_path("level_two_to_one.json"));
+				gameState->current_room = ROOM_ONE_GUID;
+			}
 		}
 		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
 		{
