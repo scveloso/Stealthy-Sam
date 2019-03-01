@@ -9,13 +9,12 @@
 class MovementSystem
 {
 public:
-	void init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager om, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp);
 	void update(float elapsed_ms);
   bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void stopEntityMovement(Entity* entity);
 
 private:
-	InputCmp inputComponent;
 	TransformCmp transformComponent;
 	CollisionCmp collisionComponent;
 	MovementCmp movementComponent;

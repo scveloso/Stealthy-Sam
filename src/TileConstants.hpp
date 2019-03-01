@@ -1,3 +1,8 @@
+// Constants used to know which entity to generate from
+// parsing the .json file.
+// Also has constants for the soft grid-system implemented
+// to know where to generate each entity. 
+
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 800;
 
@@ -15,7 +20,7 @@ const int DOOR = 484;
 const int ENEMY = 376;
 const int TORCH = 110;
 
-// Doors
+// Custom Door values to tell the game where each door leads to
 const int DOOR_ROOM_1_TO_2 = 48412;
 const int DOOR_ROOM_2_TO_1 = 48421;
 const int DOOR_ROOM_2_TO_3 = 48423;

@@ -1,8 +1,12 @@
 #include "EnemySystem.hpp"
 
-void EnemySystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, EnemyCmp ec, MovementCmp mc) {
+// System to update enemies based on decision tree AI.
+//
+// Has access to TransformCmp to properly handle enemy patrol, chasing, returning to patrol.
+// Has access to EnemyCmp to be able to change/acess enemy state/type/characteristics.
+// Has access to MovementCmp to set where and how enemy should move.
+void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc) {
 	objectManager = om;
-	collisionComponent = cc;
 	transformComponent = tc;
 	enemyComponent = ec;
 	movementComponent = mc;

@@ -4,6 +4,13 @@
 #include "UpdateAction.hpp"
 #include "TileConstants.hpp"
 
+// System to handle Sam colliding with other entities. Responsible for:
+// - Updating when keys/torches/other items are picked up
+// - Updating when enemies are collided with
+// - Updating when Sam can interact with an object
+//
+// Has access to CollisionCmp and GameStateCmp to update
+// Has access to TransformCmp to know where everything is
 void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
 {
 	objectManager = om;

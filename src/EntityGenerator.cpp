@@ -243,8 +243,8 @@ void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic
 	drawSystem->init(*objectManager, dc, tc, gameState);
 	inputSystem->init(*objectManager, ic, tc, cc, mc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, gameState);
-	enemySystem->init(*objectManager, cc, tc, ec, mc);
-	movementSystem->init(*objectManager, ic, tc, cc, mc, gameState);
+	enemySystem->init(*objectManager, tc, ec, mc);
+	movementSystem->init(*objectManager, tc, cc, mc, gameState);
 	textSystem->init(*objectManager, gameState, water);
 	lightSystem->init(*objectManager, gameState, tc, water);
 

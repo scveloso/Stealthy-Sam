@@ -39,9 +39,10 @@ struct Enemy
 	int patrolY;
 	vec2 start;
 	int action;
-	//bool chase;
 };
 
+// Will hold physics-based attributes
+// of appropriate entities.
 struct Movement
 {
 	int movementDirection;

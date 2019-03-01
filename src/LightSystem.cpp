@@ -10,7 +10,9 @@
 // is holding a torch, etc.
 //
 // Has access to Water to allow enable/disable the shaders
-// to show polygons of light
+// to show polygons of light.
+//
+// Has access to TransformCmp to know where everything is.
 void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCmp tc, Water* water)
 {
   objectManager = om;
@@ -21,14 +23,20 @@ void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCm
 
 void LightSystem::update()
 {
-  // If torch exists and is active, draw circle of light around it
+  // Grab all existing and active torches, draw circles of light around them
   Entity* torchEntity = objectManager.getEntityByLabel("Torch");
-  if (torchEntity && torchEntity->active) {
-    Transform* torchTransform = transformCmp.getTransform(torchEntity);
-    water->add_position(torchTransform->m_position);
-  }
+  std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
 
-  // If Sam holding a candle, draw circle of light around Sam
+  // TODO: Get water and shader to support multiple circle of light positions
+  for (auto& torchEntity : torchEntities)
+	{
+    if (torchEntity->active) {
+      Transform* torchTransform = transformCmp.getTransform(torchEntity);
+      water->add_position(torchTransform->m_position);
+    }
+	}
+
+  // If Sam holding a torch, draw circle of light around Sam
   Entity* heldEntity = gameState->held_entity;
   if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
     vec2 s_position = gameState->sam_position;

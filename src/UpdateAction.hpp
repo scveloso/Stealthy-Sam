@@ -1,3 +1,6 @@
+// Constants returned by Systems to world.cpp
+// if the Systems need to change world state.
+//
 // Can add stuff here like change rooms, end game, etc.
 const int NO_CHANGE = 0;
 

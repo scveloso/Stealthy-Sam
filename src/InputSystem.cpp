@@ -7,6 +7,14 @@
 #include <string>
 #include "TileConstants.hpp"
 
+// System to update game based on user input.
+//
+// Has access to GameStateCmp to know about whether Sam
+// completed tutorial actions.
+// Has access to InputCmp to be able to access entities requiring user input.
+// Has access to CollisionCmp to know if Sam can interact with objects he is colliding with.
+// Has access to TransformCmp to know where everything is.
+// Has access to MovementCmp to allow Sam to throw held items (move those items).
 void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;

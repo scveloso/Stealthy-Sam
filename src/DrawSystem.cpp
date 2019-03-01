@@ -3,6 +3,11 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 
+// System to handle drawing ALL relevant entities
+//
+// Has access to DrawCmp to know which texture to draw for an entity.
+// Has access to GameStateCmp to allow other systems to know where Sam is.
+// Has access to TransformCmp to know where everything is.
 void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ObjectManager.hpp"
 
+// Class to create and store entities for a given room
 ObjectManager::ObjectManager()
 {
 	num_of_entities = 0;
@@ -31,4 +32,17 @@ Entity* ObjectManager::getEntityByLabel(std::string label)
 		}
 	}
 	return nullptr;
+}
+
+std::vector<Entity*> ObjectManager::getEntitiesByLabel(std::string label)
+{
+	std::vector<Entity*> labelEntities;
+	for (auto& x : entities)
+	{
+		if (x->label == label)
+		{
+			labelEntities.emplace_back(x);
+		}
+	}
+	return labelEntities;
 }
