@@ -32,6 +32,8 @@ public:
 	//int enemy_direction;
 	//	void add_enemy_position(vec2 position);
 
+	// Clear light positions on room change
+	void clearLights();
 
 private:
 	// When salmon is alive, the time is set to -1

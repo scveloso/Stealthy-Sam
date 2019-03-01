@@ -126,3 +126,9 @@ void Water::restart() {
 	showEText = 0;
 	death = 0;
 }
+
+// Clear light positions on room change
+// TODO: Circle light position will be an array later and can clear the array instead
+void Water::clearLights() {
+	circle_light_position = { -1000.f, -1000.f };
+}

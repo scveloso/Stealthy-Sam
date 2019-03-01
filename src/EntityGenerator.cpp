@@ -81,7 +81,6 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				movementCmp.add(entity, 200.f, 0);
 				collisionCmp.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-				water->add_position(s_position);
 			}
 			else if (val == WALL)
 			{

@@ -191,6 +191,8 @@ void World::clearMap()
 	delete ms;
 	delete ts;
 	delete ls;
+
+	m_water->clearLights();
 }
 
 // Releases all the associated resources
