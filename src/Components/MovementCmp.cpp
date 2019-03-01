@@ -1,4 +1,6 @@
 #include "MovementCmp.hpp"
+#include <string>
+#include <iostream>
 
 void MovementCmp::add(Entity *entity, float speed, float acceleration) {
   Movement* mv = new Movement();

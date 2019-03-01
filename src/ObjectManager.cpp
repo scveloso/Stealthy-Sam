@@ -23,10 +23,12 @@ Entity* ObjectManager::getEntity(int id)
 
 Entity* ObjectManager::getEntityByLabel(std::string label)
 {
-    for (auto& x : entities) {
-    	if (x->label == label) {
-    		return x;
-    	}
-    }
-    return nullptr;
+	for (auto& x : entities)
+	{
+		if (x->label == label)
+		{
+			return x;
+		}
+	}
+	return nullptr;
 }

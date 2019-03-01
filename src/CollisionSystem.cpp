@@ -2,6 +2,7 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 #include "UpdateAction.hpp"
+#include "TileConstants.hpp"
 
 void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
 {
@@ -139,6 +140,7 @@ void CollisionSystem::handleTorches(Entity* entity)
 		// Stop drawing the picked up item
 		entity->active = false;
 		// Set Sam's held item to this entity
+		gameStateComponent->held_item = TORCH;
 		gameStateComponent->held_entity = entity;
 	}
 }

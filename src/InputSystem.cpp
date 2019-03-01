@@ -123,6 +123,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
                 movementComponent.setMovementDirection(heldEntity, RIGHT);
               }
 
+              gameState->held_item = -1;
               gameState->held_entity = NULL;
             }
 

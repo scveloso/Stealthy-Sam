@@ -8,4 +8,7 @@ void GameStateCmp::init() {
     // Tutorial status
     has_moved = false;
     has_pressed_E = false;
+
+    // Held entity
+    held_item = -1;
 }

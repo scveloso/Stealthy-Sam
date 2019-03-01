@@ -6,6 +6,13 @@
 
 using json = nlohmann::json;
 
+// Class to generate entities on game start/restart, and on room changes
+//
+// First, generateEntities() is called on a .json map made by us, generating
+// entities for each layer
+// Then, handleTextBoxEntities() is called to generate text box entities
+// After, handleHeldItem() is called to generate Sam's held item on room changes
+// Lastly, initializeSystems() is called to add all the components to their relevant systems
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
 	EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
 {
@@ -20,6 +27,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	gameState = gs;
 }
 
+// Parse .json file to generate entities
 void EntityGenerator::generateEntities(std::string room_path, Water* water)
 {
 	// Components
@@ -33,26 +41,6 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = objectManager->makeEntity("Player");
-
-	// Create text boxes if we're in room one:
-	if (map_path("room_one.json") == room_path)
-	{
-		// Text boxes
-		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
-		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-		transformCmp.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-
-		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
-		drawCmp.add(useEText, textures_path("text/etointeract.png"));
-		transformCmp.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-		useEText->active = false; // E text initially invisible
-	}
-
-	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
-	drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
-	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-	rToRestart->active = false; // Died text initially invisible
 
 	// Read JSON map file
 	std::ifstream data(room_path);
@@ -196,10 +184,60 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		}
 	}
 
-	initializeSystems(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
+	// Proceed to handle the text box entities
+	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
 }
 
-// Set-up DrawSystem, InputSystem, CollisionSystem
+// Separate call to generate text box entitities
+void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+{
+	// Create text boxes if we're in room one:
+	if (map_path("room_one.json") == room_path)
+	{
+		// Text boxes
+		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
+		dc.add(useWASD, textures_path("text/usewasd.png"));
+		tc.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+
+		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
+		dc.add(useEText, textures_path("text/etointeract.png"));
+		tc.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+		useEText->active = false; // E text initially invisible
+	}
+
+	// Text box if you're dead
+	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
+	dc.add(rToRestart, textures_path("text/rtorestart.png"));
+	tc.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+	rToRestart->active = false; // Died text initially invisible
+
+	// Proceed to handle held item, if applicable
+	handleHeldItem(dc, tc, ic, cc, ec, mc, water);
+}
+
+// When room changes, Sam's held item is deleted but we still want to generate
+// it in the new room
+void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+{
+	// Check GameStateCmp to see if any held entities from other rooms should be generated in this room
+	if (gameState->held_item != -1) {
+		if (gameState->held_item == TORCH) {
+			Entity* entity = objectManager->makeEntity("Torch");
+
+			entity->active = false; // Sam is holding it
+			mc.add(entity, 200.f, -0.1f);
+			tc.add(entity, { 0, 0 }, { 2.5f, 2.0f }, 0.0);
+			dc.add(entity, textures_path("Dungeon/torch.png"));
+			cc.add(entity);
+			gameState->held_entity = entity;
+		}
+	}
+
+	// Done generating entities, proceed to initialize systems
+	initializeSystems(dc, tc, ic, cc, ec, mc, water);
+}
+
+// Set-up DrawSystem, InputSystem, CollisionSystem, etc.
 void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
 {
 	drawSystem->init(*objectManager, dc, tc, gameState);
