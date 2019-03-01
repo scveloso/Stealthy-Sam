@@ -2,7 +2,7 @@
 uniform sampler2D screen_texture;
 uniform float time;
 uniform float dead_timer;
-uniform vec2 sam_position;
+uniform vec2 circle_light_position;
 uniform vec2 text_position;
 uniform int text_cond;
 uniform vec2 e_position;

@@ -1,0 +1,100 @@
+#include "MovementCmp.hpp"
+
+void MovementCmp::add(Entity *entity, float speed, float acceleration) {
+  Movement* mv = new Movement();
+  mv->movementDirection = NO_DIRECTION;
+  mv->baseSpeed = speed;
+  mv->currSpeed = 0;
+  mv->acceleration = acceleration;
+
+	movement_map[entity->id] = mv;
+}
+
+std::unordered_map<int, Movement *> MovementCmp::getmap()
+{
+	return movement_map;
+}
+
+Movement* MovementCmp::getMovement(Entity* entity)
+{
+  return movement_map[entity->id];
+}
+
+float MovementCmp::getBaseSpeed(Entity* entity)
+{
+  return movement_map[entity->id]->baseSpeed;
+}
+
+// Time stepping based physical animation
+float MovementCmp::getStep(Entity* entity, float elapsed_ms)
+{
+  Movement* movement = movement_map[entity->id];
+
+  // If entity uses linear movement
+  if (movement->acceleration == 0)
+  {
+    return movement->baseSpeed * (elapsed_ms / 1000);
+  }
+  else
+  {
+    float newSpeed = movement->currSpeed + (movement->acceleration * elapsed_ms);
+    movement->currSpeed = newSpeed;
+    return newSpeed * (elapsed_ms / 1000);
+  }
+}
+
+void MovementCmp::setCurrSpeed(Entity* entity, float currSpeed)
+{
+  Movement* movement = movement_map[entity->id];
+  movement->currSpeed = currSpeed;
+}
+
+void MovementCmp::setMovementDirection(Entity *entity, int movementDirection)
+{
+  int entityDirection = movement_map[entity->id]->movementDirection;
+  // Only set to that direction if not yet going in that direction
+	if (entityDirection % movementDirection != 0)
+	{
+    movement_map[entity->id]->movementDirection *= movementDirection;
+  }
+}
+
+void MovementCmp::removeMovementDirection(Entity *entity, int movementDirection)
+{
+	int entityDirection = movement_map[entity->id]->movementDirection;
+  // Only remove that direction if going in that direction
+	if (entityDirection % movementDirection == 0)
+	{
+		movement_map[entity->id]->movementDirection /= movementDirection;
+	}
+}
+
+int MovementCmp::getMovementDirection(Entity *entity)
+{
+	return movement_map[entity->id]->movementDirection;
+}
+
+void MovementCmp::resetMovementDirection(Entity *entity)
+{
+  movement_map[entity->id]->movementDirection = NO_DIRECTION;
+}
+
+bool MovementCmp::isGoingLeft(Entity *entity)
+{
+	return movement_map[entity->id]->movementDirection % LEFT == 0;
+}
+
+bool MovementCmp::isGoingRight(Entity *entity)
+{
+	return movement_map[entity->id]->movementDirection % RIGHT == 0;
+}
+
+bool MovementCmp::isGoingUp(Entity *entity)
+{
+	return movement_map[entity->id]->movementDirection % UP == 0;
+}
+
+bool MovementCmp::isGoingDown(Entity *entity)
+{
+	return movement_map[entity->id]->movementDirection % DOWN == 0;
+}

@@ -54,12 +54,15 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-                int keyUpdateAction = handleKeys(entity);
+        int keyUpdateAction = handleKeys(entity);
 
 				if (handleClosets(entity))
 				{
 					samCollision->closet = true;
 				}
+
+				// Handle grabbing a torch
+				handleTorches(entity);
 			}
 		}
 	}
@@ -126,6 +129,18 @@ bool CollisionSystem::handleClosets(Entity* entity)
 	}
 
 	return false;
+}
+
+// TODO?: Maybe an inventory or more general way of holding items
+void CollisionSystem::handleTorches(Entity* entity)
+{
+	if (entity->label.compare("Torch") == 0)
+	{
+		// Stop drawing the picked up item
+		entity->active = false;
+		// Set Sam's held item to this entity
+		gameStateComponent->held_entity = entity;
+	}
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {

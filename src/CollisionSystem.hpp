@@ -16,6 +16,7 @@ public:
 	int handleEnemies(Entity* entity);
 	int handleKeys(Entity* entity);
 	bool handleClosets(Entity* entity);
+	void handleTorches(Entity* entity);
 
 private:
 	CollisionCmp collisionComponent;

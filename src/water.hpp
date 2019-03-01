@@ -22,7 +22,8 @@ public:
 	void set_salmon_dead();
 	void reset_salmon_dead_time();
 	float get_salmon_dead_time() const;
-	//add sam_position to be pass down into shaders
+
+	//add position to be pass down into shaders to create circle of light
 	void add_position(vec2 position);
 	int showWASDText;
 	int showEText;
@@ -35,7 +36,7 @@ public:
 private:
 	// When salmon is alive, the time is set to -1
 	float m_dead_time;
-	vec2 sam_position;
+	vec2 circle_light_position;
 	vec2 textWASD_position;
 	vec2 textE_position;
 	vec2 textR_position;

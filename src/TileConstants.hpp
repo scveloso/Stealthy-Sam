@@ -13,6 +13,7 @@ const int KEY = 494;
 const int CLOSET = 496;
 const int DOOR = 484;
 const int ENEMY = 376;
+const int TORCH = 110;
 
 // Doors
 const int DOOR_ROOM_1_TO_2 = 48412;

@@ -42,6 +42,7 @@ set(SOURCE_FILES
 		src/EnemySystem.cpp
 		src/MovementSystem.cpp
     src/TextSystem.cpp
+    src/LightSystem.cpp
     src/DecisionNode.cpp
     src/EntityGenerator.cpp
 
@@ -57,6 +58,7 @@ set(SOURCE_FILES
 		src/EnemySystem.hpp
     src/MovementSystem.hpp
     src/TextSystem.hpp
+    src/LightSystem.hpp
     src/DecisionNode.hpp
     src/EntityGenerator.hpp
 
@@ -72,6 +74,8 @@ set(SOURCE_FILES
 		src/Components/CollisionCmp.hpp
 		src/Components/EnemyCmp.hpp
 		src/Components/EnemyCmp.cpp
+    src/Components/MovementCmp.hpp
+    src/Components/MovementCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
         )

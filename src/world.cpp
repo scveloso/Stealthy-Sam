@@ -21,6 +21,7 @@ CollisionSystem* cs;
 EnemySystem* es;
 MovementSystem* ms;
 TextSystem* ts;
+LightSystem* ls;
 
 // Game State component
 GameStateCmp* gameState;
@@ -164,8 +165,9 @@ void World::makeSystems()
 	es = new EnemySystem();
 	ms = new MovementSystem();
 	ts = new TextSystem();
+	ls = new LightSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, gameState);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState);
 }
 
 void World::setupWindow()
@@ -188,6 +190,7 @@ void World::clearMap()
 	delete es;
 	delete ms;
 	delete ts;
+	delete ls;
 }
 
 // Releases all the associated resources
@@ -215,13 +218,10 @@ bool World::update(float elapsed_ms)
 	int updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
 	ts->update();
+	ls->update();
 
 	// Handle UpdateAction from Systems
 	handleUpdateAction(updateAction);
-
-	// Update sam position for circle of light
-	vec2 s_position= ds->s_position;
-  m_water->add_position(s_position);
 
   return true;
 }

@@ -8,7 +8,6 @@ public:
 	void init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp);
 	void update(const mat3 projection);
 	bool setup();
-	vec2 s_position;
 	// vec2 en_position;
 	// int en_direction;
 private:

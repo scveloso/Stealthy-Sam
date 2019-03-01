@@ -7,7 +7,7 @@
 using json = nlohmann::json;
 
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
-	EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, GameStateCmp* gs)
+	EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -16,6 +16,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	inputSystem = is;
 	movementSystem = ms;
 	textSystem = ts;
+	lightSystem = ls;
 	gameState = gs;
 }
 
@@ -27,6 +28,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	InputCmp inputCmp;
 	CollisionCmp collisionCmp;
 	EnemyCmp enemyCmp;
+	MovementCmp movementCmp;
 
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
@@ -38,12 +40,10 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		// Text boxes
 		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
 		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-		inputCmp.add(useWASD);
 		transformCmp.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 
 		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
 		drawCmp.add(useEText, textures_path("text/etointeract.png"));
-		inputCmp.add(useEText);
 		transformCmp.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 		useEText->active = false; // E text initially invisible
 	}
@@ -86,10 +86,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 			{
 				entity = objectManager->getEntity(SAMS_GUID);
 
-				transformCmp.add(entity, { x, y }, { 1.125f, 1.5f }, 0.0);
+				transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
 				//drawCmp.add(entity, textures_path("sam/16.png"));
 				inputCmp.add(entity);
+				movementCmp.add(entity, 200.f, 0);
 				collisionCmp.add(entity);
 				vec2 s_position = transformCmp.getTransform(entity)->m_position;
 				water->add_position(s_position);
@@ -103,13 +104,22 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				collisionCmp.add(entity);
 			}
 			else if (val == KEY)
-            {
-                entity = objectManager->makeEntity("Key");
+			{
+        entity = objectManager->makeEntity("Key");
 
-                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-                drawCmp.add(entity, textures_path("Dungeon/key.png"));
-                collisionCmp.add(entity);
-            }
+        transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+        drawCmp.add(entity, textures_path("Dungeon/key.png"));
+        collisionCmp.add(entity);
+      }
+			else if (val == TORCH)
+			{
+			  entity = objectManager->makeEntity("Torch");
+
+				movementCmp.add(entity, 200.f, -0.1f);
+			  transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
+			  drawCmp.add(entity, textures_path("Dungeon/torch.png"));
+			  collisionCmp.add(entity);
+			}
 			else if (val == CLOSET)
 			{
 				entity = objectManager->makeEntity("Closet");
@@ -175,6 +185,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 			{
 				entity = objectManager->makeEntity("Enemy");
 
+				movementCmp.add(entity, 50.f, 0);
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
 				collisionCmp.add(entity);
@@ -185,18 +196,19 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		}
 	}
 
-	initializeSystems(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, water);
+	initializeSystems(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem
-void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, Water* water)
+void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
 {
 	drawSystem->init(*objectManager, dc, tc, gameState);
-	inputSystem->init(*objectManager, ic, tc, cc, gameState);
+	inputSystem->init(*objectManager, ic, tc, cc, mc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, gameState);
-	enemySystem->init(*objectManager, cc, tc, ec);
-	movementSystem->init(*objectManager, ic, tc, cc, gameState);
+	enemySystem->init(*objectManager, cc, tc, ec, mc);
+	movementSystem->init(*objectManager, ic, tc, cc, mc, gameState);
 	textSystem->init(*objectManager, gameState, water);
+	lightSystem->init(*objectManager, gameState, tc, water);
 
 	drawSystem->setup();
 }

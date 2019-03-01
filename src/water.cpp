@@ -53,8 +53,9 @@ void Water::set_salmon_dead() {
 	m_dead_time = glfwGetTime();
 }
 
+// Adds a circle of light at the given position
 void Water::add_position(vec2 position){
-	sam_position= position;
+	circle_light_position = position;
 }
 // void Water::add_enemy_position(vec2 position){
 // 	enemy_position.push_back(position);
@@ -83,7 +84,7 @@ void Water::draw(const mat3& projection) {
 	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
 	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
-	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
+	GLint s_position= glGetUniformLocation(effect.program, "circle_light_position");
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
 	GLint r_position= glGetUniformLocation(effect.program, "r_position");
@@ -100,7 +101,7 @@ void Water::draw(const mat3& projection) {
 	glUniform2f(t_position, textWASD_position.x-15.f, textWASD_position.y-812.f );
 	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
 	glUniform2f(e_position, textE_position.x-17.f, textE_position.y-812.f );
-	glUniform2f(s_position, sam_position.x, sam_position.y);
+	glUniform2f(s_position, circle_light_position.x, circle_light_position.y);
 	glUniform2f(r_position, textR_position.x-15.f, textR_position.y-812.f );
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));

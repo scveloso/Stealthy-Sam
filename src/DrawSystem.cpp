@@ -86,7 +86,7 @@ void DrawSystem::update(const mat3 projection)
 
 			if (entity->label == "Player") {
 				Transform* samTransform = transformComponent.getTransform(entity);
-			  s_position = samTransform->m_position;
+			  gameState->sam_position = samTransform->m_position;
 
 				// If sam is dead, we should also rotate him sideways:
 				if (!gameState->sam_is_alive)
