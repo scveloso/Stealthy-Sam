@@ -59,6 +59,9 @@ void Water::add_text(vec2 position){
 void Water::add_key(vec2 position){
 	key_position= position;
 }
+void Water::add_restart(vec2 position){
+	re_position= position;
+}
 // void Water::add_enemy_position(vec2 position){
 // 	enemy_position.push_back(position);
 // 	//printf("%g\n", enemy_position.x );
@@ -89,20 +92,23 @@ void Water::draw(const mat3& projection) {
 	GLint s_position= glGetUniformLocation(effect.program, "sam_position");
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
+	GLint r_position= glGetUniformLocation(effect.program, "r_position");
+	GLint re_cond= glGetUniformLocation(effect.program, "remove_r");
 	//GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
 	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
 	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
 	glUniform1i(death_cond, death);
-
+  glUniform1i(re_cond, remove_r);
 	glUniform1i(text_cond, removeText);
 	glUniform1i(key_cond, removeKey);
 	//glUniform1i(en_direction, enemy_direction);
-	glUniform2f(t_position, text_position.x-15.f, text_position.y-812.f );
+	glUniform2f(t_position, text_position.x, text_position.y );
 	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
-	glUniform2f(e_position, key_position.x-17.f, key_position.y-812.f );
+	glUniform2f(e_position, key_position.x, key_position.y);
 	glUniform2f(s_position, sam_position.x, sam_position.y);
+	glUniform2f(r_position, re_position.x, re_position.y);
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
 	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);

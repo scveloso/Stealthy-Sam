@@ -99,6 +99,10 @@ void DrawSystem::update(const mat3 projection)
 			  EBox = transformComponent.getTransform(entity)->m_position;
 			}
 
+			if (entity->label == USE_R_RESTART){
+				rRestart= transformComponent.getTransform(entity)->m_position;
+			}
+
 			// if (entity->label == "Enemy"){
 			// 	en_position= transformComponent.getTransform(entity)->m_position;
 			// 	en_direction= transformComponent.getTransform(entity)->direction;

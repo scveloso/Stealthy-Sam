@@ -23,9 +23,11 @@ public:
 	void add_position(vec2 position);
 	void add_text(vec2 position);
 	void add_key(vec2 position);
+	void add_restart(vec2 position);
 	int removeText;
 	int removeKey;
 	int death;
+	int remove_r;
 	//int enemy_direction;
 //	void add_enemy_position(vec2 position);
 
@@ -36,5 +38,6 @@ private:
 	vec2 sam_position;
 	vec2 text_position;
 	vec2 key_position;
+	vec2 re_position;
 	//std::vector<vec2> enemy_position;
 };

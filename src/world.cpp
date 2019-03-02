@@ -28,6 +28,7 @@ MovementSystem* ms;
 GameStateCmp* gameState;
 
 Entity* keyE;
+Entity *rRestart;
 
 
 
@@ -197,9 +198,10 @@ void World::generateEntities(std::string room_path)
 	// Text box if you're dead
 	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART, 1);
 	drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
-	transformCmp.add(rToRestart, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+	transformCmp.add(rToRestart, { 300, 400 }, { 0.2, 0.2 }, 0.0);
 	// Initially the you died textbox isn't there until you're dead
 	rToRestart->active = false;
+	rRestart= rToRestart;
 
 
 	// Read JSON map file
@@ -428,6 +430,11 @@ bool World::update(float elapsed_ms)
 		m_water.add_key(tpe);
 		m_water.removeKey = 0;
 	}
+	if(rRestart->active){
+	vec2 rpe= ds->rRestart;
+	m_water.add_restart(rpe);
+	m_water.remove_r=0;
+}
 
 	// Update sam position for circle of light
 	vec2 s_position= ds->s_position;
