@@ -2,23 +2,23 @@
 
 // internal
 #include "common.hpp"
-#include "sam.hpp"
-#include "background.hpp"
-#include "missile.hpp"
-#include "wall.hpp"
-#include "enemy.hpp"
-#include "closet.hpp"
-#include "room.hpp"
-#include "roomone.hpp"
-#include "roomtwo.hpp"
+#include "water.hpp"
+#include "Components/DrawCmp.hpp"
+#include "Components/TransformCmp.hpp"
+#include "Components/InputCmp.hpp"
+#include "Components/CollisionCmp.hpp"
+#include "Components/EnemyCmp.hpp"
+#include "ObjectManager.hpp"
 
 // stlib
 #include <vector>
 #include <random>
+#include <string>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <Components/GameStateCmp.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
@@ -30,6 +30,19 @@ public:
 
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
+
+	// Generate entities from a given path to a JSON map file
+	void generateEntities(std::string room_path);
+
+	// Set-up DrawSystem, InputSystem, CollisionSystem
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+						   GameStateCmp *gameStateCmp);
+
+	// Clear DrawSystem, InputSystem, CollisionSystem
+	void clearMap();
+
+	// Takes in an UpdateAction, handles room changes, death, etc.
+	void handleUpdateAction(int action);
 
 	// Releases all associated resources
 	void destroy();
@@ -44,41 +57,30 @@ public:
 	bool is_over()const;
 
 private:
-
-	bool spawn_enemy(float posx, float posy, float patrol_x, float patrol_y);
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
-protected:
+private:
 	// Window handle
 	GLFWwindow* m_window;
 
 	// Screen texture
-	// The draw loop first renders to this texture, then it is used for the background shader
+	// The draw loop first renders to this texture, then it is used for the water shader
 	GLuint m_frame_buffer;
 	Texture m_screen_tex;
 
-	// Background effect
-	Background m_background;
+	// Water effect
+	Water m_water;
 
-	// Game entities
-	Sam m_sam;
-	Room *m_room; // the current room
+	// Number of fish eaten by the salmon, displayed in the window title
+	unsigned int m_points;
 
-	RoomOne m_roomOne; // the first room
-	RoomTwo m_roomTwo; // the second room
-	// TODO: Finish implementing the second, third and fourth rooms
-
-	std::vector<Enemy> m_enemies;
-	std::vector<Wall> m_walls;
-	std::vector<Closet> m_closets;
-
-	vec2 m_screen;
+	float m_current_speed;
 
 	Mix_Music* m_background_music;
-	Mix_Chunk* m_sam_dead_sound;
-	Mix_Chunk* m_sam_eat_sound;
+	Mix_Chunk* m_salmon_dead_sound;
+	Mix_Chunk* m_salmon_eat_sound;
 
 	// C++ rng
 	std::default_random_engine m_rng;

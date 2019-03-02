@@ -8,6 +8,9 @@
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
 
+// JSON
+#include <../ext/json/json.hpp>
+
 // Simple utility macros to avoid mistyping directory name, name has to be a string literal
 // audio_path("audio.ogg") -> data/audio/audio.ogg
 // Get defintion of PROJECT_SOURCE_DIR from:
@@ -17,9 +20,10 @@
 
 #define data_path PROJECT_SOURCE_DIR "./data"
 #define textures_path(name)  data_path "/textures/" name
-#define sam_textures_path(name) data_path "/textures/CartoonDetective/Run/" name
 #define audio_path(name) data_path  "/audio/" name
 #define mesh_path(name) data_path  "/meshes/" name
+#define map_path(name) data_path "/maps/" name
+#define sam_default_path(name) data_path "/textures/sam/" name
 
 // Not much math is needed and there are already way too many libraries linked (:
 // If you want to do some overloads..
@@ -62,7 +66,7 @@ struct Texture
 	GLuint depth_render_buffer_id;
 	int width;
 	int height;
-	
+
 	// Loads texture from file specified by path
 	bool load_from_file(const char* path);
 	// Screen texture
@@ -71,7 +75,7 @@ struct Texture
 };
 
 // A Mesh is a collection of a VertexBuffer and an IndexBuffer. A VAO
-// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and 
+// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and
 // an Index Buffer
 struct Mesh
 {
@@ -102,7 +106,7 @@ struct Renderable
 
 	// projection contains the orthographic projection matrix. As every Renderable::draw()
 	// renders itself it needs it to correctly bind it to its shader.
-	virtual void draw(const mat3& projection) = 0;
+	void draw(const mat3& projection);
 
 	// gl Immediate mode equivalent, see the Rendering and Transformations section in the
 	// specification pdf
@@ -113,4 +117,11 @@ struct Renderable
 	void transform_end();
 };
 
-bool collides_with(vec2 obj1, vec2 obj1_scale, vec2 obj2, vec2 obj2_bounding);
+
+const std::string USE_WASD_TEXT_LABEL = "Textbox.UseWASD";
+const std::string USE_E_INTERACT_LABEL = "Textbox.UseE";
+const std::string USE_R_RESTART = "Textbox.RtoRestart";
+
+const std::string ROOM_ONE_GUID = "ROOM_ONE";
+const std::string ROOM_TWO_GUID = "ROOM_TWO";
+const std::string ROOM_THREE_GUID = "ROOM_THREE";

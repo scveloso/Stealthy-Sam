@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(436d)
 
-## added to make debugging symbols appear
-set(CMAKE_BUILD_TYPE Debug)
-
 # Set c++11
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
@@ -34,35 +31,46 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-        src/a1.cpp
-        src/common.cpp
-        src/sam.cpp
-        src/background.cpp
-        src/world.cpp
-        src/room.cpp
-        src/roomone.cpp
-        src/roomtwo.cpp
-        src/missile.cpp
-        src/wall.cpp
-        src/closet.cpp
-        src/door.cpp
-		src/enemy.cpp
-		src/collision.cpp
+		src/main.cpp
+		src/common.cpp
+		src/water.cpp
+		src/world.cpp
+		src/ObjectManager.cpp
+		src/DrawSystem.cpp
+		src/InputSystem.cpp
+		src/CollisionSystem.cpp
+		src/EnemySystem.cpp
+		src/MovementSystem.cpp
+    src/DecisionNode.cpp
 
-        src/project_path.hpp
-        src/common.hpp
-        src/sam.hpp
-        src/background.hpp
-        src/world.hpp
-        src/room.hpp
-        src/roomone.hpp
-        src/roomtwo.hpp
-        src/wall.hpp
-        src/closet.hpp
-        src/door.hpp
-		src/enemy.hpp
-		src/collision.hpp
-	)
+		src/project_path.hpp
+		src/common.hpp
+		src/water.hpp
+		src/world.hpp
+		src/ObjectManager.hpp
+		src/Entity.hpp
+		src/DrawSystem.hpp
+		src/InputSystem.hpp
+		src/CollisionSystem.hpp
+		src/EnemySystem.hpp
+    src/MovementSystem.hpp
+    src/DecisionNode.hpp
+
+		src/common.hpp
+		src/Components/Cmp.hpp
+		src/Components/DrawCmp.hpp
+		src/Components/DrawCmp.cpp
+		src/Components/TransformCmp.hpp
+		src/Components/TransformCmp.cpp
+		src/Components/InputCmp.hpp
+		src/Components/InputCmp.cpp
+		src/Components/CollisionCmp.cpp
+		src/Components/CollisionCmp.hpp
+		src/Components/EnemyCmp.hpp
+		src/Components/EnemyCmp.cpp
+		src/Components/GameStateCmp.hpp
+		src/Components/GameStateCmp.cpp
+        )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC src/)

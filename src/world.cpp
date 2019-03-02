@@ -1,18 +1,44 @@
 // Header
 #include "world.hpp"
-#include "wall_types.h"
-#include "constants.hpp"
+#include "DrawSystem.hpp"
+#include "InputSystem.hpp"
+#include "CollisionSystem.hpp"
+#include "EnemySystem.hpp"
+#include "MovementSystem.hpp"
+#include "TileConstants.hpp"
+#include "UpdateAction.hpp"
 
 // stlib
 #include <string.h>
 #include <cassert>
+#include <string>
 #include <sstream>
 #include <iostream>
-#include <math.h>
+
+using json = nlohmann::json;
+
+ObjectManager* objectManager;
+DrawSystem* ds;
+InputSystem* inputSys;
+CollisionSystem* cs;
+EnemySystem* es;
+MovementSystem* ms;
+
+// Game State component
+GameStateCmp* gameState;
+
+Entity* keyE;
+
+
 
 // Same as static in c, local to compilation unit
 namespace
 {
+	const size_t MAX_TURTLES = 15;
+	const size_t MAX_FISH = 5;
+	const size_t TURTLE_DELAY_MS = 2000;
+	const size_t FISH_DELAY_MS = 5000;
+
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
@@ -22,7 +48,8 @@ namespace
 	}
 }
 
-World::World()
+World::World() :
+	m_points(0)
 {
 	// Seeding rng with random device
 	m_rng = std::default_random_engine(std::random_device()());
@@ -54,7 +81,7 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	glfwWindowHint(GLFW_RESIZABLE, 0);
-	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "A1 Assignment", nullptr, nullptr);
+	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Stealthy Sam", nullptr, nullptr);
 	if (m_window == nullptr)
 		return false;
 
@@ -67,11 +94,8 @@ bool World::init(vec2 screen)
 	// Setting callbacks to member functions (that's why the redirect is needed)
 	// Input is handled using GLFW, for more info see
 	// http://www.glfw.org/docs/latest/input_guide.html
-	glfwSetWindowUserPointer(m_window, this);
-	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
-	auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
-	glfwSetKeyCallback(m_window, key_redirect);
-	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
+	//auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
+	//glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
 	// Create a frame buffer
 	m_frame_buffer = 0;
@@ -96,25 +120,16 @@ bool World::init(vec2 screen)
 	}
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-	m_sam_dead_sound = Mix_LoadWAV(audio_path("sam_dead.wav"));
-	m_sam_eat_sound = Mix_LoadWAV(audio_path("sam_eat.wav"));
+	m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
+	m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
 
-	if (m_background_music == nullptr || m_sam_dead_sound == nullptr || m_sam_eat_sound == nullptr)
+	if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr)
 	{
 		fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
 			audio_path("music.wav"),
-			audio_path("sam_dead.wav"),
-			audio_path("sam_eat.wav"));
+			audio_path("salmon_dead.wav"),
+			audio_path("salmon_eat.wav"));
 		return false;
-	}
-
-	// Save the screen
-	m_screen = screen;
-
-	// Initialize current room
-	if (m_sam.init()) {
-		m_room = &m_roomOne;
-		m_room->init(m_screen, &m_sam);
 	}
 
 	// Playing background music undefinitely
@@ -122,12 +137,249 @@ bool World::init(vec2 screen)
 
 	fprintf(stderr, "Loaded music\n");
 
-	if (m_background.init())
+	m_current_speed = 1.f;
+
+	Texture turtle;
+
+	// Create initial game state
+	gameState = new GameStateCmp();
+	gameState->init();
+
+	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
+	generateEntities(map_path("room_one.json"));
+
+	return m_water.init();
+}
+
+// Generate entities from a given path to a JSON map file
+void World::generateEntities(std::string room_path)
+{
+	// Components and Object Manager
+	objectManager = new ObjectManager();
+	DrawCmp drawCmp;
+	TransformCmp transformCmp;
+	InputCmp inputCmp;
+	CollisionCmp cc;
+	EnemyCmp ec;
+
+	int id = 1;
+
+	// Generate main player
+	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
+	Entity* playerEntity = objectManager->makeEntity("Player", id);
+	id++;
+
+	// Create text boxes if we're in room one:
+	if (map_path("room_one.json") == room_path)
 	{
-		return true;
+		// Text boxes
+		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL, 1);
+		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
+		inputCmp.add(useWASD);
+		transformCmp.add(useWASD, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		//pass coordinates to shader
+		vec2 tp = transformCmp.getTransform(useWASD)->m_position;
+		m_water.add_text(tp);
+		if (useWASD->active){
+			m_water.removeText=0;
+		}
+
+		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL, 1);
+		drawCmp.add(useEText, textures_path("text/etointeract.png"));
+		inputCmp.add(useEText);
+		transformCmp.add(useEText, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+		keyE= useEText;
+		// Initially the E text box isn't there until we move
+		useEText->active = false;
 	}
 
-	return false;
+
+	// Text box if you're dead
+	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART, 1);
+	drawCmp.add(rToRestart, textures_path("text/rtorestart.png"));
+	transformCmp.add(rToRestart, { 300, 150 }, { 0.2, 0.2 }, 0.0);
+	// Initially the you died textbox isn't there until you're dead
+	rToRestart->active = false;
+
+
+	// Read JSON map file
+	std::ifstream data(room_path);
+	json map = json::parse(data);
+	json layers = map["layers"];
+
+	// Go through layers
+	for (json::iterator layer_it = layers.begin(); layer_it != layers.end(); ++layer_it)
+	{
+		json tiles = (*layer_it)["data"];
+
+		float y = TILE_HEIGHT / 2;
+		float x = TILE_WIDTH / 2;
+
+		// Go through all tiles in this layer
+		for (json::iterator tile_it = tiles.begin(); tile_it != tiles.end(); ++tile_it)
+		{
+			if (x > SCREEN_WIDTH)
+			{
+				x = TILE_WIDTH / 2;
+				y += TILE_HEIGHT;
+			}
+
+			// Read tile value
+			int val = (*tile_it).get<int>();
+
+			Entity* entity;
+
+			// Generate main player
+			if (val == SAM)
+			{
+				entity = objectManager->getEntity(SAMS_GUID);
+
+				transformCmp.add(entity, { x, y }, { 1.125f, 1.5f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+				//drawCmp.add(entity, textures_path("sam/16.png"));
+				inputCmp.add(entity);
+				cc.add(entity);
+				vec2 s_position = transformCmp.getTransform(entity)->m_position;
+				m_water.add_position(s_position);
+
+			}
+			else if (val == WALL)
+			{
+				entity = objectManager->makeEntity("Wall", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/wall_mid.png"));
+				cc.add(entity);
+			}
+			else if (val == KEY)
+            {
+                entity = objectManager->makeEntity("Key", id);
+                id++;
+
+                transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+                drawCmp.add(entity, textures_path("Dungeon/key.png"));
+                cc.add(entity);
+            }
+			else if (val == CLOSET)
+			{
+				entity = objectManager->makeEntity("Closet", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
+				cc.add(entity);
+
+				// Make interactable areas around the closet
+				entity = objectManager->makeEntity("ClosetArea", id);
+				id++;
+				transformCmp.add(entity, { x + (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+				cc.add(entity);
+
+				entity = objectManager->makeEntity("ClosetArea", id);
+				id++;
+				transformCmp.add(entity, { x - (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+				cc.add(entity);
+
+				entity = objectManager->makeEntity("ClosetArea", id);
+				id++;
+				transformCmp.add(entity, { x, y + (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+				cc.add(entity);
+
+				entity = objectManager->makeEntity("ClosetArea", id);
+				id++;
+				transformCmp.add(entity, { x, y - (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_1_TO_2)
+			{
+				entity = objectManager->makeEntity("DoorRoom1To2", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_2_TO_1)
+			{
+				entity = objectManager->makeEntity("DoorRoom2To1", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_2_TO_3)
+			{
+				entity = objectManager->makeEntity("DoorRoom2To3", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == DOOR_ROOM_3_TO_2)
+			{
+				entity = objectManager->makeEntity("DoorRoom3To2", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				cc.add(entity);
+			}
+			else if (val == ENEMY)
+			{
+				entity = objectManager->makeEntity("Enemy", id);
+				id++;
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
+				cc.add(entity);
+				ec.add(entity, 100, 0);
+				// vec2 en_position = transformCmp.getTransform(entity)->m_position;
+				// m_water.add_enemy_position(en_position);
+				// m_water.enemy_direction=5;
+			}
+
+			x += TILE_WIDTH;
+		}
+	}
+
+	// Proceed to initialize systems
+
+	initializeSystems(drawCmp, transformCmp, inputCmp, cc, ec, gameState);
+}
+
+// Set-up DrawSystem, InputSystem, CollisionSystem
+void World::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,
+							  GameStateCmp* gameStateCmp)
+{
+	ds = new DrawSystem(*objectManager, dc, tc, gameStateCmp);
+	inputSys = new InputSystem(*objectManager, ic, tc, cc, gameStateCmp);
+	cs = new CollisionSystem(*objectManager, cc, tc, gameStateCmp);
+	es = new EnemySystem(*objectManager, cc, tc, ec);
+	ms = new MovementSystem(*objectManager, ic, tc, cc, gameStateCmp);
+
+	ds->setup();
+	inputSys->setup(m_window);
+
+	glfwSetWindowUserPointer(m_window, this);
+	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+	glfwSetKeyCallback(m_window, key_redirect);
+}
+
+// Clear objects in map for reinitialization of entities when rooms switch
+void World::clearMap()
+{
+	delete ds;
+	delete inputSys;
+	delete cs;
+	delete es;
+	delete ms;
 }
 
 // Releases all the associated resources
@@ -137,39 +389,102 @@ void World::destroy()
 
 	if (m_background_music != nullptr)
 		Mix_FreeMusic(m_background_music);
-	if (m_sam_dead_sound != nullptr)
-		Mix_FreeChunk(m_sam_dead_sound);
-	if (m_sam_eat_sound != nullptr)
-		Mix_FreeChunk(m_sam_eat_sound);
+	if (m_salmon_dead_sound != nullptr)
+		Mix_FreeChunk(m_salmon_dead_sound);
+	if (m_salmon_eat_sound != nullptr)
+		Mix_FreeChunk(m_salmon_eat_sound);
 
 	Mix_CloseAudio();
-
-	m_sam.destroy();
-
 	glfwDestroyWindow(m_window);
 }
 
 // Update our game world
+// Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	int w, h;
-        glfwGetFramebufferSize(m_window, &w, &h);
-	vec2 screen = { (float)w, (float)h };
+	// Update Systems
+	es->update(elapsed_ms);
 
-	// Update current room
-	int action = m_room->update(elapsed_ms, screen);
+	int updateAction = cs->update(elapsed_ms);
+	ms->update(elapsed_ms);
 
-	if (action == CHANGE_ROOM_TWO) {
-		m_room = &m_roomTwo;
-		m_room->init(m_screen, &m_sam);
-		m_sam.set_position({(screen.x) - 90, (screen.y / 2) + 250 });
-	} else if (action == CHANGE_ROOM_ONE) {
-		m_room = &m_roomOne;
-		m_room->init(m_screen, &m_sam);
-		m_sam.set_position({90, (screen.y / 2) + 250 });
+	// Handle UpdateAction
+	handleUpdateAction(updateAction);
+	if (inputSys->has_move == 1)
+	{
+		m_water.removeText= 1;
+		m_water.removeKey=0;
 	}
 
-	return true;
+	if (inputSys->press_keyE == 1)
+	{
+		m_water.removeKey= 1;
+
+	}
+
+	if (keyE->active)
+	{
+		vec2 tpe = ds->EBox;
+		m_water.add_key(tpe);
+		m_water.removeKey = 0;
+	}
+
+	// Update sam position for circle of light
+	vec2 s_position= ds->s_position;
+    m_water.add_position(s_position);
+	// vec2 en_position= ds->en_position;
+	// m_water.add_enemy_position(en_position);
+	// m_water.enemy_direction= ds->en_direction;
+
+    return true;
+}
+
+// Takes in an UpdateAction, handles room changes, death, etc.
+void World::handleUpdateAction(int updateAction)
+{
+	if (updateAction != NO_CHANGE)
+	{
+		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
+		{
+			clearMap();
+			generateEntities(map_path("room_one_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
+		}
+		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
+		{
+			clearMap();
+			generateEntities(map_path("room_two_to_one.json"));
+			gameState->current_room = ROOM_ONE_GUID;
+		}
+		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
+		{
+			clearMap();
+			generateEntities(map_path("room_two_to_three.json"));
+			gameState->current_room = ROOM_THREE_GUID;
+		}
+		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
+		{
+			clearMap();
+			generateEntities(map_path("room_three_to_two.json"));
+			gameState->current_room = ROOM_TWO_GUID;
+		}
+		else if (updateAction == COLLIDE_WITH_ENEMY)
+		{
+			gameState->sam_is_alive = false;
+
+			// Trigger the death textbox
+			m_water.death=1;
+			objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
+		}
+		else if (updateAction == RESET_GAME)
+		{
+			gameState->init();
+			m_water.removeKey=1;
+			clearMap();
+			generateEntities(map_path("room_one.json"));
+			m_water.death=0;
+		}
+	}
 }
 
 // Render our game world
@@ -185,6 +500,7 @@ void World::draw()
 
 	// Updating window title with points
 	std::stringstream title_ss;
+	title_ss << "Points: " << m_points;
 	glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
 	/////////////////////////////////////
@@ -194,7 +510,7 @@ void World::draw()
 	// Clearing backbuffer
 	glViewport(0, 0, w, h);
 	glDepthRange(0.00001, 10);
-	const float clear_color[3] = { 0.1f, 0.1f, 0.1f };
+	const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
 	glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
 	glClearDepth(1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -212,8 +528,7 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
-	// Draw current room
-	m_room->draw(projection_2D);
+	ds->update(projection_2D);
 
 	/////////////////////
 	// Truely render to the screen
@@ -230,7 +545,7 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_background.draw(projection_2D);
+	m_water.draw(projection_2D);
 
 	//////////////////
 	// Presenting
@@ -241,30 +556,12 @@ void World::draw()
 bool World::is_over()const
 {
 	return glfwWindowShouldClose(m_window);
-}
 
-bool World::spawn_enemy(float posx, float posy, float patrol_x, float patrol_y)
-{
-	Enemy enemy;
-	if (enemy.init())
-	{
-		enemy.set_position({ posx, posy });
-		enemy.set_patrol_length_x(patrol_x);
-		enemy.set_patrol_length_y(patrol_y);
-		m_enemies.emplace_back(enemy);
-		return true;
-	}
-
-	return false;
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow*, int key, int _, int action, int mod)
 {
-	// Call on_key for current room
-	m_room->on_key(key, action, mod);
-}
-
-void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
-{
+    int resultingAction = inputSys->on_key(m_window, key, _, action, mod);
+    handleUpdateAction(resultingAction);
 }
