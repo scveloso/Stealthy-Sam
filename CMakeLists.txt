@@ -41,7 +41,10 @@ set(SOURCE_FILES
 		src/CollisionSystem.cpp
 		src/EnemySystem.cpp
 		src/MovementSystem.cpp
+    src/TextSystem.cpp
+    src/LightSystem.cpp
     src/DecisionNode.cpp
+    src/EntityGenerator.cpp
 
 		src/project_path.hpp
 		src/common.hpp
@@ -54,7 +57,10 @@ set(SOURCE_FILES
 		src/CollisionSystem.hpp
 		src/EnemySystem.hpp
     src/MovementSystem.hpp
+    src/TextSystem.hpp
+    src/LightSystem.hpp
     src/DecisionNode.hpp
+    src/EntityGenerator.hpp
 
 		src/common.hpp
 		src/Components/Cmp.hpp
@@ -68,6 +74,8 @@ set(SOURCE_FILES
 		src/Components/CollisionCmp.hpp
 		src/Components/EnemyCmp.hpp
 		src/Components/EnemyCmp.cpp
+    src/Components/MovementCmp.hpp
+    src/Components/MovementCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
         )
