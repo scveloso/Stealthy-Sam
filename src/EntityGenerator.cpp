@@ -47,8 +47,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	json map = json::parse(data);
 	json layers = map["layers"];
 
-	// Go through layers
-	for (json::iterator layer_it = layers.begin(); layer_it != layers.end(); ++layer_it)
+#if __APPLE__
+    for (json::iterator layer_it = layers.begin(); layer_it != layers.end(); ++layer_it)
+#else
+    for (json::reverse_iterator layer_it = layers.rbegin(); layer_it != layers.rend(); layer_it++)
+#endif
 	{
 		json tiles = (*layer_it)["data"];
 
