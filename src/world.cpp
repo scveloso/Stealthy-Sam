@@ -260,14 +260,14 @@ void World::handleUpdateAction(int updateAction)
         else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
         {
             clearMap();
-            generateEntities(map_path("level_two_to_three.json"));
             gameState->current_room = ROOM_THREE_GUID;
+            generateEntities(map_path("level_two_to_three.json"));
         }
         else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
         {
             clearMap();
-            generateEntities(map_path("level_three_to_two.json"));
             gameState->current_room = ROOM_TWO_GUID;
+            generateEntities(map_path("level_three_to_two.json"));
         }
         else if (updateAction == RESET_GAME)
         {
