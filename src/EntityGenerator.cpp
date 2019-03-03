@@ -1037,7 +1037,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
 {
 	// Create text boxes if we're in room one:
-	if (map_path("room_one.json") == room_path)
+	if (map_path("level_one.json") == room_path)
 	{
 		// Text boxes
 		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
