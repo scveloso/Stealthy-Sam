@@ -5,4 +5,11 @@ void GameStateCmp::init() {
     level_two_key = false;
     level_three_key = false;
     current_room = ROOM_ONE_GUID;
+
+    // Tutorial status
+    has_moved = false;
+    has_pressed_E = false;
+
+    // Held entity
+    held_item = -1;
 }

@@ -1,5 +1,10 @@
 #include "DecisionNode.hpp"
 
+// Represents a node in a decision tree
+// Can either be a decision node or an end node
+// Decision nodes lead to other nodes based on a condition
+// End nodes have an action that should be executed when reached
+
 // ** END NODES **
 // An end node in the decision tree
 DecisionNode::DecisionNode(int action) {

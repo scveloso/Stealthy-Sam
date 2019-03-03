@@ -2,8 +2,16 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 #include "UpdateAction.hpp"
+#include "TileConstants.hpp"
 
-CollisionSystem::CollisionSystem(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
+// System to handle Sam colliding with other entities. Responsible for:
+// - Updating when keys/torches/other items are picked up
+// - Updating when enemies are collided with
+// - Updating when Sam can interact with an object
+//
+// Has access to CollisionCmp and GameStateCmp to update
+// Has access to TransformCmp to know where everything is
+void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;
@@ -54,13 +62,16 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-                int keyUpdateAction = handleKeys(entity);
+        int keyUpdateAction = handleKeys(entity);
 
 
 				if (handleClosets(entity))
 				{
 					samCollision->closet = true;
 				}
+
+				// Handle grabbing a torch
+				handleTorches(entity);
 			}
 		}
 	}
@@ -101,7 +112,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 {
 	if (entity->label.compare("Enemy") == 0)
 	{
-		return COLLIDE_WITH_ENEMY;
+		gameStateComponent->sam_is_alive = false;
 	}
 
 	return NO_CHANGE;
@@ -134,6 +145,19 @@ bool CollisionSystem::handleClosets(Entity* entity)
 	}
 
 	return false;
+}
+
+// TODO?: Maybe an inventory or more general way of holding items
+void CollisionSystem::handleTorches(Entity* entity)
+{
+	if (entity->label.compare("Torch") == 0)
+	{
+		// Stop drawing the picked up item
+		entity->active = false;
+		// Set Sam's held item to this entity
+		gameStateComponent->held_item = TORCH;
+		gameStateComponent->held_entity = entity;
+	}
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {

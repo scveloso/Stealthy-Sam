@@ -4,6 +4,5 @@
 struct Entity {
 	int id;
 	bool active;
-	int gameState;
 	std::string label;
 };

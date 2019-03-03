@@ -117,6 +117,7 @@ struct Renderable
 	void transform_end();
 };
 
+const vec2 TEXT_POSITION = { 300, 150 };
 
 const std::string USE_WASD_TEXT_LABEL = "Textbox.UseWASD";
 const std::string USE_E_INTERACT_LABEL = "Textbox.UseE";

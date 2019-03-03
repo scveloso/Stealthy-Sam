@@ -11,7 +11,7 @@
 
 using Clock = std::chrono::high_resolution_clock;
 
-// Global 
+// Global
 World world;
 const int width = 1200;
 const int height = 800;
