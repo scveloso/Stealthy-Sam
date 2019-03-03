@@ -12,15 +12,11 @@ void DrawCmp::add(Entity *entity, const char* file)
 		}
 	}
 
-	draw_map[entity->id] = draw;
+	draw_vec.emplace_back(std::make_pair(entity, draw));
 }
 
-std::unordered_map<int, Draw *> DrawCmp::getmap()
+std::vector<std::pair<Entity*, Draw *>> DrawCmp::getmap()
 {
-	return draw_map;
+	return draw_vec;
 }
 
-Draw* DrawCmp::getDraw(Entity* entity)
-{
-	return draw_map.at(entity->id);
-}

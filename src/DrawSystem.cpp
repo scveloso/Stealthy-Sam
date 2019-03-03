@@ -20,7 +20,7 @@ bool DrawSystem::setup()
 {
 	for (auto& it : drawComponent.getmap())
 	{
-		Entity *entity = objectManager.getEntity(it.first);
+		Entity *entity = it.first;
 		Draw *draw = it.second;
 
 		transformComponent.setHeight(entity, draw->texture.height);
@@ -73,7 +73,7 @@ void DrawSystem::update(const mat3 projection)
 {
 	for (auto& it : drawComponent.getmap())
 	{
-		Entity *entity = objectManager.getEntity(it.first);
+		Entity *entity = it.first;
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities

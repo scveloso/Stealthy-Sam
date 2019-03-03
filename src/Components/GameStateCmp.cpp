@@ -2,7 +2,8 @@
 
 void GameStateCmp::init() {
     sam_is_alive = true;
-    keys = 0;
+    level_two_key = false;
+    level_three_key = false;
     current_room = ROOM_ONE_GUID;
 
     // Tutorial status

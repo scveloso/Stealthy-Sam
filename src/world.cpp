@@ -146,7 +146,7 @@ bool World::init(vec2 screen)
 	m_water->init();
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
-	generateEntities(map_path("room_one.json"));
+	generateEntities(map_path("level_one.json"));
 
 	return true;
 }
@@ -174,7 +174,10 @@ void World::makeSystems()
 	ls = new LightSystem();
 
 	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState);
+
+
 }
+
 
 void World::setupWindow()
 {
@@ -239,37 +242,46 @@ void World::handleUpdateAction(int updateAction)
 {
 	if (updateAction != NO_CHANGE)
 	{
-		if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
+        if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
 		{
-			clearMap();
-			generateEntities(map_path("room_one_to_two.json"));
-			gameState->current_room = ROOM_TWO_GUID;
-		}
+            clearMap();
+            gameState->current_room = ROOM_TWO_GUID;
+            generateEntities(map_path("level_one_to_two.json"));
+        }
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
-			clearMap();
-			generateEntities(map_path("room_two_to_one.json"));
-			gameState->current_room = ROOM_ONE_GUID;
+			if (gameState->level_two_key && gameState->level_three_key)
+			{
+				clearMap();
+                gameState->current_room = ROOM_ONE_GUID;
+                generateEntities(map_path("level_two_to_one_with_key.json"));
+            }
+			else
+			{
+				clearMap();
+                gameState->current_room = ROOM_ONE_GUID;
+                generateEntities(map_path("level_two_to_one.json"));
+            }
 		}
-		else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
-		{
-			clearMap();
-			generateEntities(map_path("room_two_to_three.json"));
-			gameState->current_room = ROOM_THREE_GUID;
-		}
-		else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
-		{
-			clearMap();
-			generateEntities(map_path("room_three_to_two.json"));
-			gameState->current_room = ROOM_TWO_GUID;
-		}
-		else if (updateAction == RESET_GAME)
-		{
-			gameState->init();
-			clearMap();
-			generateEntities(map_path("room_one.json"));
-			m_water->restart();
-		}
+        else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
+        {
+            clearMap();
+            gameState->current_room = ROOM_THREE_GUID;
+            generateEntities(map_path("level_two_to_three.json"));
+        }
+        else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
+        {
+            clearMap();
+            gameState->current_room = ROOM_TWO_GUID;
+            generateEntities(map_path("level_three_to_two.json"));
+        }
+        else if (updateAction == RESET_GAME)
+        {
+            gameState->init();
+            clearMap();
+            generateEntities(map_path("level_one.json"));
+            m_water->restart();
+        }
 	}
 }
 
