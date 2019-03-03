@@ -99,19 +99,14 @@ void main()
 
   float p = dimmer(d);
 
-//   if (d <= 100*100){
-//   color= in_color;
-// }
+
 if (death_cond ==0){
- if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 0){
+ if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 1){
    color= (in_color);
  }
-else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 0){
+else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 1){
   color= (in_color);
 }
-// else if (x <= x2+we && x >= x2-we && y <= y2+h && y >= y2-h && re_cond == 0){
-//   color= (in_color);
-// }
 else if (time < 5*10){
         color = in_color*p*(time/50);
  }

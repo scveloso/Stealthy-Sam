@@ -21,7 +21,6 @@ struct Transform
 	vec2 m_position;
 	vec2 m_scale;
 	float m_rotation;
-	int movementDirection;
 	float width;
 	float height;
 	bool visible;
@@ -40,7 +39,16 @@ struct Enemy
 	int patrolY;
 	vec2 start;
 	int action;
-	//bool chase;
+};
+
+// Will hold physics-based attributes
+// of appropriate entities.
+struct Movement
+{
+	int movementDirection;
+	float baseSpeed;
+	float currSpeed;
+	float acceleration;
 };
 
 const int NORMAL = 11;

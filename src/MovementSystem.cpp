@@ -5,12 +5,17 @@
 #include <iostream>
 #include <Components/GameStateCmp.hpp>
 
-MovementSystem::MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, GameStateCmp* gameStateCmp)
+// System to handle movement for ALL relevant entities, including non-Sam entities.
+//
+// Has access to MovementCmp to know at what rate to move each and every entity.
+// Has access to CollisionCmp to know if an entity will obstruct movement.
+// Has access to TransformCmp to know where everything is.
+void MovementSystem::init(ObjectManager om, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
-    inputComponent = ic;
     transformComponent = tc;
     collisionComponent = cc;
+    movementComponent = mc;
     gameState = gameStateCmp;
 }
 
@@ -18,77 +23,95 @@ MovementSystem::MovementSystem(ObjectManager om, InputCmp ic, TransformCmp tc, C
 // If movement to a new position will be interrupted, cancel movement
 void MovementSystem::update(float elapsed_ms)
 {
-	const float SAM_SPEED = 200.f;
-	float step = SAM_SPEED * (elapsed_ms / 1000);
+	for (auto& it : movementComponent.getmap())
+  {
+    Entity* entity = objectManager.getEntity(it.first);
 
-	for (auto& it : inputComponent.getmap())
-    {
-        Entity* entity = objectManager.getEntity(it.first);
+    // Calculate step
+    float step = movementComponent.getStep(entity, elapsed_ms);
 
-        if (entity->id == SAMS_GUID && !gameState->sam_is_alive)
-        {
-            continue;
-        }
-
-        Transform* entityTransform = transformComponent.getTransform(entity);
-        int movementDirection = entityTransform->movementDirection;
-        vec2 oldPosition = entityTransform->m_position;
-
-        if (transformComponent.getTransform(entity)->visible)
-        {
-            if (movementDirection % LEFT == 0)
-            {
-                entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
-                if (is_movement_interrupted(entity->id, entityTransform))
-                {
-                    entityTransform->m_position = oldPosition;
-                }
-                else
-                {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % RIGHT == 0)
-            {
-                entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
-                if (is_movement_interrupted(entity->id, entityTransform))
-                {
-                    entityTransform->m_position = oldPosition;
-                }
-                else
-                {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % DOWN == 0)
-            {
-                entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
-                if (is_movement_interrupted(entity->id, entityTransform))
-                {
-                    entityTransform->m_position = oldPosition;
-                }
-                else
-                {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % UP == 0)
-            {
-                entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
-                if (is_movement_interrupted(entity->id, entityTransform))
-                {
-                    entityTransform->m_position = oldPosition;
-                }
-                else
-                {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-        }
+    // For non-linear entities, check if it came to a halt
+    // and rotate it sideways for comedic effect
+    if (step < 0) {
+      movementComponent.setCurrSpeed(entity, 0);
+      movementComponent.resetMovementDirection(entity);
     }
+
+    // If Sam is dead, continue
+    if (entity->id == SAMS_GUID && !gameState->sam_is_alive)
+    {
+        continue;
+    }
+
+    Transform* entityTransform = transformComponent.getTransform(entity);
+    int movementDirection = movementComponent.getMovementDirection(entity);
+    vec2 oldPosition = entityTransform->m_position;
+
+    if (transformComponent.getTransform(entity)->visible)
+    {
+      if (movementDirection % LEFT == 0)
+      {
+          entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+          if (is_movement_interrupted(entity->id, entityTransform))
+          {
+            movementComponent.setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+
+      if (movementDirection % RIGHT == 0)
+      {
+          entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
+          if (is_movement_interrupted(entity->id, entityTransform))
+          {
+            movementComponent.setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+
+      if (movementDirection % DOWN == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
+          if (is_movement_interrupted(entity->id, entityTransform))
+          {
+            movementComponent.setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+
+      if (movementDirection % UP == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
+          if (is_movement_interrupted(entity->id, entityTransform))
+          {
+            movementComponent.setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+    }
+  }
+}
+
+void MovementSystem::stopEntityMovement(Entity* entity)
+{
+  movementComponent.resetMovementDirection(entity);
+  movementComponent.setCurrSpeed(entity, 0);
 }
 
 // Checks if movement to new position will be interrupted by a Wall entity

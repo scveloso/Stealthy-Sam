@@ -3,7 +3,12 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 
-DrawSystem::DrawSystem(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
+// System to handle drawing ALL relevant entities
+//
+// Has access to DrawCmp to know which texture to draw for an entity.
+// Has access to GameStateCmp to allow other systems to know where Sam is.
+// Has access to TransformCmp to know where everything is.
+void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
@@ -86,7 +91,7 @@ void DrawSystem::update(const mat3 projection)
 
 			if (entity->label == "Player") {
 				Transform* samTransform = transformComponent.getTransform(entity);
-			  s_position = samTransform->m_position;
+			  gameState->sam_position = samTransform->m_position;
 
 				// If sam is dead, we should also rotate him sideways:
 				if (!gameState->sam_is_alive)
