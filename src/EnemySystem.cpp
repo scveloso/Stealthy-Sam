@@ -5,6 +5,7 @@
 // Has access to TransformCmp to properly handle enemy patrol, chasing, returning to patrol.
 // Has access to EnemyCmp to be able to change/acess enemy state/type/characteristics.
 // Has access to MovementCmp to set where and how enemy should move.
+// Has access to ItemCmp to chase thrown torches, etc. 
 void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc) {
 	objectManager = om;
 	transformComponent = tc;

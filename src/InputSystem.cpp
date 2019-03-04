@@ -16,6 +16,7 @@
 // Has access to CollisionCmp to know if Sam can interact with objects he is colliding with.
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
+// Has access to ItemCmp to toggle items as thrown. 
 void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;

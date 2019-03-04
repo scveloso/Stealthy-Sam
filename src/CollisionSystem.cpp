@@ -9,8 +9,9 @@
 // - Updating when enemies are collided with
 // - Updating when Sam can interact with an object
 //
-// Has access to CollisionCmp and GameStateCmp to update
-// Has access to TransformCmp to know where everything is
+// Has access to CollisionCmp and GameStateCmp to update.
+// Has access to TransformCmp to know where everything is.
+// Has access to ItemCmp to toggle items as held. 
 void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, ItemCmp itc, GameStateCmp* gsc)
 {
 	objectManager = om;
