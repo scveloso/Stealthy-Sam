@@ -40,6 +40,7 @@ void LightSystem::update()
     }
 	}
 
+<<<<<<< HEAD
   int i = 0;
   for (auto& enemyEntity : enemyEntities)
   {
@@ -49,6 +50,19 @@ void LightSystem::update()
       i= i+2;
     }
 
+=======
+  // Grab all existing thrown torches, draw circles of light around them
+  Entity* thrownTorchEntity = objectManager.getEntityByLabel("ThrownTorch");
+  std::vector<Entity*> thrownTorchEntities = objectManager.getEntitiesByLabel("ThrownTorch");
+
+  // TODO: Get water and shader to support multiple circle of light positions
+  for (auto& thrownTorchEntity : thrownTorchEntities)
+	{
+    if (thrownTorchEntity->active) {
+      Transform* thrownTorchTransform = transformCmp.getTransform(thrownTorchEntity);
+      water->add_position(thrownTorchTransform->m_position);
+    }
+>>>>>>> Checkpoint for enemies chasing torches
 	}
 
   // If Sam holding a torch, draw circle of light around Sam

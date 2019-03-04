@@ -13,10 +13,12 @@ class EnemySystem
 {
 public:
 	void init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc);
+	void initDecisionTree();
 	void update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
 	void patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et);
-	void chaseSam(Enemy* enemy, Transform* et, Transform* st, Entity* enemyEntity);
+	void tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity);
+	void chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity);
 	void returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* enemyEntity, float elapsed_ms);
 
 private:

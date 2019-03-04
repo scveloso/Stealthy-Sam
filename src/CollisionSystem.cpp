@@ -162,6 +162,16 @@ void CollisionSystem::handleTorches(Entity* entity)
 		gameStateComponent->held_item = TORCH;
 		gameStateComponent->held_entity = entity;
 	}
+
+	if (entity->label.compare("ThrownTorch") == 0)
+	{
+		// Stop drawing the picked up item
+		entity->active = false;
+		entity->label = "Torch";
+		// Set Sam's held item to this entity
+		gameStateComponent->held_item = TORCH;
+		gameStateComponent->held_entity = entity;
+	}
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
