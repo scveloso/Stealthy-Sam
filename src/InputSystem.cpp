@@ -16,7 +16,7 @@
 // Has access to CollisionCmp to know if Sam can interact with objects he is colliding with.
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
-void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, GameStateCmp* gameStateCmp)
+void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;
@@ -24,6 +24,7 @@ void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, Collision
     collisionComponent = cc;
     movementComponent = mc;
     enemyComponent = ec;
+    itemComponent = itc;
     gameState = gameStateCmp;
 }
 
@@ -158,7 +159,8 @@ void InputSystem::handleThrowable(Entity* entity) {
   if (heldEntity && heldEntity->label.compare("Torch") == 0)
   {
     heldEntity->active = true;
-    heldEntity->label = "ThrownTorch";
+    itemComponent.throwItem(heldEntity);
+
     Movement* entityMovement = movementComponent.getMovement(heldEntity);
     movementComponent.resetMovementDirection(heldEntity);
 

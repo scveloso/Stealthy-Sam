@@ -76,6 +76,8 @@ set(SOURCE_FILES
 		src/Components/EnemyCmp.cpp
     src/Components/MovementCmp.hpp
     src/Components/MovementCmp.cpp
+    src/Components/ItemCmp.hpp
+    src/Components/ItemCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
         )

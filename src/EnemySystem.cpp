@@ -5,11 +5,12 @@
 // Has access to TransformCmp to properly handle enemy patrol, chasing, returning to patrol.
 // Has access to EnemyCmp to be able to change/acess enemy state/type/characteristics.
 // Has access to MovementCmp to set where and how enemy should move.
-void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc) {
+void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc) {
 	objectManager = om;
 	transformComponent = tc;
 	enemyComponent = ec;
 	movementComponent = mc;
+	itemComponent = itc;
 
 	initDecisionTree();
 }
@@ -71,13 +72,19 @@ void EnemySystem::update(float elapsed_ms) {
 // Check if the thrown entity exists, if it does - chase it
 // Otherwise, return to patrol
 void EnemySystem::tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity) {
-	Entity* thrownTorchEntity = objectManager.getEntityByLabel("ThrownTorch");
-	if (thrownTorchEntity) {
-		Transform *tt =  transformComponent.getTransform(thrownTorchEntity);
-		chaseTarget(enemy, et, tt, enemyEntity);
-	} else {
-		enemy->action = RETURN_TO_PATROL;
+	int thrownTorchId = itemComponent.getThrownTorchId();
+
+	if (thrownTorchId != -1) {
+		Entity* thrownTorchEntity = objectManager.getEntity(thrownTorchId);
+
+		if (thrownTorchEntity->label.compare("Torch") == 0) {
+			Transform *tt =  transformComponent.getTransform(thrownTorchEntity);
+			chaseTarget(enemy, et, tt, enemyEntity);
+			return;
+		}
 	}
+
+	enemy->action = RETURN_TO_PATROL;
 }
 
 // Set the enemy to chase the target

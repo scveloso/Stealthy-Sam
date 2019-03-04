@@ -2,6 +2,7 @@
 #include "Components/TransformCmp.hpp"
 #include "Components/DrawCmp.hpp"
 #include "Components/EnemyCmp.hpp"
+#include "Components/ItemCmp.hpp"
 #include "Components/MovementCmp.hpp"
 #include "DecisionNode.hpp"
 #include "ObjectManager.hpp"
@@ -12,7 +13,7 @@
 class EnemySystem
 {
 public:
-	void init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc);
+	void init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc);
 	void initDecisionTree();
 	void update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
@@ -26,6 +27,7 @@ private:
 	TransformCmp transformComponent;
 	EnemyCmp enemyComponent;
 	MovementCmp movementComponent;
+	ItemCmp itemComponent;
 	ObjectManager objectManager;
 	std::vector<DecisionNode*> decision_tree;
 };

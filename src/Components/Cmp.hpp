@@ -51,6 +51,11 @@ struct Movement
 	float acceleration;
 };
 
+struct Item
+{
+	bool thrown;
+};
+
 const int NORMAL = 11;
 
 const int UP = 2;

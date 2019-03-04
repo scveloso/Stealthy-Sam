@@ -41,6 +41,7 @@ void LightSystem::update()
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   int i = 0;
   for (auto& enemyEntity : enemyEntities)
   {
@@ -65,6 +66,8 @@ void LightSystem::update()
 >>>>>>> Checkpoint for enemies chasing torches
 	}
 
+=======
+>>>>>>> If enemies are chasing Sam and Sam throws a torch, they chase the torch
   // If Sam holding a torch, draw circle of light around Sam
   Entity* heldEntity = gameState->held_entity;
   if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
