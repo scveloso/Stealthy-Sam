@@ -5,7 +5,20 @@
 // Has access to TransformCmp to properly handle enemy patrol, chasing, returning to patrol.
 // Has access to EnemyCmp to be able to change/acess enemy state/type/characteristics.
 // Has access to MovementCmp to set where and how enemy should move.
-// Has access to ItemCmp to chase thrown torches, etc. 
+// Has access to ItemCmp to chase thrown torches, etc.
+
+/* Current enemy decision tree:
++-------------+--------------------------------+-----------------------------+---------------------------------+
+| Node Number |            Decision            |           Action            |             Action              |
++-------------+--------------------------------+-----------------------------+---------------------------------+
+|           0 | Is Sam hidden?                 | Hidden? Go to node 1        | Not hidden? Go to node 2        |
+|           1 | Is enemy chasing Sam?          | Chasing? Go to node 3       | Not chasing? Go to node 5       |
+|           2 | Is Sam on left side of screen? | Left side? Go to node 4     | Not left side? Go to node 5     |
+|           3 | End                            | Return to patrol            | Return to patrol                |
+|           4 | Is enemy chasing torch?        | Chasing torch? Go to node 5 | Not chasing torch? Go to node 6 |
+|           5 | End                            | Maintain Action             | Maintain Action                 |
+|           6 | End                            | Chase Sam                   | Chase Sam                       |
++-------------+--------------------------------+-----------------------------+---------------------------------+ */
 void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc) {
 	objectManager = om;
 	transformComponent = tc;
