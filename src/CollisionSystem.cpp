@@ -103,6 +103,10 @@ int CollisionSystem::handleDoors(Entity* entity)
 	{
 		return CHANGE_ROOM_THREE_TO_TWO;
 	}
+	else if (entity->label.compare("DoorRoom1To4") == 0)
+	{
+		return CHANGE_ROOM_ONE_TO_FOUR;
+	}
 
 	return NO_CHANGE;
 }

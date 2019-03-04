@@ -271,13 +271,49 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
 				collisionCmp.add(entity);
 			}
-			else if (val == VASE)
+			else if (val == UNLIT_LIGHT)
 			{
-				entity = objectManager->makeEntity("VASE");
+				entity = objectManager->makeEntity("UNLIT_LIGHT");
 
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/vase.png"));
+				drawCmp.add(entity, textures_path("Dungeon/UNLIT_LIGHT.png"));
+				collisionCmp.add(entity);
+			}
+//			else if (val == LIT_LIGHT)
+//			{
+//				entity = objectManager->makeEntity("LIT_LIGHT");
+//
+//
+//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+//				drawCmp.add(entity, textures_path("Dungeon/LIT_LIGHT.png"));
+//				collisionCmp.add(entity);
+//			}
+			else if (val == PILLAR_TOP)
+			{
+				entity = objectManager->makeEntity("PILLAR_TOP");
+
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == PILLAR_MID)
+			{
+				entity = objectManager->makeEntity("PILLAR_MID");
+
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == PILLAR_BOT)
+			{
+				entity = objectManager->makeEntity("Wall");
+
+
+				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/PILLAR_BOT.png"));
 				collisionCmp.add(entity);
 			}
 			else if (val == CLOSET)
@@ -1007,6 +1043,15 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 			else if (val == DOOR_ROOM_3_TO_2)
 			{
 				entity = objectManager->makeEntity("DoorRoom3To2");
+
+
+				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
+				drawCmp.add(entity, textures_path("Dungeon/door.png"));
+				collisionCmp.add(entity);
+			}
+			else if (val == DOOR_ROOM_1_TO_4)
+			{
+				entity = objectManager->makeEntity("DoorRoom1To4");
 
 
 				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
