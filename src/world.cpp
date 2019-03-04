@@ -26,6 +26,11 @@ LightSystem* ls;
 // Game State component
 GameStateCmp* gameState;
 
+// Entity* keyE;
+// Entity *rRestart;
+
+
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -149,6 +154,7 @@ bool World::init(vec2 screen)
 // Generate entities from a given path to a JSON map file
 void World::generateEntities(std::string room_path)
 {
+
 	makeSystems();
 
 	// EntityGenerator create entities and init systems
@@ -228,7 +234,7 @@ bool World::update(float elapsed_ms)
 	// Handle UpdateAction from Systems
 	handleUpdateAction(updateAction);
 
-  return true;
+	return true;
 }
 
 // Takes in an UpdateAction, handles room changes, restarts, etc.
