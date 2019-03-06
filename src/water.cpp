@@ -10,7 +10,6 @@ bool Water::init() {
 	textWASD_position = TEXT_POSITION;
 	textE_position = TEXT_POSITION;
 	textR_position = TEXT_POSITION;
-
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
 	// Make the size slightly larger then the screen to crop the boundary
@@ -57,13 +56,12 @@ void Water::set_salmon_dead() {
 void Water::add_position(vec2 position){
 	circle_light_position = position;
 }
-// void Water::add_restart(vec2 position){
-// 	re_position= position;
-// }
-// void Water::add_enemy_position(vec2 position){
-// 	enemy_position.push_back(position);
-// 	//printf("%g\n", enemy_position.x );
-// }
+void Water::add_enemy_position(int i, vec2 position){
+  float x= position.x;
+	float y= position.y;
+	enemy_position[i]=x;
+	enemy_position[i+1]=y;
+}
 
 void Water::reset_salmon_dead_time() {
 	m_dead_time = -1;
@@ -81,6 +79,7 @@ void Water::draw(const mat3& projection) {
 	// Setting shaders
 	glUseProgram(effect.program);
 
+ // calculate enemy_position array size
 
 	// Set screen_texture sampling to texture unit 0
 	// Set clock
@@ -91,19 +90,27 @@ void Water::draw(const mat3& projection) {
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
 	GLint r_position= glGetUniformLocation(effect.program, "r_position");
+  GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
+
 	GLint re_cond= glGetUniformLocation(effect.program, "remove_r");
-	//GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
 	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
 	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
+
 	glUniform1i(death_cond, death);
   glUniform1i(re_cond, remove_r);
 	glUniform1i(text_cond, showWASDText);
 	glUniform1i(key_cond, showEText);
 	//glUniform1i(en_direction, enemy_direction);
 	glUniform2f(t_position, textWASD_position.x, textWASD_position.y);
-	//glUniform2f(en_position, enemy_position.x+10.f, enemy_position.y-820.f );
+		//glUniform2fv(en_position, arrayLength, reinterpret_cast<const GLfloat*>(&enemy_position));
+		//glUniform2fv(en_position, arrayLength, (const GLfloat*)(&enemy_position));
+		//glUniform2fv(en_position, arrayLength, glm::value_ptr(enemy_position[0]));
+	glUniform2fv(en_position, 5, enemy_position);
+	// glUniform1fv(en_position, 10, enemy_position);
+
+	// printf("%g\n", enemy_position[0]);
 	glUniform2f(e_position, textE_position.x, textE_position.y );
 	glUniform2f(s_position, circle_light_position.x, circle_light_position.y);
 	glUniform2f(r_position, textR_position.x, textR_position.y);

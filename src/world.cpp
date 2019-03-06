@@ -26,8 +26,6 @@ LightSystem* ls;
 // Game State component
 GameStateCmp* gameState;
 
-// Entity* keyE;
-// Entity *rRestart;
 
 
 

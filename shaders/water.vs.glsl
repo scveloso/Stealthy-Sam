@@ -5,12 +5,14 @@ uniform vec2 e_position;
 uniform vec2 text_position;
 uniform vec2 r_position;
 uniform vec2 circle_light_position;
+uniform vec2 enemy_position[5];
 
 
 
 out vec2 uv; out vec2 s_position;
 out vec2 keye_position; out vec2 re_position;
 out vec2 t_position;
+out vec2 en_position[5];
 void main()
 {
     gl_Position = in_position;
@@ -22,5 +24,9 @@ void main()
     keye_position= vec2(e_position.x-15, 800-e_position.y+12);
     t_position= vec2(text_position.x-15, 800-text_position.y+12);
     re_position= vec2(r_position.x-5, 800-r_position.y+12);
+    for(int i = 0; i < 5; i++)
+  	{
+      en_position[i]= vec2(enemy_position[i].x-20, 800-enemy_position[i].y);
+    }
 
 }
