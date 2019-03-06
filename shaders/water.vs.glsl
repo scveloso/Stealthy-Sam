@@ -17,13 +17,15 @@ out vec2 en_position[5];
 //adjustment variable
 float alpha =0;
 float beta=0;
+float en_alpha=0;
+float en_beta=0;
 void main()
 {
     gl_Position = in_position;
     // Convert to the [0, 1] range of UV coordinate
     uv = (in_position.xy + vec2(1.05, 1.05)) / 2.1;
 
-    // tuning adjustment variable based on location range
+    // tuning adjustment variable based on sam location range
     if (circle_light_position.x <= 300){
       alpha = -0.95;
     } else if( 300 < circle_light_position.x && circle_light_position.x <= 600){
@@ -42,13 +44,34 @@ void main()
     }else if (600 < circle_light_position.y){
       beta = -0.95;
     }
+
     s_position= vec2(circle_light_position.x+(alpha*20), 800-circle_light_position.y+(beta*12));
     keye_position= vec2(e_position.x-15, 800-e_position.y+12);
     t_position= vec2(text_position.x-15, 800-text_position.y+12);
     re_position= vec2(r_position.x-5, 800-r_position.y+12);
+
     for(int i = 0; i < 5; i++)
   	{
-      en_position[i]= vec2(enemy_position[i].x+(alpha*20), 800-enemy_position[i].y+(beta*12));
+      //tuning adjustment variable based on enemy location range
+      if (enemy_position[i].x <= 300){
+        en_alpha = -0.95;
+      } else if( 300 < enemy_position[i].x && enemy_position[i].x <= 600){
+        en_alpha = -0.31;
+      } else if( 600 < enemy_position[i].x && enemy_position[i].x <= 900){
+        en_alpha = 0.32;
+      }else if (900 < enemy_position[i].x){
+        en_alpha = 0.95;
+      }
+     if (enemy_position[i].y <= 200){
+        en_beta = 0.95;
+      } else if( 200 < enemy_position[i].y && enemy_position[i].y <= 400){
+        en_beta = 0.31;
+      } else if( 400 < enemy_position[i].y && enemy_position[i].y <= 600){
+        en_beta = -0.32;
+      }else if (600 < enemy_position[i].y){
+        en_beta = -0.95;
+      }
+      en_position[i]= vec2(enemy_position[i].x+(en_alpha*20), 800-enemy_position[i].y+(en_beta*12));
     }
 
 }
