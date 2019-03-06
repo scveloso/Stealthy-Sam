@@ -63,6 +63,13 @@ void Water::add_enemy_position(int i, vec2 position){
 	enemy_position[i+1]=y;
 }
 
+void Water::clear_enemy_position(){
+	for (int i=0; i < 10; i++){
+		enemy_position[i]=0;
+	}
+
+}
+
 void Water::reset_salmon_dead_time() {
 	m_dead_time = -1;
 }
@@ -108,7 +115,7 @@ void Water::draw(const mat3& projection) {
 		//glUniform2fv(en_position, arrayLength, (const GLfloat*)(&enemy_position));
 		//glUniform2fv(en_position, arrayLength, glm::value_ptr(enemy_position[0]));
 	glUniform2fv(en_position, 5, enemy_position);
-	// glUniform1fv(en_position, 10, enemy_position);
+
 
 	// printf("%g\n", enemy_position[0]);
 	glUniform2f(e_position, textE_position.x, textE_position.y );

@@ -32,7 +32,8 @@ public:
 	int remove_r;
 	int enemy_direction;
 
-
+  //clear enemy_position array
+	void clear_enemy_position();
 
 	// Clear light positions on room change
 	void clearLights();
@@ -44,7 +45,7 @@ private:
 	vec2 textWASD_position;
 	vec2 textE_position;
 	vec2 textR_position;
-	GLfloat enemy_position[10];
+	GLfloat enemy_position[10]={0};
 	//std::vector<vec2> enemy_position;
 
 };
