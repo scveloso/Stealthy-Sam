@@ -37,11 +37,11 @@ layout(location = 0) out vec4 color;
   float y1= ep.y;
   float x2= rp.x;
   float y2= rp.y;
-  // float s= 10;
-  // float t=5;
+
   float tri_w= 100;
   float tri_h=50;
-  float displace=15;
+  float displace=5;
+  float vdisplace = 10;
   float s[5];
   float t[5];
   float st[5];
@@ -68,11 +68,11 @@ void main()
     { // calculate which direction the enemy cone should be placed
       float direction= enemy_direction[i].x;
       if (direction == 1.0){
-        displace = -displace;
+        displace = -(displace+ 50);
         tri_w = -tri_w;
       }
       //calculate the 3 vertex points (p0, p1, p2) of the view cone/traingle
-      vec2 p0= vec2(en_position[i].x+displace, en_position[i].y);
+      vec2 p0= vec2(en_position[i].x+displace, en_position[i].y+vdisplace);
       vec2 p1= p0+ vec2(tri_w, -tri_h/2);
       vec2 p2= p1 + vec2(0,tri_h);
       float Area = 0.5 *(-p1.y*p2.x + p0.y*(-p1.x + p2.x) + p0.x*(p1.y - p2.y) + p1.x*p2.y);

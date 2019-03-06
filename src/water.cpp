@@ -91,8 +91,6 @@ void Water::draw(const mat3& projection) {
 	// Setting shaders
 	glUseProgram(effect.program);
 
- // calculate enemy_position array size
-
 	// Set screen_texture sampling to texture unit 0
 	// Set clock
 	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
