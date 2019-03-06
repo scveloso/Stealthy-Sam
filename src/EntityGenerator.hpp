@@ -8,6 +8,7 @@
 #include "Components/CollisionCmp.hpp"
 #include "Components/EnemyCmp.hpp"
 #include "Components/MovementCmp.hpp"
+#include "Components/ItemCmp.hpp"
 #include "water.hpp"
 #include "ObjectManager.hpp"
 #include "DrawSystem.hpp"
@@ -31,9 +32,9 @@ public:
 		LightSystem* lightSystem, GameStateCmp* gameState);
 	void generateEntities(std::string room_path, Water* water);
     void generateBoss(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water);
-	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water);
-	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water);
-	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water);
+	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
 
 private:
 	ObjectManager* objectManager;

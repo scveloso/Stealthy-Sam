@@ -48,7 +48,6 @@ void LightSystem::update()
       water->add_enemy_position(i, enemyTransform->m_position);
       i= i+2;
     }
-
 	}
 
   // If Sam holding a torch, draw circle of light around Sam
