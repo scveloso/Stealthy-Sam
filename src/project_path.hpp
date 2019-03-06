@@ -2,4 +2,5 @@
 
 // Please don't change the content of this header
 
-#define PROJECT_SOURCE_DIR "C:/Users/carolinec/Desktop/cs436/en_cone/"
+
+#define PROJECT_SOURCE_DIR "/Users/sveloso/Documents/team05game_refactored/team05game/"
