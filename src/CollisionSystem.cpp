@@ -9,13 +9,15 @@
 // - Updating when enemies are collided with
 // - Updating when Sam can interact with an object
 //
-// Has access to CollisionCmp and GameStateCmp to update
-// Has access to TransformCmp to know where everything is
-void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, GameStateCmp* gsc)
+// Has access to CollisionCmp and GameStateCmp to update.
+// Has access to TransformCmp to know where everything is.
+// Has access to ItemCmp to toggle items as held. 
+void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, ItemCmp itc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;
 	transformComponent = tc;
+	itemComponent = itc;
 	gameStateComponent = gsc;
 }
 
@@ -161,6 +163,7 @@ void CollisionSystem::handleTorches(Entity* entity)
 		// Set Sam's held item to this entity
 		gameStateComponent->held_item = TORCH;
 		gameStateComponent->held_entity = entity;
+		itemComponent.pickUpItem(entity);
 	}
 }
 

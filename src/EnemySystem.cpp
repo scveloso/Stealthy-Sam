@@ -5,23 +5,57 @@
 // Has access to TransformCmp to properly handle enemy patrol, chasing, returning to patrol.
 // Has access to EnemyCmp to be able to change/acess enemy state/type/characteristics.
 // Has access to MovementCmp to set where and how enemy should move.
-void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc) {
+// Has access to ItemCmp to chase thrown torches, etc.
+
+/* Current enemy decision tree:
++-------------+--------------------------------+-----------------------------+---------------------------------+
+| Node Number |            Decision            |           Action            |             Action              |
++-------------+--------------------------------+-----------------------------+---------------------------------+
+|           0 | Is Sam hidden?                 | Hidden? Go to node 1        | Not hidden? Go to node 2        |
+|           1 | Is enemy chasing Sam?          | Chasing? Go to node 3       | Not chasing? Go to node 5       |
+|           2 | Is Sam on left side of screen? | Left side? Go to node 4     | Not left side? Go to node 5     |
+|           3 | End                            | Return to patrol            | Return to patrol                |
+|           4 | Is enemy chasing torch?        | Chasing torch? Go to node 5 | Not chasing torch? Go to node 6 |
+|           5 | End                            | Maintain Action             | Maintain Action                 |
+|           6 | End                            | Chase Sam                   | Chase Sam                       |
++-------------+--------------------------------+-----------------------------+---------------------------------+ */
+void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc) {
 	objectManager = om;
 	transformComponent = tc;
 	enemyComponent = ec;
 	movementComponent = mc;
+	itemComponent = itc;
 
+	initDecisionTree();
+}
+
+void EnemySystem::initDecisionTree() {
+	// Node 0
 	DecisionNode* decisionNode = new DecisionNode(1, 2);
 	decision_tree.emplace_back(decisionNode);
+
+	// Node 1
 	decisionNode = new DecisionNode(3, 5);
 	decision_tree.emplace_back(decisionNode);
+
+	// Node 2
 	decisionNode = new DecisionNode(4, 5);
 	decision_tree.emplace_back(decisionNode);
+
+	// Node 3
 	decisionNode = new DecisionNode(RETURN_TO_PATROL);
 	decision_tree.emplace_back(decisionNode);
-	decisionNode = new DecisionNode(CHASE_SAM);
+
+	// Node 4
+	decisionNode = new DecisionNode(5, 6);
 	decision_tree.emplace_back(decisionNode);
+
+	// Node 5
 	decisionNode = new DecisionNode(MAINTAIN_ACTION);
+	decision_tree.emplace_back(decisionNode);
+
+	// Node 6
+	decisionNode = new DecisionNode(CHASE_SAM);
 	decision_tree.emplace_back(decisionNode);
 }
 
@@ -40,34 +74,54 @@ void EnemySystem::update(float elapsed_ms) {
 		if (enemy->action == PATROL) {
 			patrolEnemy(enemy, enemyEntity, et);
 		} else if (enemy->action == CHASE_SAM) {
-			chaseSam(enemy, et, samTransform, enemyEntity);
+			chaseTarget(enemy, et, samTransform, enemyEntity);
 		} else if (enemy->action == RETURN_TO_PATROL) {
 			returnToPatrolPosition(enemy, et, enemyEntity, elapsed_ms);
+		} else if (enemy->action == CHASE_TORCH) {
+			tryChaseThrownTorch(enemy, et, enemyEntity);
 		}
 	}
 }
 
-// Set the enemy to chase Sam
-void EnemySystem::chaseSam(Enemy* enemy, Transform* et, Transform* st, Entity* enemyEntity) {
-	vec2 enemyPosition = et->m_position;
-	vec2 samPosition = st->m_position;
+// Check if the thrown entity exists, if it does - chase it
+// Otherwise, return to patrol
+void EnemySystem::tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity) {
+	int thrownTorchId = itemComponent.getThrownTorchId();
 
-	if (enemyPosition.x > samPosition.x) {
+	if (thrownTorchId != -1) {
+		Entity* thrownTorchEntity = objectManager.getEntity(thrownTorchId);
+
+		if (thrownTorchEntity->label.compare("Torch") == 0) {
+			Transform *tt =  transformComponent.getTransform(thrownTorchEntity);
+			chaseTarget(enemy, et, tt, enemyEntity);
+			return;
+		}
+	}
+
+	enemy->action = RETURN_TO_PATROL;
+}
+
+// Set the enemy to chase the target
+void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity) {
+	vec2 enemyPosition = et->m_position;
+	vec2 targetPosition = gt->m_position;
+
+	if (enemyPosition.x > targetPosition.x) {
 		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
 		movementComponent.setMovementDirection(enemyEntity, LEFT);
 	}
 
-	if (enemyPosition.x < samPosition.x) {
+	if (enemyPosition.x < targetPosition.x) {
 		movementComponent.removeMovementDirection(enemyEntity, LEFT);
 		movementComponent.setMovementDirection(enemyEntity, RIGHT);
 	}
 
-	if (enemyPosition.y > samPosition.y) {
+	if (enemyPosition.y > targetPosition.y) {
 		movementComponent.removeMovementDirection(enemyEntity, DOWN);
 		movementComponent.setMovementDirection(enemyEntity, UP);
 	}
 
-	if (enemyPosition.y < samPosition.y) {
+	if (enemyPosition.y < targetPosition.y) {
 		movementComponent.removeMovementDirection(enemyEntity, UP);
 		movementComponent.setMovementDirection(enemyEntity, DOWN);
 	}
@@ -161,15 +215,24 @@ void EnemySystem::handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform)
 	int nextNodePos = currNode->getNextNode(!samTransform->visible);
 	currNode = decision_tree.at(nextNodePos);
 
+	// Node 1's children nodes are both end nodes
 	if (nextNodePos == 1) {
 		nextNodePos = currNode->getNextNode(enemy->action == CHASE_SAM);
 		currNode = decision_tree.at(nextNodePos);
 		action = currNode->getAction();
 	}
+	// One of node 2's children nodes are a decision node and the other is an end node
 	else if (nextNodePos == 2) {
 		nextNodePos = currNode->getNextNode(samTransform->m_position.x <= 600);
 		currNode = decision_tree.at(nextNodePos);
-		action = currNode->getAction();
+
+		if (nextNodePos == 4) {
+			nextNodePos = currNode->getNextNode(enemy->action == CHASE_TORCH);
+			currNode = decision_tree.at(nextNodePos);
+			action = currNode->getAction();
+		} else if (nextNodePos == 5) {
+			action = currNode->getAction();
+		}
 	}
 
 	if (action != MAINTAIN_ACTION) {

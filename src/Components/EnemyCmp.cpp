@@ -14,3 +14,14 @@ void EnemyCmp::add(Entity* entity, int patrolX, int patrolY) {
 std::unordered_map<int, Enemy *> EnemyCmp::getmap() {
 	return enemy_map;
 }
+
+// For all enemies doing currEnemyAction, change to newEnemyAction
+void EnemyCmp::updateEnemyAction(int currEnemyAction, int newEnemyAction) {
+	for (auto& it : enemy_map)
+	{
+		Enemy* enemy = it.second;
+		if (enemy->action == currEnemyAction) {
+			enemy->action = newEnemyAction;
+		}
+	}
+}

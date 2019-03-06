@@ -37,6 +37,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	CollisionCmp collisionCmp;
 	EnemyCmp enemyCmp;
 	MovementCmp movementCmp;
+	ItemCmp itemCmp;
 
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
@@ -90,6 +91,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/torch.png"));
 				collisionCmp.add(entity);
+				itemCmp.add(entity);
 			}
 			else if (val == TOP_LEFT_CORNER)
 			{
@@ -238,7 +240,6 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				entity = objectManager->makeEntity("Wall");
 
 
-				// entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState);
 
 				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 				drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
@@ -1075,11 +1076,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	}
 
 	// Proceed to handle the text box entities
-	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
+	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
 }
 
 // Separate call to generate text box entitities
-void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
 {
 	// Create text boxes if we're in room one:
 	if (map_path("level_one.json") == room_path)
@@ -1102,12 +1103,12 @@ void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc,
 	rToRestart->active = false; // Died text initially invisible
 
 	// Proceed to handle held item, if applicable
-	handleHeldItem(dc, tc, ic, cc, ec, mc, water);
+	handleHeldItem(dc, tc, ic, cc, ec, mc, itc, water);
 }
 
 // When room changes, Sam's held item is deleted but we still want to generate
 // it in the new room
-void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
 {
 	// Check GameStateCmp to see if any held entities from other rooms should be generated in this room
 	if (gameState->held_item != -1) {
@@ -1119,21 +1120,22 @@ void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, C
 			tc.add(entity, { 0, 0 }, { 2.5f, 2.0f }, 0.0);
 			dc.add(entity, textures_path("Dungeon/torch.png"));
 			cc.add(entity);
+			itc.add(entity);
 			gameState->held_entity = entity;
 		}
 	}
 
 	// Done generating entities, proceed to initialize systems
-	initializeSystems(dc, tc, ic, cc, ec, mc, water);
+	initializeSystems(dc, tc, ic, cc, ec, mc, itc, water);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem, etc.
-void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
 {
 	drawSystem->init(*objectManager, dc, tc, gameState);
-	inputSystem->init(*objectManager, ic, tc, cc, mc, gameState);
-	collisionSystem->init(*objectManager, cc, tc, gameState);
-	enemySystem->init(*objectManager, tc, ec, mc);
+	inputSystem->init(*objectManager, ic, tc, cc, mc, ec, itc, gameState);
+	collisionSystem->init(*objectManager, cc, tc, itc, gameState);
+	enemySystem->init(*objectManager, tc, ec, mc, itc);
 	movementSystem->init(*objectManager, tc, cc, mc, gameState);
 	textSystem->init(*objectManager, gameState, water);
 	lightSystem->init(*objectManager, gameState, tc, water);
