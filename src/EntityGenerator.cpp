@@ -14,7 +14,7 @@ using json = nlohmann::json;
 // After, handleHeldItem() is called to generate Sam's held item on room changes
 // Lastly, initializeSystems() is called to add all the components to their relevant systems
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
-	EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
+								 EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -70,1006 +70,1002 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 
 			Entity* entity;
 
-			// Generate main player
-			if (val == SAM)
-			{
-				entity = objectManager->getEntity(SAMS_GUID);
-
-				transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/sam.png"));
-				//drawCmp.add(entity, textures_path("sam/16.png"));
-				inputCmp.add(entity);
-				movementCmp.add(entity, 200.f, 0);
-				collisionCmp.add(entity);
-				vec2 s_position = transformCmp.getTransform(entity)->m_position;
-			}
-			else if (val == TORCH)
-			{
-				entity = objectManager->makeEntity("Torch");
-
-				movementCmp.add(entity, 200.f, -0.1f);
-				transformCmp.add(entity, { x, y }, { 2.5f, 2.0f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/torch.png"));
-				collisionCmp.add(entity);
-				itemCmp.add(entity);
-			}
-			else if (val == TOP_LEFT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_TL)
-			{
-				entity = objectManager->makeEntity("Special_Door");
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_TR)
-			{
-				entity = objectManager->makeEntity("Special_Door");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_ML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_ML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_MR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DOOR_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == OPEN_DOOR_TL)
-			{
-				entity = objectManager->makeEntity("Open_Door");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == OPEN_DOOR_TR)
-			{
-				entity = objectManager->makeEntity("Open_Door");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == OPEN_DOOR_BL)
-			{
-				entity = objectManager->makeEntity("Open_Door");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == OPEN_DOOR_BR)
-			{
-				entity = objectManager->makeEntity("Open_Door");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == TOP_RIGHT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/top_right_corner.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BOTTOM_LEFT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/bottom_left_corner.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BOTTOM_RIGHT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/bottom_right_corner.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == TOP_WALL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/top_wall.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BOTTOM_WALL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/bottom_wall.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_WALL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_WALL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/right_wall.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BLACK_TILE)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/black_tile.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == FLOOR_TILE)
-			{
-				entity = objectManager->makeEntity("Floor_Tile");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == UNLIT_LIGHT)
-			{
-				entity = objectManager->makeEntity("UNLIT_LIGHT");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/UNLIT_LIGHT.png"));
-				collisionCmp.add(entity);
-			}
-//			else if (val == LIT_LIGHT)
-//			{
-//				entity = objectManager->makeEntity("LIT_LIGHT");
-//
-//
-//				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-//				drawCmp.add(entity, textures_path("Dungeon/LIT_LIGHT.png"));
-//				collisionCmp.add(entity);
-//			}
-			else if (val == PILLAR_TOP)
-			{
-				entity = objectManager->makeEntity("PILLAR_TOP");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == PILLAR_MID)
-			{
-				entity = objectManager->makeEntity("PILLAR_MID");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == PILLAR_BOT)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/PILLAR_BOT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CLOSET)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
-				collisionCmp.add(entity);
-
-				// Make interactable areas around the closet
-				entity = objectManager->makeEntity("ClosetArea");
-				transformCmp.add(entity, { x + (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
-				collisionCmp.add(entity);
-
-				entity = objectManager->makeEntity("ClosetArea");
-				transformCmp.add(entity, { x - (TILE_WIDTH / 2), y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
-				collisionCmp.add(entity);
-
-				entity = objectManager->makeEntity("ClosetArea");
-				transformCmp.add(entity, { x, y + (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
-				collisionCmp.add(entity);
-
-				entity = objectManager->makeEntity("ClosetArea");
-				transformCmp.add(entity, { x, y - (TILE_HEIGHT / 2) }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_TOP_EDGE)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TOP_EDGE.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_LEFT_EDGE)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_LEFT_EDGE.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_RIGHT_EDGE)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_RIGHT_EDGE.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_BOT_EDGE)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BOT_EDGE.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_LEFT_LEG)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_LEFT_LEG.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_RIGHT_LEG)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_RIGHT_LEG.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_SHADOW)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_SHADOW.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == BIG_TABLE_FILL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_FILL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SMALL_TABLE_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SMALL_TABLE_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SMALL_TABLE_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SMALL_TABLE_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_TL)
-			{
-				entity = objectManager->makeEntity("Chair");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_TR)
-			{
-				entity = objectManager->makeEntity("Chair");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_ML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_ML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_MR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_MR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CHAIR_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CHAIR_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_CHAIR_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_CHAIR_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_CHAIR_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_CHAIR_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_CHAIR_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_CHAIR_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_CHAIR_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_CHAIR_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DISH_CAB_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DISH_CAB_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DISH_CAB_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DISH_CAB_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == MAT_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/MAT_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == MAT_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/MAT_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == MAT_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/MAT_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == MAT_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/MAT_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CAB_TL)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CAB_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CAB_TR)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CAB_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CAB_BL)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CAB_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CAB_BR)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CAB_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SIDE_CAB_T)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_T.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SIDE_CAB_M)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_M.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SIDE_CAB_ML)
-			{
-				entity = objectManager->makeEntity("Closet");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_ML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == SIDE_CAB_L)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_L.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LIGHT_LEFT)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LIGHT_LEFT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LIGHT_RIGHT)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LIGHT_RIGHT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CLOCK_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CLOCK_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CLOCK_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CLOCK_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CLOCK_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CLOCK_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == CLOCK_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/CLOCK_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_BML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_BMR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BMR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_LEFT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_LEFT_CORNER.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_ML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_LEFT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_MR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_RIGHT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_RIGHT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_RIGHT_CORNER.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_LEFT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == LEFT_COUNTER_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_RIGHT.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_BL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_BML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_BMR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BMR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_BR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_LEFT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_LEFT_CORNER.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_ML)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_ML.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_MR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_MR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_RIGHT_CORNER)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_RIGHT_CORNER.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_TL)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TL.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == RIGHT_COUNTER_TR)
-			{
-				entity = objectManager->makeEntity("Wall");
-
-
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TR.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == KEY)
-			{
-				entity = objectManager->makeEntity("Key");
-
-
-				if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
-				{
-					std::cout << "Level 2 key is still active" << std::endl;
-					transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+			switch (val) {
+				// Generate main player
+				case SAM: {
+					entity = objectManager->getEntity(SAMS_GUID);
+
+					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+					//drawCmp.add(entity, textures_path("sam/16.png"));
+					inputCmp.add(entity);
+					movementCmp.add(entity, 200.f, 0);
 					collisionCmp.add(entity);
+					vec2 s_position = transformCmp.getTransform(entity)->m_position;
+					break;
 				}
-				else if (gameState->current_room == ROOM_THREE_GUID && !gameState->level_three_key)
-				{
-					std::cout << "Level 3 key is still active" << std::endl;
-					transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+				case TORCH: {
+					entity = objectManager->makeEntity("Torch");
+
+					movementCmp.add(entity, 200.f, -0.1f);
+					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/torch.png"));
 					collisionCmp.add(entity);
+                    itemCmp.add(entity);
+					break;
 				}
+				case TOP_LEFT_CORNER: {
+
+					entity = objectManager->makeEntity("Wall");
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_TL: {
+					entity = objectManager->makeEntity("Special_Door");
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_TR: {
+					entity = objectManager->makeEntity("Special_Door");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_ML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_ML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_MR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DOOR_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case OPEN_DOOR_TL: {
+					entity = objectManager->makeEntity("Open_Door");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case OPEN_DOOR_TR: {
+					entity = objectManager->makeEntity("Open_Door");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case OPEN_DOOR_BL: {
+					entity = objectManager->makeEntity("Open_Door");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case OPEN_DOOR_BR: {
+					entity = objectManager->makeEntity("Open_Door");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/OPEN_DOOR_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case TOP_RIGHT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/top_right_corner.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BOTTOM_LEFT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/bottom_left_corner.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BOTTOM_RIGHT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/bottom_right_corner.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case TOP_WALL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/top_wall.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BOTTOM_WALL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/bottom_wall.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_WALL: {
+					entity = objectManager->makeEntity("Wall");
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_WALL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/right_wall.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BLACK_TILE: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/black_tile.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case FLOOR_TILE: {
+					entity = objectManager->makeEntity("Floor_Tile");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case UNLIT_LIGHT: {
+					entity = objectManager->makeEntity("UNLIT_LIGHT");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/UNLIT_LIGHT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case PILLAR_TOP: {
+					entity = objectManager->makeEntity("PILLAR_TOP");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case PILLAR_MID: {
+					entity = objectManager->makeEntity("PILLAR_MID");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case PILLAR_BOT: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/PILLAR_BOT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CLOSET: {
+					entity = objectManager->makeEntity("Closet");
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/chest_closed.png"));
+					collisionCmp.add(entity);
+
+					// Make interactable areas around the closet
+					entity = objectManager->makeEntity("ClosetArea");
+					transformCmp.add(entity, {x + (TILE_WIDTH / 2), y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+					collisionCmp.add(entity);
+
+					entity = objectManager->makeEntity("ClosetArea");
+					transformCmp.add(entity, {x - (TILE_WIDTH / 2), y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+					collisionCmp.add(entity);
+
+					entity = objectManager->makeEntity("ClosetArea");
+					transformCmp.add(entity, {x, y + (TILE_HEIGHT / 2)}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+					collisionCmp.add(entity);
+
+					entity = objectManager->makeEntity("ClosetArea");
+					transformCmp.add(entity, {x, y - (TILE_HEIGHT / 2)}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/interactable_area.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_TOP_EDGE: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_TOP_EDGE.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_LEFT_EDGE: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_LEFT_EDGE.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_RIGHT_EDGE: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_RIGHT_EDGE.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_BOT_EDGE: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_BOT_EDGE.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_LEFT_LEG: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_LEFT_LEG.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_RIGHT_LEG: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_RIGHT_LEG.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_SHADOW: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_SHADOW.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case BIG_TABLE_FILL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/BIG_TABLE_FILL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SMALL_TABLE_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SMALL_TABLE_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SMALL_TABLE_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SMALL_TABLE_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SMALL_TABLE_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_TL: {
+					entity = objectManager->makeEntity("Chair");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_TR: {
+					entity = objectManager->makeEntity("Chair");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_ML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_ML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_MR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_MR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CHAIR_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CHAIR_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_CHAIR_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_CHAIR_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_CHAIR_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_CHAIR_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_CHAIR_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_CHAIR_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_CHAIR_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_CHAIR_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_CHAIR_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_CHAIR_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DISH_CAB_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DISH_CAB_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DISH_CAB_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DISH_CAB_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/DISH_CAB_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case MAT_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/MAT_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case MAT_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/MAT_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case MAT_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/MAT_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case MAT_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/MAT_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CAB_TL: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CAB_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CAB_TR: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CAB_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CAB_BL: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CAB_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CAB_BR: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CAB_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SIDE_CAB_T: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_T.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SIDE_CAB_M: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_M.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SIDE_CAB_ML: {
+					entity = objectManager->makeEntity("Closet");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_ML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case SIDE_CAB_L: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/SIDE_CAB_L.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LIGHT_LEFT: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LIGHT_LEFT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LIGHT_RIGHT: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LIGHT_RIGHT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CLOCK_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CLOCK_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CLOCK_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CLOCK_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CLOCK_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CLOCK_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case CLOCK_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/CLOCK_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_BML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_BMR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BMR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_LEFT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_LEFT_CORNER.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_ML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_LEFT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_MR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_MID_RIGHT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_RIGHT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_RIGHT_CORNER.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_LEFT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case LEFT_COUNTER_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LEFT_COUNTER_TOP_RIGHT.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_BL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_BML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_BMR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BMR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_BR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_BR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_LEFT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_LEFT_CORNER.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_ML: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_ML.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_MR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_MR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_RIGHT_CORNER: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_RIGHT_CORNER.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_TL: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TL.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case RIGHT_COUNTER_TR: {
+					entity = objectManager->makeEntity("Wall");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/RIGHT_COUNTER_TR.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case KEY: {
+					entity = objectManager->makeEntity("Key");
+
+
+					if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+					{
+						std::cout << "Level 2 key is still active" << std::endl;
+						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+						collisionCmp.add(entity);
+					}
+					else if (gameState->current_room == ROOM_THREE_GUID && !gameState->level_three_key)
+					{
+						std::cout << "Level 3 key is still active" << std::endl;
+						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+						collisionCmp.add(entity);
+					}
+					break;
+				}
+				case DOOR_ROOM_1_TO_2: {
+					entity = objectManager->makeEntity("DoorRoom1To2");
+
+
+					transformCmp.add(entity, {x, y}, {1.5625f, 1.5625f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/door.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_ROOM_2_TO_1: {
+					entity = objectManager->makeEntity("DoorRoom2To1");
+
+
+					transformCmp.add(entity, {x, y}, {1.5625f, 1.5625f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/door.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_ROOM_2_TO_3: {
+					entity = objectManager->makeEntity("DoorRoom2To3");
+
+
+					transformCmp.add(entity, {x, y}, {1.5625f, 1.5625f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/door.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_ROOM_3_TO_2: {
+					entity = objectManager->makeEntity("DoorRoom3To2");
+
+
+					transformCmp.add(entity, {x, y}, {1.5625f, 1.5625f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/door.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case DOOR_ROOM_1_TO_4: {
+					entity = objectManager->makeEntity("DoorRoom1To4");
+
+
+					transformCmp.add(entity, {x, y}, {1.5625f, 1.5625f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/door.png"));
+					collisionCmp.add(entity);
+					break;
+				}
+				case ENEMY: {
+					entity = objectManager->makeEntity("Enemy");
+
+					movementCmp.add(entity, 50.f, 0);
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
+					collisionCmp.add(entity);
+					enemyCmp.add(entity, 100, 0);
+					break;
+				}
+				case NULL_TILE: {
+					break;
+				}
+				default:
+					printf("no match found for %d\n", val);
 			}
-			else if (val == DOOR_ROOM_1_TO_2)
-			{
-				entity = objectManager->makeEntity("DoorRoom1To2");
-
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_ROOM_2_TO_1)
-			{
-				entity = objectManager->makeEntity("DoorRoom2To1");
-
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_ROOM_2_TO_3)
-			{
-				entity = objectManager->makeEntity("DoorRoom2To3");
-
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_ROOM_3_TO_2)
-			{
-				entity = objectManager->makeEntity("DoorRoom3To2");
-
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == DOOR_ROOM_1_TO_4)
-			{
-				entity = objectManager->makeEntity("DoorRoom1To4");
-
-
-				transformCmp.add(entity, { x, y }, { 1.5625f, 1.5625f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/door.png"));
-				collisionCmp.add(entity);
-			}
-			else if (val == ENEMY)
-			{
-				entity = objectManager->makeEntity("Enemy");
-
-				movementCmp.add(entity, 50.f, 0);
-				transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
-				drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
-				collisionCmp.add(entity);
-				enemyCmp.add(entity, 100, 0);
-			}
-
 
 			x += TILE_WIDTH;
 		}
@@ -1077,6 +1073,16 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 
 	// Proceed to handle the text box entities
 	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
+
+	if (room_path == map_path("level_one_to_four.json"))
+	{
+		generateBoss(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
+	}
+}
+// Separate call to generate text box entitities
+void EntityGenerator::generateBoss(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
+{
+	// TODO
 }
 
 // Separate call to generate text box entitities
@@ -1140,5 +1146,5 @@ void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic
 	textSystem->init(*objectManager, gameState, water);
 	lightSystem->init(*objectManager, gameState, tc, water);
 
-	drawSystem->setup();
-}
+		drawSystem->setup();
+	}
