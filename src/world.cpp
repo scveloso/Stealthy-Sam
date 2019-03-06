@@ -26,8 +26,6 @@ LightSystem* ls;
 // Game State component
 GameStateCmp* gameState;
 
-// Entity* keyE;
-// Entity *rRestart;
 
 
 
@@ -247,9 +245,11 @@ void World::handleUpdateAction(int updateAction)
             clearMap();
             gameState->current_room = ROOM_TWO_GUID;
             generateEntities(map_path("level_one_to_two.json"));
+						m_water->clear_enemy_position();
         }
 		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
 		{
+			m_water->clear_enemy_position();
 			if (gameState->level_two_key && gameState->level_three_key)
 			{
 				clearMap();
@@ -268,18 +268,21 @@ void World::handleUpdateAction(int updateAction)
             clearMap();
             gameState->current_room = ROOM_THREE_GUID;
             generateEntities(map_path("level_two_to_three.json"));
+						m_water->clear_enemy_position();
         }
         else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
         {
             clearMap();
             gameState->current_room = ROOM_TWO_GUID;
             generateEntities(map_path("level_three_to_two.json"));
+						m_water->clear_enemy_position();
         }
 		else if (updateAction == CHANGE_ROOM_ONE_TO_FOUR)
 		{
 			clearMap();
 			gameState->current_room = ROOM_FOUR_GUID;
 			generateEntities(map_path("level_one_to_four.json"));
+			m_water->clear_enemy_position();
 		}
         else if (updateAction == RESET_GAME)
         {
@@ -287,6 +290,7 @@ void World::handleUpdateAction(int updateAction)
             clearMap();
             generateEntities(map_path("level_one.json"));
             m_water->restart();
+						m_water->clear_enemy_position();
         }
 	}
 }
