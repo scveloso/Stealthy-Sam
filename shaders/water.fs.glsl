@@ -41,9 +41,9 @@ layout(location = 0) out vec4 color;
   float tri_w= 100;
   float tri_h=50;
   float displace=15;
-  float s[5]={0,0,0,0,0};
-  float t[5]= {0,0,0,0,0};
-  float st[5]= {0,0,0,0,0};
+  float s[5];
+  float t[5];
+  float st[5];
 
 float dimmer(float d) {
 
