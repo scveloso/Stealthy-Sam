@@ -109,21 +109,25 @@ void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity
 	if (enemyPosition.x > targetPosition.x) {
 		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
 		movementComponent.setMovementDirection(enemyEntity, LEFT);
+		transformComponent.setFacingDirection(enemyEntity, LEFT);
 	}
 
 	if (enemyPosition.x < targetPosition.x) {
 		movementComponent.removeMovementDirection(enemyEntity, LEFT);
 		movementComponent.setMovementDirection(enemyEntity, RIGHT);
+		transformComponent.setFacingDirection(enemyEntity, RIGHT);
 	}
 
 	if (enemyPosition.y > targetPosition.y) {
 		movementComponent.removeMovementDirection(enemyEntity, DOWN);
 		movementComponent.setMovementDirection(enemyEntity, UP);
+		transformComponent.setFacingDirection(enemyEntity, UP);
 	}
 
 	if (enemyPosition.y < targetPosition.y) {
 		movementComponent.removeMovementDirection(enemyEntity, UP);
 		movementComponent.setMovementDirection(enemyEntity, DOWN);
+		transformComponent.setFacingDirection(enemyEntity, UP);
 	}
 }
 
@@ -140,24 +144,28 @@ void EnemySystem::returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* en
 		enemyPosition = { enemyPosition.x - step, enemyPosition.y };
 		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
 		movementComponent.setMovementDirection(enemyEntity, LEFT);
+		transformComponent.setFacingDirection(enemyEntity, LEFT);
 	}
 
 	if (enemyPosition.x < startPosition.x) {
 		enemyPosition = { enemyPosition.x + step, enemyPosition.y };
 		movementComponent.removeMovementDirection(enemyEntity, LEFT);
 		movementComponent.setMovementDirection(enemyEntity, RIGHT);
+		transformComponent.setFacingDirection(enemyEntity, RIGHT);
 	}
 
 	if (enemyPosition.y > startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y - step };
 		movementComponent.removeMovementDirection(enemyEntity, DOWN);
 		movementComponent.setMovementDirection(enemyEntity, UP);
+		transformComponent.setFacingDirection(enemyEntity, UP);
 	}
 
 	if (enemyPosition.y < startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y + step };
 		movementComponent.removeMovementDirection(enemyEntity, UP);
 		movementComponent.setMovementDirection(enemyEntity, DOWN);
+		transformComponent.setFacingDirection(enemyEntity, DOWN);
 	}
 
 	// If position will no longer change (as close to starting position as possible),
@@ -174,35 +182,38 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et) 
 		if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
 			movementComponent.setMovementDirection(enemyEntity, RIGHT);
 			enemy->start = et->m_position;
+			et->facingDirection = RIGHT;
 		}
 
 		if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
 			movementComponent.removeMovementDirection(enemyEntity, RIGHT);
 			movementComponent.setMovementDirection(enemyEntity, LEFT);
-			et->m_scale.x *= -1;
+			et->facingDirection = LEFT;
 		}
 
 		if (et->m_position.x < enemy->start.x) {
 			movementComponent.removeMovementDirection(enemyEntity, LEFT);
 			movementComponent.setMovementDirection(enemyEntity, RIGHT);
+			et->facingDirection = RIGHT;
 		}
 	}
 	else {
 		if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
 			movementComponent.setMovementDirection(enemyEntity, UP);
 			enemy->start = et->m_position;
+			et->facingDirection = UP;
 		}
 
 		if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
 			movementComponent.removeMovementDirection(enemyEntity, UP);
 			movementComponent.setMovementDirection(enemyEntity, DOWN);
-			et->m_scale.x *= -1;
+			et->facingDirection = DOWN;
 		}
 
 		if (et->m_position.y < enemy->start.y) {
 			movementComponent.removeMovementDirection(enemyEntity, DOWN);
 			movementComponent.setMovementDirection(enemyEntity, UP);
-			et->m_scale.x *= -1;
+			et->facingDirection = UP;
 		}
 	}
 }

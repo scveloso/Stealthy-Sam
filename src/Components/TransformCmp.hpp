@@ -26,6 +26,10 @@ public:
 
 	void setRotation(Entity* entity, float rotation);
 
+	void setFacingDirection(Entity *entity, int facingDirection);
+	void removeFacingDirection(Entity *entity, int facingDirection);
+	int getFacingDirection(Entity *entity);
+
 private:
 	std::unordered_map<int, Transform*> transform_map;
 };

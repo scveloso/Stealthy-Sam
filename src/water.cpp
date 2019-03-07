@@ -72,7 +72,6 @@ void Water::clear_enemy_position(){
 	for (int i=0; i < 10; i++){
 		enemy_position[i]=-40;
 	}
-
 }
 
 void Water::reset_salmon_dead_time() {

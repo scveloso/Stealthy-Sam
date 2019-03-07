@@ -16,7 +16,7 @@
 // Has access to CollisionCmp to know if Sam can interact with objects he is colliding with.
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
-// Has access to ItemCmp to toggle items as thrown. 
+// Has access to ItemCmp to toggle items as thrown.
 void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
@@ -55,7 +55,8 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             {
               movementComponent.setMovementDirection(entity, LEFT);
               if (gameState->sam_is_alive) {
-                transformComponent.faceLeft(entity);
+                transformComponent.faceLeft(entity); // this is to rotate Sam texture
+                transformComponent.setFacingDirection(entity, LEFT);
               }
               gameState->has_moved = true;
             }
@@ -65,17 +66,24 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             {
               movementComponent.setMovementDirection(entity, RIGHT);
               if (gameState->sam_is_alive) {
-                transformComponent.faceRight(entity);
+                transformComponent.faceRight(entity); // this is to rotate Sam texture
+                transformComponent.setFacingDirection(entity, RIGHT);
               }
               gameState->has_moved = true;
             }
             break;
           case GLFW_KEY_S:
             movementComponent.setMovementDirection(entity, DOWN);
+            if (gameState->sam_is_alive) {
+              transformComponent.setFacingDirection(entity, DOWN);
+            }
             gameState->has_moved = true;
             break;
           case GLFW_KEY_W:
             movementComponent.setMovementDirection(entity, UP);
+            if (gameState->sam_is_alive) {
+              transformComponent.setFacingDirection(entity, UP);
+            }
             gameState->has_moved = true;
             break;
           case GLFW_KEY_E:
@@ -122,15 +130,19 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         switch (key) {
           case GLFW_KEY_A:
             movementComponent.removeMovementDirection(entity, LEFT);
+            //transformComponent.removeFacingDirection(entity, LEFT);
             break;
           case GLFW_KEY_D:
             movementComponent.removeMovementDirection(entity, RIGHT);
+            //transformComponent.removeFacingDirection(entity, RIGHT);
             break;
           case GLFW_KEY_S:
             movementComponent.removeMovementDirection(entity, DOWN);
+            //transformComponent.removeFacingDirection(entity, DOWN);
             break;
           case GLFW_KEY_W:
             movementComponent.removeMovementDirection(entity, UP);
+            //transformComponent.removeFacingDirection(entity, UP);
             break;
           default:
             break;
@@ -159,30 +171,58 @@ void InputSystem::handleThrowable(Entity* entity) {
   // If a torch is thrown
   if (heldEntity && heldEntity->label.compare("Torch") == 0)
   {
-    heldEntity->active = true;
-    itemComponent.throwItem(heldEntity);
+    // Figure out what direction to throw the torch in,
+    // MovementDirection is prioritized, facing direction used at rest
+    int throwDirection = NO_DIRECTION;
+    int movementDirection = movementComponent.getMovementDirection(entity);
+    int facingDirection = transformComponent.getFacingDirection(entity);
 
-    Movement* entityMovement = movementComponent.getMovement(heldEntity);
-    movementComponent.resetMovementDirection(heldEntity);
-
-    // Set the throwable's movement-physics attributes to move to the left
-    if (transformComponent.isFacingLeft(entity)) {
-      vec2 torch_position = { gameState->sam_position.x - (TILE_WIDTH), gameState->sam_position.y };
-      transformComponent.setPosition(heldEntity, torch_position);
-      movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
-      movementComponent.setMovementDirection(heldEntity, LEFT);
+    if (movementDirection != NO_DIRECTION) {
+      throwDirection = movementDirection;
+    } else {
+      throwDirection = facingDirection;
     }
 
-    // Set the throwable's movement-physics attributes to move to the right
-    if (transformComponent.isFacingRight(entity)) {
-      vec2 torch_position = { gameState->sam_position.x + (TILE_WIDTH), gameState->sam_position.y };
+    // Throw torch if there is a valid direction to throw it in
+    if (throwDirection != NO_DIRECTION) {
+      Movement* entityMovement = movementComponent.getMovement(heldEntity);
+      movementComponent.resetMovementDirection(heldEntity);
+
+      vec2 torch_position = gameState->sam_position;
+      if (throwDirection % LEFT == 0) {
+        torch_position = { gameState->sam_position.x - (TILE_WIDTH), gameState->sam_position.y };
+        movementComponent.setMovementDirection(heldEntity, LEFT);
+      }
+
+      if (throwDirection % RIGHT == 0) {
+        torch_position = { gameState->sam_position.x + (TILE_WIDTH), gameState->sam_position.y };
+        movementComponent.setMovementDirection(heldEntity, RIGHT);
+      }
+
+      if (throwDirection % UP == 0) {
+        torch_position = { gameState->sam_position.x, gameState->sam_position.y - (TILE_HEIGHT) };
+        movementComponent.setMovementDirection(heldEntity, UP);
+      }
+
+      if (throwDirection % DOWN == 0) {
+        torch_position = { gameState->sam_position.x, gameState->sam_position.y + (TILE_HEIGHT) };
+        movementComponent.setMovementDirection(heldEntity, DOWN);
+      }
+
+      // Torch is now active and thrown
+      heldEntity->active = true;
+      itemComponent.throwItem(heldEntity);
+
+      // Set its position and get it moving
       transformComponent.setPosition(heldEntity, torch_position);
       movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
-      movementComponent.setMovementDirection(heldEntity, RIGHT);
-    }
 
-    enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
-    gameState->held_item = -1;
-    gameState->held_entity = NULL;
+      // Update enemies chasing Sam to chase torch instead
+      enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
+
+      // No longer holding torch
+      gameState->held_item = -1;
+      gameState->held_entity = NULL;
+    }
   }
 }

@@ -8,8 +8,8 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->width = 0.0f;
 	tb->height = 0.0f;
 	tb->visible = true;
+	tb->facingDirection = NO_DIRECTION;
 	transform_map[entity->id] = tb;
-	//printf("Entity ID in Transform: %d\n", entity->id);
 }
 
 std::unordered_map<int, Transform *> TransformCmp::getmap()
@@ -91,4 +91,30 @@ bool TransformCmp::isFacingDown(Entity* entity)
 void TransformCmp::setRotation(Entity* entity, float rotation)
 {
 	transform_map[entity->id]->m_rotation = rotation;
+}
+
+void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
+{
+	transform_map[entity->id]->facingDirection = facingDirection;
+}
+
+void TransformCmp::removeFacingDirection(Entity *entity, int facingDirection)
+{
+	int entityDirection = transform_map[entity->id]->facingDirection;
+
+  // Only try remove that direction if facing in that direction
+	if (entityDirection % facingDirection == 0)
+	{
+		int newDirection = entityDirection / facingDirection;
+
+		// We want one facing direction to remain
+		if (newDirection != NO_DIRECTION) {
+			transform_map[entity->id]->facingDirection = newDirection;
+		}
+	}
+}
+
+int TransformCmp::getFacingDirection(Entity *entity)
+{
+	return transform_map[entity->id]->facingDirection;
 }
