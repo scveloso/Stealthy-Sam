@@ -127,7 +127,7 @@ void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity
 	if (enemyPosition.y < targetPosition.y) {
 		movementComponent.removeMovementDirection(enemyEntity, UP);
 		movementComponent.setMovementDirection(enemyEntity, DOWN);
-		transformComponent.setFacingDirection(enemyEntity, UP);
+		transformComponent.setFacingDirection(enemyEntity, DOWN);
 	}
 }
 
