@@ -49,13 +49,8 @@ void LightSystem::update()
       if (transformCmp.isFacingLeft(enemyEntity)){
         water->add_enemy_direction(i, 1.0);
       }
-<<<<<<< HEAD
       else if (transformCmp.isFacingRight(enemyEntity)){
         water->add_enemy_direction(i,2.0);
-=======
-      else{
-        water->add_enemy_direction(i, 2.0);
->>>>>>> Minor change LightSystem
       }
       else if (transformCmp.isFacingUp(enemyEntity)){
         water->add_enemy_direction(i,3.0);
