@@ -76,6 +76,18 @@ bool TransformCmp::isFacingRight(Entity* entity)
 	return transform_map[entity->id]->m_scale.x > 0;
 }
 
+bool TransformCmp::isFacingUp(Entity* entity)
+{
+	return transform_map[entity->id]->m_scale.y > 0;
+}
+
+bool TransformCmp::isFacingDown(Entity* entity)
+{
+	return transform_map[entity->id]->m_scale.x < 0;
+}
+
+
+
 void TransformCmp::setRotation(Entity* entity, float rotation)
 {
 	transform_map[entity->id]->m_rotation = rotation;

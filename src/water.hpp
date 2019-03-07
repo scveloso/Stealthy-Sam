@@ -25,14 +25,14 @@ public:
 	//add position to be pass down into shaders to create circle of light
 	void add_position(vec2 position);
 	void add_enemy_position(int i, vec2 position);
-	// left =1; right =2; for direction
+	// left =1; right =2; up =3; down=4; for direction
 	void add_enemy_direction(int i, float direction);
 	int showWASDText;
 	int showEText;
 	int showRText;
 	int death;
 	int remove_r;
-	
+
   //clear enemy_position array
 	void clear_enemy_position();
 

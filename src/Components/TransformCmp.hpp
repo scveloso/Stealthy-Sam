@@ -21,6 +21,9 @@ public:
 	bool isFacingLeft(Entity* entity);
 	bool isFacingRight(Entity* entity);
 
+	bool isFacingUp(Entity* entity);
+	bool isFacingDown(Entity* entity);
+
 	void setRotation(Entity* entity, float rotation);
 
 private:

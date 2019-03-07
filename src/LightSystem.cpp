@@ -46,11 +46,18 @@ void LightSystem::update()
     if (enemyEntity->active) {
       Transform* enemyTransform = transformCmp.getTransform(enemyEntity);
       water->add_enemy_position(i, enemyTransform->m_position);
+      // left =1; right =2; up =3; down=4;
       if (transformCmp.isFacingLeft(enemyEntity)){
         water->add_enemy_direction(i, 1.0);
       }
-      else{
+      else if (transformCmp.isFacingRight(enemyEntity)){
         water->add_enemy_direction(i,2.0);
+      }
+      else if (transformCmp.isFacingUp(enemyEntity)){
+        water->add_enemy_direction(i,3.0);
+      }
+      else if (transformCmp.isFacingDown(enemyEntity)){
+        water->add_enemy_direction(i,4.0);
       }
       i= i+2;
     }
