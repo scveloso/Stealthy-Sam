@@ -19,4 +19,3 @@ std::vector<std::pair<Entity*, Draw *>> DrawCmp::getmap()
 {
 	return draw_vec;
 }
-

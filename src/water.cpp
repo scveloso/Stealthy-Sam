@@ -65,14 +65,13 @@ void Water::add_enemy_position(int i, vec2 position){
 }
 
 void Water::add_enemy_direction(int i, float direction){
-	enemy_direction[i]= direction;
+	enemy_direction[i] = direction;
 }
 
 void Water::clear_enemy_position(){
 	for (int i=0; i < 10; i++){
 		enemy_position[i]=-40;
 	}
-
 }
 
 void Water::reset_salmon_dead_time() {

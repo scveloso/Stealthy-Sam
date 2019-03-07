@@ -4,9 +4,10 @@
 #include "Components/Cmp.hpp"
 #include "UpdateAction.hpp"
 #include "EnemyAction.hpp"
+#include "TileConstants.hpp"
+#include "CollisionSystem.hpp"
 #include <iostream>
 #include <string>
-#include "TileConstants.hpp"
 
 // System to update game based on user input.
 //
@@ -16,7 +17,7 @@
 // Has access to CollisionCmp to know if Sam can interact with objects he is colliding with.
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
-// Has access to ItemCmp to toggle items as thrown. 
+// Has access to ItemCmp to toggle items as thrown.
 void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
@@ -55,7 +56,8 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             {
               movementComponent.setMovementDirection(entity, LEFT);
               if (gameState->sam_is_alive) {
-                transformComponent.faceLeft(entity);
+                transformComponent.faceLeft(entity); // this is to rotate Sam texture
+                transformComponent.setFacingDirection(entity, LEFT);
               }
               gameState->has_moved = true;
             }
@@ -65,17 +67,24 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             {
               movementComponent.setMovementDirection(entity, RIGHT);
               if (gameState->sam_is_alive) {
-                transformComponent.faceRight(entity);
+                transformComponent.faceRight(entity); // this is to rotate Sam texture
+                transformComponent.setFacingDirection(entity, RIGHT);
               }
               gameState->has_moved = true;
             }
             break;
           case GLFW_KEY_S:
             movementComponent.setMovementDirection(entity, DOWN);
+            if (gameState->sam_is_alive) {
+              transformComponent.setFacingDirection(entity, DOWN);
+            }
             gameState->has_moved = true;
             break;
           case GLFW_KEY_W:
             movementComponent.setMovementDirection(entity, UP);
+            if (gameState->sam_is_alive) {
+              transformComponent.setFacingDirection(entity, UP);
+            }
             gameState->has_moved = true;
             break;
           case GLFW_KEY_E:
@@ -159,30 +168,113 @@ void InputSystem::handleThrowable(Entity* entity) {
   // If a torch is thrown
   if (heldEntity && heldEntity->label.compare("Torch") == 0)
   {
-    heldEntity->active = true;
-    itemComponent.throwItem(heldEntity);
-
-    Movement* entityMovement = movementComponent.getMovement(heldEntity);
-    movementComponent.resetMovementDirection(heldEntity);
-
-    // Set the throwable's movement-physics attributes to move to the left
-    if (transformComponent.isFacingLeft(entity)) {
-      vec2 torch_position = { gameState->sam_position.x - (TILE_WIDTH), gameState->sam_position.y };
-      transformComponent.setPosition(heldEntity, torch_position);
-      movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
-      movementComponent.setMovementDirection(heldEntity, LEFT);
+    // Figure out what direction to throw the torch in,
+    // MovementDirection is prioritized, facing direction used at rest
+    int throwDirection = NO_DIRECTION;
+    int movementDirection = movementComponent.getMovementDirection(entity);
+    int facingDirection = transformComponent.getFacingDirection(entity);
+    if (movementDirection != NO_DIRECTION) {
+      throwDirection = movementDirection;
+    } else {
+      throwDirection = facingDirection;
     }
 
-    // Set the throwable's movement-physics attributes to move to the right
-    if (transformComponent.isFacingRight(entity)) {
-      vec2 torch_position = { gameState->sam_position.x + (TILE_WIDTH), gameState->sam_position.y };
-      transformComponent.setPosition(heldEntity, torch_position);
-      movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
-      movementComponent.setMovementDirection(heldEntity, RIGHT);
-    }
+    // Throw torch if there is a valid direction to throw it in
+    if (throwDirection != NO_DIRECTION) {
+      Transform* entityTransform = transformComponent.getTransform(heldEntity);
+      movementComponent.resetMovementDirection(heldEntity);
 
-    enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
-    gameState->held_item = -1;
-    gameState->held_entity = NULL;
+      vec2 torch_position = gameState->sam_position;
+      if (throwDirection % LEFT == 0) {
+        torch_position = tryThrowHorizontal(heldEntity, entityTransform, torch_position, LEFT, (-1 * TILE_WIDTH));
+      }
+
+      if (throwDirection % RIGHT == 0) {
+        torch_position = tryThrowHorizontal(heldEntity, entityTransform, torch_position, RIGHT, TILE_WIDTH);
+      }
+
+      if (throwDirection % UP == 0) {
+        torch_position = tryThrowVertical(heldEntity, entityTransform, torch_position, UP, (-1 * TILE_HEIGHT));
+      }
+
+      if (throwDirection % DOWN == 0) {
+        torch_position = tryThrowVertical(heldEntity, entityTransform, torch_position, DOWN, TILE_HEIGHT);
+      }
+
+      // If torch movement won't be interrupted by a wall/closet
+      if (torch_position.x != gameState->sam_position.x ||
+          torch_position.y != gameState->sam_position.y) {
+        // Torch is now active and thrown
+        heldEntity->active = true;
+        itemComponent.throwItem(heldEntity);
+
+        // Set its position and get it moving
+        transformComponent.setPosition(heldEntity, torch_position);
+        Movement* entityMovement = movementComponent.getMovement(heldEntity);
+        movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
+
+        // Update enemies chasing Sam to chase torch instead
+        enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
+
+        // No longer holding torch
+        gameState->held_item = -1;
+        gameState->held_entity = NULL;
+      }
+    }
   }
+}
+
+vec2 InputSystem::tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset) {
+  torch_position = { torch_position.x + offset, torch_position.y };
+  entityTransform->m_position = torch_position;
+  bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
+
+  if (movementInterrupted) {
+    torch_position = { torch_position.x - offset, torch_position.y };
+    entityTransform->m_position = torch_position;
+  } else {
+    movementComponent.setMovementDirection(heldEntity, direction);
+  }
+
+  return torch_position;
+}
+
+vec2 InputSystem::tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset) {
+  torch_position = { torch_position.x, torch_position.y + offset };
+  entityTransform->m_position = torch_position;
+  bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
+
+  if (movementInterrupted) {
+    torch_position = { torch_position.x, torch_position.y - offset};
+    entityTransform->m_position = torch_position;
+  } else {
+    movementComponent.setMovementDirection(heldEntity, direction);
+  }
+
+  return torch_position;
+}
+
+// Checks if movement to new position will be interrupted by a Wall entity
+bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransform)
+{
+    for (auto& it2 : collisionComponent.getmap())
+    {
+        int otherEntityId = it2.first;
+        if (otherEntityId != entityId)
+        {
+            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+
+      if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+      {
+        Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+
+                if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }

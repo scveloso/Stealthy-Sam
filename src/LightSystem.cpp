@@ -28,7 +28,6 @@ void LightSystem::update()
   std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
 
  // grab all existing enemy
- Entity* enemyEntity= objectManager.getEntityByLabel("Enemy");
  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
 
   // TODO: Get water and shader to support multiple circle of light positions

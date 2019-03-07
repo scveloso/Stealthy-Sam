@@ -8,8 +8,8 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->width = 0.0f;
 	tb->height = 0.0f;
 	tb->visible = true;
+	tb->facingDirection = NO_DIRECTION;
 	transform_map[entity->id] = tb;
-	//printf("Entity ID in Transform: %d\n", entity->id);
 }
 
 std::unordered_map<int, Transform *> TransformCmp::getmap()
@@ -68,27 +68,35 @@ void TransformCmp::faceRight(Entity *entity)
 
 bool TransformCmp::isFacingLeft(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x < 0;
+	return transform_map[entity->id]->facingDirection % LEFT == 0;
 }
 
 bool TransformCmp::isFacingRight(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x > 0;
+	return transform_map[entity->id]->facingDirection % RIGHT == 0;
 }
 
 bool TransformCmp::isFacingUp(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.y > 0;
+	return transform_map[entity->id]->facingDirection % UP == 0;
 }
 
 bool TransformCmp::isFacingDown(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x < 0;
+	return transform_map[entity->id]->facingDirection % DOWN == 0;
 }
-
-
 
 void TransformCmp::setRotation(Entity* entity, float rotation)
 {
 	transform_map[entity->id]->m_rotation = rotation;
+}
+
+void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
+{
+	transform_map[entity->id]->facingDirection = facingDirection;
+}
+
+int TransformCmp::getFacingDirection(Entity *entity)
+{
+	return transform_map[entity->id]->facingDirection;
 }

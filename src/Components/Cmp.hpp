@@ -24,6 +24,7 @@ struct Transform
 	float width;
 	float height;
 	bool visible;
+	int facingDirection;
 };
 
 struct Collision
