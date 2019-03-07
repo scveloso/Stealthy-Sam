@@ -4,9 +4,10 @@
 #include "Components/Cmp.hpp"
 #include "UpdateAction.hpp"
 #include "EnemyAction.hpp"
+#include "TileConstants.hpp"
+#include "CollisionSystem.hpp"
 #include <iostream>
 #include <string>
-#include "TileConstants.hpp"
 
 // System to update game based on user input.
 //
@@ -172,7 +173,6 @@ void InputSystem::handleThrowable(Entity* entity) {
     int throwDirection = NO_DIRECTION;
     int movementDirection = movementComponent.getMovementDirection(entity);
     int facingDirection = transformComponent.getFacingDirection(entity);
-
     if (movementDirection != NO_DIRECTION) {
       throwDirection = movementDirection;
     } else {
@@ -181,44 +181,100 @@ void InputSystem::handleThrowable(Entity* entity) {
 
     // Throw torch if there is a valid direction to throw it in
     if (throwDirection != NO_DIRECTION) {
-      Movement* entityMovement = movementComponent.getMovement(heldEntity);
+      Transform* entityTransform = transformComponent.getTransform(heldEntity);
       movementComponent.resetMovementDirection(heldEntity);
 
       vec2 torch_position = gameState->sam_position;
       if (throwDirection % LEFT == 0) {
-        torch_position = { gameState->sam_position.x - (TILE_WIDTH), gameState->sam_position.y };
-        movementComponent.setMovementDirection(heldEntity, LEFT);
+        torch_position = tryThrowHorizontal(heldEntity, entityTransform, torch_position, LEFT, (-1 * TILE_WIDTH));
       }
 
       if (throwDirection % RIGHT == 0) {
-        torch_position = { gameState->sam_position.x + (TILE_WIDTH), gameState->sam_position.y };
-        movementComponent.setMovementDirection(heldEntity, RIGHT);
+        torch_position = tryThrowHorizontal(heldEntity, entityTransform, torch_position, RIGHT, TILE_WIDTH);
       }
 
       if (throwDirection % UP == 0) {
-        torch_position = { gameState->sam_position.x, gameState->sam_position.y - (TILE_HEIGHT) };
-        movementComponent.setMovementDirection(heldEntity, UP);
+        torch_position = tryThrowVertical(heldEntity, entityTransform, torch_position, UP, (-1 * TILE_HEIGHT));
       }
 
       if (throwDirection % DOWN == 0) {
-        torch_position = { gameState->sam_position.x, gameState->sam_position.y + (TILE_HEIGHT) };
-        movementComponent.setMovementDirection(heldEntity, DOWN);
+        torch_position = tryThrowVertical(heldEntity, entityTransform, torch_position, DOWN, TILE_HEIGHT);
       }
 
-      // Torch is now active and thrown
-      heldEntity->active = true;
-      itemComponent.throwItem(heldEntity);
+      // If torch movement won't be interrupted by a wall/closet
+      if (torch_position.x != gameState->sam_position.x ||
+          torch_position.y != gameState->sam_position.y) {
+        // Torch is now active and thrown
+        heldEntity->active = true;
+        itemComponent.throwItem(heldEntity);
 
-      // Set its position and get it moving
-      transformComponent.setPosition(heldEntity, torch_position);
-      movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
+        // Set its position and get it moving
+        transformComponent.setPosition(heldEntity, torch_position);
+        Movement* entityMovement = movementComponent.getMovement(heldEntity);
+        movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
 
-      // Update enemies chasing Sam to chase torch instead
-      enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
+        // Update enemies chasing Sam to chase torch instead
+        enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
 
-      // No longer holding torch
-      gameState->held_item = -1;
-      gameState->held_entity = NULL;
+        // No longer holding torch
+        gameState->held_item = -1;
+        gameState->held_entity = NULL;
+      }
     }
   }
+}
+
+vec2 InputSystem::tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset) {
+  torch_position = { torch_position.x + offset, torch_position.y };
+  entityTransform->m_position = torch_position;
+  bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
+
+  if (movementInterrupted) {
+    torch_position = { torch_position.x - offset, torch_position.y };
+    entityTransform->m_position = torch_position;
+  } else {
+    movementComponent.setMovementDirection(heldEntity, direction);
+  }
+
+  return torch_position;
+}
+
+vec2 InputSystem::tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset) {
+  torch_position = { torch_position.x, torch_position.y + offset };
+  entityTransform->m_position = torch_position;
+  bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
+
+  if (movementInterrupted) {
+    torch_position = { torch_position.x, torch_position.y - offset};
+    entityTransform->m_position = torch_position;
+  } else {
+    movementComponent.setMovementDirection(heldEntity, direction);
+  }
+
+  return torch_position;
+}
+
+// Checks if movement to new position will be interrupted by a Wall entity
+bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransform)
+{
+    for (auto& it2 : collisionComponent.getmap())
+    {
+        int otherEntityId = it2.first;
+        if (otherEntityId != entityId)
+        {
+            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+
+      if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+      {
+        Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+
+                if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
