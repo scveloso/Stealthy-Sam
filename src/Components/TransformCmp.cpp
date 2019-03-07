@@ -68,25 +68,23 @@ void TransformCmp::faceRight(Entity *entity)
 
 bool TransformCmp::isFacingLeft(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x < 0;
+	return transform_map[entity->id]->facingDirection % LEFT == 0;
 }
 
 bool TransformCmp::isFacingRight(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x > 0;
+	return transform_map[entity->id]->facingDirection % RIGHT == 0;
 }
 
 bool TransformCmp::isFacingUp(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.y > 0;
+	return transform_map[entity->id]->facingDirection % UP == 0;
 }
 
 bool TransformCmp::isFacingDown(Entity* entity)
 {
-	return transform_map[entity->id]->m_scale.x < 0;
+	return transform_map[entity->id]->facingDirection % DOWN == 0;
 }
-
-
 
 void TransformCmp::setRotation(Entity* entity, float rotation)
 {
@@ -96,22 +94,6 @@ void TransformCmp::setRotation(Entity* entity, float rotation)
 void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
 {
 	transform_map[entity->id]->facingDirection = facingDirection;
-}
-
-void TransformCmp::removeFacingDirection(Entity *entity, int facingDirection)
-{
-	int entityDirection = transform_map[entity->id]->facingDirection;
-
-  // Only try remove that direction if facing in that direction
-	if (entityDirection % facingDirection == 0)
-	{
-		int newDirection = entityDirection / facingDirection;
-
-		// We want one facing direction to remain
-		if (newDirection != NO_DIRECTION) {
-			transform_map[entity->id]->facingDirection = newDirection;
-		}
-	}
 }
 
 int TransformCmp::getFacingDirection(Entity *entity)

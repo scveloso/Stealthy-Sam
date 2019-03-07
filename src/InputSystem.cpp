@@ -130,19 +130,15 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         switch (key) {
           case GLFW_KEY_A:
             movementComponent.removeMovementDirection(entity, LEFT);
-            //transformComponent.removeFacingDirection(entity, LEFT);
             break;
           case GLFW_KEY_D:
             movementComponent.removeMovementDirection(entity, RIGHT);
-            //transformComponent.removeFacingDirection(entity, RIGHT);
             break;
           case GLFW_KEY_S:
             movementComponent.removeMovementDirection(entity, DOWN);
-            //transformComponent.removeFacingDirection(entity, DOWN);
             break;
           case GLFW_KEY_W:
             movementComponent.removeMovementDirection(entity, UP);
-            //transformComponent.removeFacingDirection(entity, UP);
             break;
           default:
             break;
