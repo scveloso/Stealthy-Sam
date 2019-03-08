@@ -36,6 +36,17 @@ void LightSystem::update()
     }
   }
 
+  // Grab all existing and active cauldrons, draw circles of light around them
+  std::vector<Entity*> cauldronEntities = objectManager.getEntitiesByLabel("Cauldron");
+  for (auto& cauldronEntity : cauldronEntities)
+  {
+    if (cauldronEntity->active) {
+      Transform* cauldronTransform = transformCmp.getTransform(cauldronEntity);
+      water->addTorchPosition(e, cauldronTransform->m_position);
+      e = e + 2;
+    }
+  }
+
   // Grab all existing enemies and send their directions and positions to shader
   std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
 
