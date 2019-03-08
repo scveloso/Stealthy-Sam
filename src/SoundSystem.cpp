@@ -4,14 +4,16 @@
 SoundSystem::SoundSystem()
 {
     background_music = Mix_LoadMUS(audio_path("spooky_background.wav"));
-    death_sound = Mix_LoadWAV(audio_path("death_sound.wav"));
     boss_background_music = Mix_LoadMUS(audio_path("boss_background.wav"));
+    death_sound = Mix_LoadWAV(audio_path("death_sound.wav"));
+    key_pickup_sound = Mix_LoadWAV(audio_path("key_pickup.wav"));
     if (background_music == nullptr || death_sound == nullptr || boss_background_music == nullptr)
     {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
+        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n %s\nmake sure the data directory is present",
                 audio_path("spooky_background.wav"),
+                audio_path("boss_background.wav"),
                 audio_path("death_sound.wav"),
-                audio_path("boss_background.wav"));
+                audio_path("key_pickup.wav"));
     }
 }
 
@@ -24,6 +26,11 @@ void SoundSystem::playBackgroundMusic()
 {
     // Playing background music undefinitely
     Mix_PlayMusic(background_music, -1);
+}
+
+void SoundSystem::playKeyPickup()
+{
+    Mix_PlayChannel(-1, key_pickup_sound, 0);
 }
 
 void SoundSystem::playDeath()

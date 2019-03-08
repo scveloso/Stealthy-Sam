@@ -65,6 +65,10 @@ int CollisionSystem::update(float elapsed_ms)
 
 				// Handle key collisions
         		int keyUpdateAction = handleKeys(entity);
+				if (keyUpdateAction != NO_CHANGE)
+				{
+					return keyUpdateAction;
+				}
 
 
 				if (handleClosets(entity))
@@ -136,10 +140,12 @@ int CollisionSystem::handleKeys(Entity* entity)
 		if (gameStateComponent->current_room == ROOM_TWO_GUID)
 		{
 			gameStateComponent->level_two_key = true;
+			return KEY_PICKUP_EVENT;
 		}
 		else if (gameStateComponent->current_room == ROOM_THREE_GUID)
 		{
 			gameStateComponent->level_three_key = true;
+			return KEY_PICKUP_EVENT;
 		}
 	}
 

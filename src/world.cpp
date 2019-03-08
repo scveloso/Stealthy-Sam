@@ -292,7 +292,11 @@ void World::handleUpdateAction(int updateAction)
 				soundSystem->playDeath();
 				break;
 			}
-
+			case KEY_PICKUP_EVENT:
+			{
+				soundSystem->playKeyPickup();
+				break;
+			}
 			default:
 			{
 			    printf("Update Action %d was not recognized", updateAction);
