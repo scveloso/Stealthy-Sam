@@ -65,7 +65,13 @@ void Water::add_enemy_position(int i, vec2 position){
 	enemy_position[i+1]=y;
 }
 
-void Water::add_torch_position(int i, vec2 position){
+void Water::reinitializeTorchPositions() {
+	for (int i=0; i < 10; i++){
+		torch_light[i]= -1000.f;
+	}
+}
+
+void Water::addTorchPosition(int i, vec2 position) {
   float x= position.x;
 	float y= position.y;
 	torch_light[i]=x;

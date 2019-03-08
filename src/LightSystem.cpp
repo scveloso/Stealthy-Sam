@@ -24,21 +24,20 @@ void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCm
 void LightSystem::update()
 {
   // Grab all existing and active torches, draw circles of light around them
-  Entity* torchEntity = objectManager.getEntityByLabel("Torch");
   std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
-
- // grab all existing enemy
- std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
-
   int e = 0;
+  water->reinitializeTorchPositions();
   for (auto& torchEntity : torchEntities)
-	{
+  {
     if (torchEntity->active) {
       Transform* torchTransform = transformCmp.getTransform(torchEntity);
-      water->add_torch_position(e,torchTransform->m_position);
-      e= e+2;
+      water->addTorchPosition(e, torchTransform->m_position);
+      e = e + 2;
     }
-	}
+  }
+
+  // Grab all existing enemies and send their directions and positions to shader
+  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
 
   int i = 0;
   for (auto& enemyEntity : enemyEntities)
@@ -51,27 +50,26 @@ void LightSystem::update()
         water->add_enemy_direction(i, 1.0);
       }
       else if (transformCmp.isFacingRight(enemyEntity)){
-        water->add_enemy_direction(i,2.0);
+        water->add_enemy_direction(i, 2.0);
       }
       else if (transformCmp.isFacingUp(enemyEntity)){
-        water->add_enemy_direction(i,3.0);
+        water->add_enemy_direction(i, 3.0);
       }
       else if (transformCmp.isFacingDown(enemyEntity)){
-        water->add_enemy_direction(i,4.0);
+        water->add_enemy_direction(i, 4.0);
       }
-      i= i+2;
+      i = i + 2;
     }
-	}
+  }
 
   // If Sam holding a torch, draw circle of light around Sam
   Entity* heldEntity = gameState->held_entity;
   if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
     vec2 s_position = gameState->sam_position;
     water->add_position(s_position);
-    water->torch_light[0]= -100;
-    water->torch_light[1]= -100;
-  }
-  else if (heldEntity && gameState->held_entity->label.compare("Torch") != 0) {
-   water->clearLights();
+    // water->torch_light[0]= -100;
+    // water->torch_light[1]= -100;
+  } else if (!heldEntity || gameState->held_entity->label.compare("Torch") != 0) {
+    water->clearLights();
   }
 }
