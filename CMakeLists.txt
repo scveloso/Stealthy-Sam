@@ -19,7 +19,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(IS_OS_WINDOWS 1)
 else()
-  message(FATAL_ERROR "OS ${CMAKE_SYSTEM_NAME} was not recognized")
+	message(FATAL_ERROR "OS ${CMAKE_SYSTEM_NAME} was not recognized")
 endif()
 
 # Create executable target
@@ -41,10 +41,10 @@ set(SOURCE_FILES
 		src/CollisionSystem.cpp
 		src/EnemySystem.cpp
 		src/MovementSystem.cpp
-    src/TextSystem.cpp
-    src/LightSystem.cpp
-    src/DecisionNode.cpp
-    src/EntityGenerator.cpp
+		src/TextSystem.cpp
+		src/LightSystem.cpp
+		src/DecisionNode.cpp
+		src/EntityGenerator.cpp
 
 		src/project_path.hpp
 		src/common.hpp
@@ -56,11 +56,11 @@ set(SOURCE_FILES
 		src/InputSystem.hpp
 		src/CollisionSystem.hpp
 		src/EnemySystem.hpp
-    src/MovementSystem.hpp
-    src/TextSystem.hpp
-    src/LightSystem.hpp
-    src/DecisionNode.hpp
-    src/EntityGenerator.hpp
+		src/MovementSystem.hpp
+		src/TextSystem.hpp
+		src/LightSystem.hpp
+		src/DecisionNode.hpp
+		src/EntityGenerator.hpp
 
 		src/common.hpp
 		src/Components/Cmp.hpp
@@ -74,13 +74,13 @@ set(SOURCE_FILES
 		src/Components/CollisionCmp.hpp
 		src/Components/EnemyCmp.hpp
 		src/Components/EnemyCmp.cpp
-    src/Components/MovementCmp.hpp
-    src/Components/MovementCmp.cpp
-    src/Components/ItemCmp.hpp
-    src/Components/ItemCmp.cpp
+		src/Components/MovementCmp.hpp
+		src/Components/MovementCmp.cpp
+		src/Components/ItemCmp.hpp
+		src/Components/ItemCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
-        )
+        src/SoundSystem.cpp src/SoundSystem.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
