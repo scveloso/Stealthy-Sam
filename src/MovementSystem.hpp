@@ -13,6 +13,8 @@ public:
 	void update(float elapsed_ms);
   bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void stopEntityMovement(Entity* entity);
+	void torch_cauldron_collision(int entityId, Transform* entityTransform);
+	void cauldronCheck(Entity *entity, Transform *entityTransform);
 
 private:
 	TransformCmp transformComponent;
@@ -20,4 +22,6 @@ private:
 	MovementCmp movementComponent;
 	ObjectManager objectManager;
 	GameStateCmp *gameState;
+
+
 };

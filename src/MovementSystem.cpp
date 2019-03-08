@@ -52,6 +52,8 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % LEFT == 0)
       {
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+          cauldronCheck(entity, entityTransform);
+
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -66,6 +68,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % RIGHT == 0)
       {
           entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -80,6 +83,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % DOWN == 0)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -94,6 +98,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % UP == 0)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -107,6 +112,15 @@ void MovementSystem::update(float elapsed_ms)
     }
   }
 }
+
+void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
+    if (entity->label.compare("Torch") == 0)
+          {
+              torch_cauldron_collision(entity->id, entityTransform);
+          }
+}
+
+
 
 void MovementSystem::stopEntityMovement(Entity* entity)
 {
@@ -124,17 +138,39 @@ bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTran
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-      if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
-      {
-        Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+            if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+            {
+                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
                     return true;
                 }
             }
+
         }
     }
 
     return false;
+}
+void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
+{
+    for (auto& it2 : collisionComponent.getmap())
+    {
+        int otherEntityId = it2.first;
+        if (otherEntityId != entityId)
+        {
+            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+
+            if (otherEntity->label.compare("Cauldron") == 0)
+            {
+                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+
+                if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
+                {
+                    otherEntity->active = true;
+                }
+            }
+        }
+    }
 }

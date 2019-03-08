@@ -68,11 +68,15 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
+	glfwWindowHint(GLFW_RESIZABLE, 0);
 #if __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-	glfwWindowHint(GLFW_RESIZABLE, 0);
+	// separate window size for Mac OS
+	// m_window = glfwCreateWindow((int)screen.x / 2, (int)screen.y / 2, "Stealthy Sam", nullptr, nullptr);
+
 	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Stealthy Sam", nullptr, nullptr);
+
 	if (m_window == nullptr)
 		return false;
 
