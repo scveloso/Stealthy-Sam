@@ -72,6 +72,7 @@ void main()
         en_beta = -0.95;
       }
       en_position[i]= vec2(enemy_position[i].x+(en_alpha*20), 800-enemy_position[i].y+(en_beta*12));
+      // en_position[i]= vec2(enemy_position[i].x, 800-enemy_position[i].y);
     }
 
 }
