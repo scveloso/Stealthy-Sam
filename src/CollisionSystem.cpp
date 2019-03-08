@@ -11,7 +11,7 @@
 //
 // Has access to CollisionCmp and GameStateCmp to update.
 // Has access to TransformCmp to know where everything is.
-// Has access to ItemCmp to toggle items as held. 
+// Has access to ItemCmp to toggle items as held.
 void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp tc, ItemCmp itc, GameStateCmp* gsc)
 {
 	objectManager = om;
@@ -159,14 +159,17 @@ bool CollisionSystem::handleClosets(Entity* entity)
 // TODO?: Maybe an inventory or more general way of holding items
 void CollisionSystem::handleTorches(Entity* entity)
 {
-	if (entity->label.compare("Torch") == 0)
-	{
-		// Stop drawing the picked up item
-		entity->active = false;
-		// Set Sam's held item to this entity
-		gameStateComponent->held_item = TORCH;
-		gameStateComponent->held_entity = entity;
-		itemComponent.pickUpItem(entity);
+	// Can only pick up item if not holding anything
+	if (!gameStateComponent->held_entity) {
+		if (entity->label.compare("Torch") == 0)
+		{
+			// Stop drawing the picked up item
+			entity->active = false;
+			// Set Sam's held item to this entity
+			gameStateComponent->held_item = TORCH;
+			gameStateComponent->held_entity = entity;
+			itemComponent.pickUpItem(entity);
+		}
 	}
 }
 

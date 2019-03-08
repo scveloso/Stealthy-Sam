@@ -125,9 +125,11 @@ bool World::init(vec2 screen)
 
 	m_water = new Water();
 	m_water->init();
-	//clear fragment shader arrays
+
+	// Clear fragment shader arrays
 	m_water->clear_enemy_position();
-	m_water->clearLights();
+	m_water->clearSamLight();
+	m_water->clearTorchPositions();
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("level_one.json"));
@@ -182,8 +184,6 @@ void World::clearMap()
 	delete ms;
 	delete ts;
 	delete ls;
-
-	m_water->clearLights();
 }
 
 // Releases all the associated resources

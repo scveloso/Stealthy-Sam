@@ -87,7 +87,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				case TORCH: {
 					entity = objectManager->makeEntity("Torch");
 
-					movementCmp.add(entity, 200.f, -0.1f);
+					movementCmp.add(entity, 400.f, -0.5f);
 					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/torch.png"));
 					collisionCmp.add(entity);
@@ -1132,7 +1132,7 @@ void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, C
 			Entity* entity = objectManager->makeEntity("Torch");
 
 			entity->active = false; // Sam is holding it
-			mc.add(entity, 200.f, -0.1f);
+			mc.add(entity, 400.f, -0.5f);
 			tc.add(entity, { 0, 0 }, { 2.5f, 2.0f }, 0.0);
 			dc.add(entity, textures_path("Dungeon/torch.png"));
 			cc.add(entity);
