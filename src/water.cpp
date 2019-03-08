@@ -10,6 +10,7 @@ bool Water::init() {
 	textWASD_position = TEXT_POSITION;
 	textE_position = TEXT_POSITION;
 	textR_position = TEXT_POSITION;
+
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
 	// Make the size slightly larger then the screen to crop the boundary
@@ -64,14 +65,22 @@ void Water::add_enemy_position(int i, vec2 position){
 	enemy_position[i+1]=y;
 }
 
+void Water::add_torch_position(int i, vec2 position){
+  float x= position.x;
+	float y= position.y;
+	torch_light[i]=x;
+	torch_light[i+1]=y;
+}
+
 void Water::add_enemy_direction(int i, float direction){
 	enemy_direction[i] = direction;
 }
 
 void Water::clear_enemy_position(){
 	for (int i=0; i < 10; i++){
-		enemy_position[i]=-40;
+		enemy_position[i]=-1000.f;
 		enemy_direction[i]=0;
+		torch_light[i]= -1000.f;
 	}
 }
 
@@ -101,6 +110,7 @@ void Water::draw(const mat3& projection) {
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
 	GLint r_position= glGetUniformLocation(effect.program, "r_position");
   GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
+	GLint tor_position= glGetUniformLocation(effect.program, "torch_light");
 
 	GLint re_cond= glGetUniformLocation(effect.program, "remove_r");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
@@ -115,6 +125,7 @@ void Water::draw(const mat3& projection) {
 	glUniform2f(t_position, textWASD_position.x, textWASD_position.y);
 	glUniform2fv(en_position, 5, enemy_position);
 	glUniform2fv(en_direction, 5, enemy_direction);
+	glUniform2fv(tor_position, 5, torch_light);
 
 
 	glUniform2f(e_position, textE_position.x, textE_position.y );

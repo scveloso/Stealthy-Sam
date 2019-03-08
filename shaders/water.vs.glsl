@@ -6,6 +6,7 @@ uniform vec2 text_position;
 uniform vec2 r_position;
 uniform vec2 circle_light_position;
 uniform vec2 enemy_position[5];
+uniform vec2 torch_light[5];
 
 
 
@@ -13,12 +14,15 @@ out vec2 uv; out vec2 s_position;
 out vec2 keye_position; out vec2 re_position;
 out vec2 t_position;
 out vec2 en_position[5];
+out vec2 tor_position[5];
 
 //adjustment variable
-float alpha =0;
-float beta=0;
-float en_alpha=0;
-float en_beta=0;
+float alpha;
+float beta;
+float en_alpha;
+float en_beta;
+float tor_alpha;
+float tor_beta;
 void main()
 {
     gl_Position = in_position;
@@ -73,6 +77,30 @@ void main()
       }
       en_position[i]= vec2(enemy_position[i].x+(en_alpha*20), 800-enemy_position[i].y+(en_beta*12));
       // en_position[i]= vec2(enemy_position[i].x, 800-enemy_position[i].y);
+    }
+
+    for(int i = 0; i < 5; i++)
+  	{
+      //tuning adjustment variable based on torch location range
+      if (torch_light[i].x <= 300){
+        tor_alpha = -0.95;
+      } else if( 300 < torch_light[i].x && torch_light[i].x <= 600){
+        tor_alpha = -0.31;
+      } else if( 600 < torch_light[i].x && torch_light[i].x <= 900){
+        tor_alpha = 0.32;
+      }else if (900 < torch_light[i].x){
+        tor_alpha = 0.95;
+      }
+     if (torch_light[i].y <= 200){
+        tor_beta = 0.95;
+      } else if( 200 < torch_light[i].y && torch_light[i].y <= 400){
+        tor_beta = 0.31;
+      } else if( 400 < torch_light[i].y && torch_light[i].y <= 600){
+        tor_beta = -0.32;
+      }else if (600 < torch_light[i].y){
+        tor_beta = -0.95;
+      }
+      tor_position[i]= vec2(torch_light[i].x+(tor_alpha*20), 800-torch_light[i].y+(tor_beta*12));
     }
 
 }

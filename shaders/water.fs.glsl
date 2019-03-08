@@ -15,6 +15,7 @@ in vec2 t_position;
 in vec2 keye_position;
 in vec2 re_position;
 in vec2 en_position[5];
+in vec2 tor_position[5];
 
 layout(location = 0) out vec4 color;
 
@@ -48,6 +49,7 @@ layout(location = 0) out vec4 color;
   float s[5];
   float t[5];
   float st[5];
+  float d_torch[5];
 
 float dimmer(float d) {
 
@@ -63,8 +65,22 @@ float dimmer(float d) {
 void main()
 {
     float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
-
+    //create circle of light around each torch;
+    int j=0;
+    for (int i = 0; i < 5; i++){
+      if (i==j){
+        d_torch[j]=(x- tor_position[j].x)*(x- tor_position[j].x)+ (y-tor_position[j].y)*(y-tor_position[j].y);
+      }
+      j++;
+    }
+    bool dt1 = d_torch[1] <= 70*70;
+    bool dt2 = d_torch[2] <= 70*70;
+    bool dt3 = d_torch[3] <= 70*70;
+    bool dt4 = d_torch[4] <= 70*70;
+    bool dt0 = d_torch[0] <= 100*100;
+    // float dt= (x- tor_position[0].x)*(x- tor_position[0].x)+ (y-tor_position[0].y)*(y-tor_position[0].y);
     float p = dimmer(d);
+
 
     int k=0;
     for(int i = 0; i < 5; i++)
@@ -115,6 +131,9 @@ void main()
 
     if (death_cond ==0){
       if (st1 || st2 || st3 || st4 || st0){
+        color= in_color;
+      }
+      else if (dt1 || dt2 || dt3 || dt4 || dt0){
         color= in_color;
       }
       else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 1){

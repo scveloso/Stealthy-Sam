@@ -27,11 +27,13 @@ public:
 	void add_enemy_position(int i, vec2 position);
 	// left =1; right =2; up =3; down=4; for direction
 	void add_enemy_direction(int i, float direction);
+	void add_torch_position(int i, vec2 position);
 	int showWASDText;
 	int showEText;
 	int showRText;
 	int death;
 	int remove_r;
+	GLfloat torch_light[10];
 
   //clear enemy_position array
 	void clear_enemy_position();
@@ -46,7 +48,8 @@ private:
 	vec2 textWASD_position;
 	vec2 textE_position;
 	vec2 textR_position;
-	GLfloat enemy_position[10]={0};
-	GLfloat enemy_direction[10]={0};
+	GLfloat enemy_position[10];
+	GLfloat enemy_direction[10];
+	// GLfloat torch_light[10]= {-100};
 
 };
