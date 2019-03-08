@@ -120,3 +120,4 @@ const int PILLAR_TOP = 166;
 const int PILLAR_MID = 198;
 const int PILLAR_BOT = 230;
 const int UNLIT_LIGHT = 381;
+const int LIT_LIGHT = 382;

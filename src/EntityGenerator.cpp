@@ -281,6 +281,16 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					collisionCmp.add(entity);
 					break;
 				}
+				case LIT_LIGHT: {
+					entity = objectManager->makeEntity("Couldron");
+
+
+					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
+					drawCmp.add(entity, textures_path("Dungeon/LIT_LIGHT.png"));
+					collisionCmp.add(entity);
+					entity->active = false;
+					break;
+				}
 				case PILLAR_TOP: {
 					entity = objectManager->makeEntity("PILLAR_TOP");
 
@@ -1074,7 +1084,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	// Proceed to handle the text box entities
 	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
 
-	if (room_path == map_path("level_one_to_four.json"))
+	if (room_path == map_path("level_one.json"))
 	{
 		generateBoss(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
 	}

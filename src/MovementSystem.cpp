@@ -52,6 +52,10 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % LEFT == 0)
       {
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+          if (entity->label.compare("Torch") == 0)
+          {
+              torch_couldron_collision(entity->id, entityTransform);
+          }
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -66,6 +70,10 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % RIGHT == 0)
       {
           entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
+          if (entity->label.compare("Torch") == 0)
+          {
+              torch_couldron_collision(entity->id, entityTransform);
+          }
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -124,17 +132,40 @@ bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTran
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-      if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
-      {
-        Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+            if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+            {
+                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
                     return true;
                 }
             }
+
         }
     }
 
     return false;
+}
+void MovementSystem::torch_couldron_collision(int entityId, Transform* entityTransform)
+{
+    for (auto& it2 : collisionComponent.getmap())
+    {
+        int otherEntityId = it2.first;
+        if (otherEntityId != entityId)
+        {
+            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+
+            if (otherEntity->label.compare("Couldron") == 0)
+            {
+                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+
+                if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
+                {
+                    std::cout << "Couldron hit" << std::endl;
+                    otherEntity->active = true;
+                }
+            }
+        }
+    }
 }

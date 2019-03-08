@@ -64,7 +64,7 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-        int keyUpdateAction = handleKeys(entity);
+        		int keyUpdateAction = handleKeys(entity);
 
 
 				if (handleClosets(entity))
