@@ -71,4 +71,7 @@ void LightSystem::update()
     water->torch_light[0]= -100;
     water->torch_light[1]= -100;
   }
+  else if (heldEntity && gameState->held_entity->label.compare("Torch") != 0) {
+   water->clearLights();
+  }
 }

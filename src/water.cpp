@@ -74,6 +74,7 @@ void Water::add_torch_position(int i, vec2 position){
 
 void Water::add_enemy_direction(int i, float direction){
 	enemy_direction[i] = direction;
+	enemy_direction[i+1]=0;
 }
 
 void Water::clear_enemy_position(){
