@@ -144,7 +144,7 @@ bool World::init(vec2 screen)
 	m_water->init();
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
-	generateEntities(map_path("0_to_four.json"));
+	generateEntities(map_path("level_one.json"));
 
 	return true;
 }
