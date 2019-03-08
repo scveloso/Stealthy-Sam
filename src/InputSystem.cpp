@@ -246,6 +246,8 @@ vec2 InputSystem::tryThrowVertical(Entity* heldEntity, Transform* entityTransfor
   entityTransform->m_position = torch_position;
   bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
 
+  torch_cauldron_collision(heldEntity->id, entityTransform);
+  
   if (movementInterrupted) {
     torch_position = { torch_position.x, torch_position.y - offset};
     entityTransform->m_position = torch_position;

@@ -52,10 +52,8 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % LEFT == 0)
       {
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
-          if (entity->label.compare("Torch") == 0)
-          {
-              torch_cauldron_collision(entity->id, entityTransform);
-          }
+          cauldronCheck(entity, entityTransform);
+
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -70,10 +68,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % RIGHT == 0)
       {
           entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
-          if (entity->label.compare("Torch") == 0)
-          {
-              torch_cauldron_collision(entity->id, entityTransform);
-          }
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -88,6 +83,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % DOWN == 0)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -102,6 +98,7 @@ void MovementSystem::update(float elapsed_ms)
       if (movementDirection % UP == 0)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
+          cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity->id, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
@@ -115,6 +112,15 @@ void MovementSystem::update(float elapsed_ms)
     }
   }
 }
+
+void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
+    if (entity->label.compare("Torch") == 0)
+          {
+              torch_cauldron_collision(entity->id, entityTransform);
+          }
+}
+
+
 
 void MovementSystem::stopEntityMovement(Entity* entity)
 {
