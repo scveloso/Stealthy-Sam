@@ -15,6 +15,7 @@ in vec2 t_position;
 in vec2 keye_position;
 in vec2 re_position;
 in vec2 en_position[5];
+in vec2 tor_position[5];
 
 layout(location = 0) out vec4 color;
 
@@ -42,9 +43,13 @@ layout(location = 0) out vec4 color;
   float tri_h=25;
   float displace=15;
   float vdisplace = 10;
+  // up and down control variable
+  float a=0;
+  float b=1;
   float s[5];
   float t[5];
   float st[5];
+  float d_torch[5];
 
 float dimmer(float d) {
 
@@ -60,8 +65,22 @@ float dimmer(float d) {
 void main()
 {
     float d= (x - sp.x)*(x - sp.x)+(y- sp.y)*(y-sp.y);
-
+    //create circle of light around each torch;
+    int j=0;
+    for (int i = 0; i < 5; i++){
+      if (i==j){
+        d_torch[j]=(x- tor_position[j].x)*(x- tor_position[j].x)+ (y-tor_position[j].y)*(y-tor_position[j].y);
+      }
+      j++;
+    }
+    bool dt1 = d_torch[1] <= 70*70;
+    bool dt2 = d_torch[2] <= 70*70;
+    bool dt3 = d_torch[3] <= 70*70;
+    bool dt4 = d_torch[4] <= 70*70;
+    bool dt0 = d_torch[0] <= 100*100;
+    // float dt= (x- tor_position[0].x)*(x- tor_position[0].x)+ (y-tor_position[0].y)*(y-tor_position[0].y);
     float p = dimmer(d);
+
 
     int k=0;
     for(int i = 0; i < 5; i++)
@@ -70,22 +89,29 @@ void main()
       if (direction == 1.0){
         displace = -(displace);
         tri_w = -tri_w;
-      } else if (direction == 3.0){
+      }
+      else if (direction == 3.0){
         displace=0;
+        vdisplace= 5+vdisplace;
+        a=-1;
+        b=0;
         float temp = tri_w;
         tri_w= tri_h;
-        tri_h= temp;
-      } else if (direction == 4.0){
+        tri_h= -temp;
+      }
+      else if (direction == 4.0){
         displace=0;
-        vdisplace= -vdisplace;
+        vdisplace= -(5+vdisplace);
+        a=-1;
+        b=0;
         float temp = tri_w;
-        tri_w= -tri_h;
+        tri_w= tri_h;
         tri_h= temp;
       }
       //calculate the 3 vertex points (p0, p1, p2) of the view cone/traingle
       vec2 p0= vec2(en_position[i].x+displace, en_position[i].y+vdisplace);
       vec2 p1= p0+ vec2(tri_w, -tri_h);
-      vec2 p2= p1 + vec2(0,tri_h*2);
+      vec2 p2= p1 + vec2(a*tri_w*2,b*tri_h*2);
       float Area = 0.5 *(-p1.y*p2.x + p0.y*(-p1.x + p2.x) + p0.x*(p1.y - p2.y) + p1.x*p2.y);
       if (i == k){
         //use barycentric coordinate's implicit equation to decide if a point is inside the triangle
@@ -105,6 +131,9 @@ void main()
 
     if (death_cond ==0){
       if (st1 || st2 || st3 || st4 || st0){
+        color= in_color;
+      }
+      else if (dt1 || dt2 || dt3 || dt4 || dt0){
         color= in_color;
       }
       else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 1){

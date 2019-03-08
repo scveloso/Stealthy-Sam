@@ -30,12 +30,13 @@ void LightSystem::update()
  // grab all existing enemy
  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
 
-  // TODO: Get water and shader to support multiple circle of light positions
+  int e = 0;
   for (auto& torchEntity : torchEntities)
 	{
     if (torchEntity->active) {
       Transform* torchTransform = transformCmp.getTransform(torchEntity);
-      water->add_position(torchTransform->m_position);
+      water->add_torch_position(e,torchTransform->m_position);
+      e= e+2;
     }
 	}
 
@@ -67,5 +68,10 @@ void LightSystem::update()
   if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
     vec2 s_position = gameState->sam_position;
     water->add_position(s_position);
+    water->torch_light[0]= -100;
+    water->torch_light[1]= -100;
+  }
+  else if (heldEntity && gameState->held_entity->label.compare("Torch") != 0) {
+   water->clearLights();
   }
 }
