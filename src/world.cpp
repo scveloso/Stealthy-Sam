@@ -25,18 +25,11 @@ LightSystem* ls;
 
 // Game State component
 GameStateCmp* gameState;
-
-
-
+SoundSystem* soundSystem;
 
 // Same as static in c, local to compilation unit
 namespace
 {
-	const size_t MAX_TURTLES = 15;
-	const size_t MAX_FISH = 5;
-	const size_t TURTLE_DELAY_MS = 2000;
-	const size_t FISH_DELAY_MS = 5000;
-
 	namespace
 	{
 		void glfw_err_cb(int error, const char* desc)
@@ -117,24 +110,10 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
-	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-	m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-	m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
-
-	if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr)
-	{
-		fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-			audio_path("music.wav"),
-			audio_path("salmon_dead.wav"),
-			audio_path("salmon_eat.wav"));
-		return false;
-	}
-
-	// Playing background music undefinitely
-	Mix_PlayMusic(m_background_music, -1);
-	fprintf(stderr, "Loaded music\n");
 	m_current_speed = 1.f;
 
+	soundSystem = new SoundSystem();
+	soundSystem->playBackgroundMusic();
 
 	// Create initial game state
 	gameState = new GameStateCmp();
@@ -172,8 +151,6 @@ void World::makeSystems()
 	ls = new LightSystem();
 
 	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState);
-
-
 }
 
 
@@ -209,8 +186,8 @@ void World::destroy()
 
 	if (m_background_music != nullptr)
 		Mix_FreeMusic(m_background_music);
-	if (m_salmon_dead_sound != nullptr)
-		Mix_FreeChunk(m_salmon_dead_sound);
+	if (m_death_sound != nullptr)
+		Mix_FreeChunk(m_death_sound);
 	if (m_salmon_eat_sound != nullptr)
 		Mix_FreeChunk(m_salmon_eat_sound);
 
@@ -240,58 +217,80 @@ void World::handleUpdateAction(int updateAction)
 {
 	if (updateAction != NO_CHANGE)
 	{
-        if (updateAction == CHANGE_ROOM_ONE_TO_TWO)
+		switch (updateAction)
 		{
-            clearMap();
-            gameState->current_room = ROOM_TWO_GUID;
-            generateEntities(map_path("level_one_to_two.json"));
-						m_water->clear_enemy_position();
-        }
-		else if (updateAction == CHANGE_ROOM_TWO_TO_ONE)
-		{
-			m_water->clear_enemy_position();
-			if (gameState->level_two_key && gameState->level_three_key)
+			case CHANGE_ROOM_ONE_TO_TWO:
 			{
 				clearMap();
-                gameState->current_room = ROOM_ONE_GUID;
-                generateEntities(map_path("level_two_to_one_with_key.json"));
-            }
-			else
+				gameState->current_room = ROOM_TWO_GUID;
+				generateEntities(map_path("level_one_to_two.json"));
+				m_water->clear_enemy_position();
+				break;
+			}
+			case CHANGE_ROOM_TWO_TO_ONE:
+			{
+				m_water->clear_enemy_position();
+				if (gameState->level_two_key && gameState->level_three_key)
+				{
+					clearMap();
+					gameState->current_room = ROOM_ONE_GUID;
+					generateEntities(map_path("level_two_to_one_with_key.json"));
+				}
+				else
+				{
+					clearMap();
+					gameState->current_room = ROOM_ONE_GUID;
+					generateEntities(map_path("level_two_to_one.json"));
+				}
+				break;
+			}
+			case CHANGE_ROOM_TWO_TO_THREE:
 			{
 				clearMap();
-                gameState->current_room = ROOM_ONE_GUID;
-                generateEntities(map_path("level_two_to_one.json"));
-            }
+				gameState->current_room = ROOM_THREE_GUID;
+				generateEntities(map_path("level_two_to_three.json"));
+				m_water->clear_enemy_position();
+				break;
+			}
+			case CHANGE_ROOM_THREE_TO_TWO:
+			{
+				clearMap();
+				gameState->current_room = ROOM_TWO_GUID;
+				generateEntities(map_path("level_three_to_two.json"));
+				m_water->clear_enemy_position();
+				break;
+			}
+			case CHANGE_ROOM_ONE_TO_FOUR:
+			{
+				clearMap();
+				gameState->current_room = ROOM_FOUR_GUID;
+				generateEntities(map_path("level_one_to_four.json"));
+				m_water->clear_enemy_position();
+
+				// Trigger boss music
+				soundSystem->playBossMusic();
+				break;
+			}
+			case RESET_GAME:
+			{
+				gameState->init();
+				clearMap();
+				generateEntities(map_path("level_one.json"));
+				m_water->restart();
+				m_water->clear_enemy_position();
+				break;
+			}
+			case SAM_DEATH:
+			{
+				soundSystem->playDeath();
+				break;
+			}
+
+			default:
+			{
+			    printf("Update Action %d was not recognized", updateAction);
+			}
 		}
-        else if (updateAction == CHANGE_ROOM_TWO_TO_THREE)
-        {
-            clearMap();
-            gameState->current_room = ROOM_THREE_GUID;
-            generateEntities(map_path("level_two_to_three.json"));
-						m_water->clear_enemy_position();
-        }
-        else if (updateAction == CHANGE_ROOM_THREE_TO_TWO)
-        {
-            clearMap();
-            gameState->current_room = ROOM_TWO_GUID;
-            generateEntities(map_path("level_three_to_two.json"));
-						m_water->clear_enemy_position();
-        }
-		else if (updateAction == CHANGE_ROOM_ONE_TO_FOUR)
-		{
-			clearMap();
-			gameState->current_room = ROOM_FOUR_GUID;
-			generateEntities(map_path("level_one_to_four.json"));
-			m_water->clear_enemy_position();
-		}
-        else if (updateAction == RESET_GAME)
-        {
-            gameState->init();
-            clearMap();
-            generateEntities(map_path("level_one.json"));
-            m_water->restart();
-						m_water->clear_enemy_position();
-        }
 	}
 }
 

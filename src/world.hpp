@@ -20,6 +20,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <Components/GameStateCmp.hpp>
+#include <SoundSystem.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
@@ -84,7 +85,7 @@ private:
 	float m_current_speed;
 
 	Mix_Music* m_background_music;
-	Mix_Chunk* m_salmon_dead_sound;
+	Mix_Chunk* m_death_sound;
 	Mix_Chunk* m_salmon_eat_sound;
 
 	// C++ rng
