@@ -77,7 +77,7 @@ void main()
     bool dt2 = d_torch[2] <= 70*70;
     bool dt3 = d_torch[3] <= 70*70;
     bool dt4 = d_torch[4] <= 70*70;
-    bool dt0 = d_torch[0] <= 100*100;
+    bool dt0 = d_torch[0] <= 70*70;
     // float dt= (x- tor_position[0].x)*(x- tor_position[0].x)+ (y-tor_position[0].y)*(y-tor_position[0].y);
     float p = dimmer(d);
 
