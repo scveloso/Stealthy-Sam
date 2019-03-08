@@ -28,8 +28,8 @@ public:
 	// left =1; right =2; up =3; down=4; for direction
 	void add_enemy_direction(int i, float direction);
 	void addTorchPosition(int i, vec2 position);
-	void reinitializeTorchPositions();
-	
+	void clearTorchPositions();
+
 	int showWASDText;
 	int showEText;
 	int showRText;
@@ -37,11 +37,11 @@ public:
 	int remove_r;
 	GLfloat torch_light[10];
 
-  //clear enemy_position array
+  // Clear enemy_position array
 	void clear_enemy_position();
 
-	// Clear light positions on room change
-	void clearLights();
+	// Clear Sam's light when his held torch is thrown
+	void clearSamLight();
 
 private:
 	// When salmon is alive, the time is set to -1

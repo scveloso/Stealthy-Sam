@@ -26,7 +26,7 @@ void LightSystem::update()
   // Grab all existing and active torches, draw circles of light around them
   std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
   int e = 0;
-  water->reinitializeTorchPositions();
+  water->clearTorchPositions();
   for (auto& torchEntity : torchEntities)
   {
     if (torchEntity->active) {
@@ -78,9 +78,7 @@ void LightSystem::update()
   if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
     vec2 s_position = gameState->sam_position;
     water->add_position(s_position);
-    // water->torch_light[0]= -100;
-    // water->torch_light[1]= -100;
   } else if (!heldEntity || gameState->held_entity->label.compare("Torch") != 0) {
-    water->clearLights();
+    water->clearSamLight();
   }
 }

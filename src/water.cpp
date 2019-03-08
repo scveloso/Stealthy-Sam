@@ -65,7 +65,7 @@ void Water::add_enemy_position(int i, vec2 position){
 	enemy_position[i+1]=y;
 }
 
-void Water::reinitializeTorchPositions() {
+void Water::clearTorchPositions() {
 	for (int i=0; i < 10; i++){
 		torch_light[i]= -1000.f;
 	}
@@ -162,8 +162,6 @@ void Water::restart() {
 	death = 0;
 }
 
-// Clear light positions on room change
-// TODO: Circle light position will be an array later and can clear the array instead
-void Water::clearLights() {
+void Water::clearSamLight() {
 	circle_light_position = { -1000.f, -1000.f };
 }
