@@ -13,3 +13,7 @@ const int CHANGE_ROOM_ONE_TO_FOUR = 6;
 
 // Resetting game
 const int RESET_GAME = 5;
+
+
+// Game Logic actions
+const int SAM_DEATH = 7;
