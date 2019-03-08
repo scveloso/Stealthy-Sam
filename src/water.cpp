@@ -71,6 +71,7 @@ void Water::add_enemy_direction(int i, float direction){
 void Water::clear_enemy_position(){
 	for (int i=0; i < 10; i++){
 		enemy_position[i]=-40;
+		enemy_direction[i]=0;
 	}
 }
 

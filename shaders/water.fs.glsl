@@ -42,6 +42,9 @@ layout(location = 0) out vec4 color;
   float tri_h=25;
   float displace=15;
   float vdisplace = 10;
+  // up and down control variable
+  float a=0;
+  float b=1;
   float s[5];
   float t[5];
   float st[5];
@@ -72,20 +75,26 @@ void main()
         tri_w = -tri_w;
       } else if (direction == 3.0){
         displace=0;
+        vdisplace= 3*vdisplace;
+        a=-2;
+        b=0;
         float temp = tri_w;
         tri_w= tri_h;
-        tri_h= temp;
-      } else if (direction == 4.0){
+        tri_h= -temp;
+      }
+      else if (direction == 4.0){
         displace=0;
-        vdisplace= -vdisplace;
+        vdisplace= -3*vdisplace;
+        a=-2;
+        b=0;
         float temp = tri_w;
-        tri_w= -tri_h;
+        tri_w= tri_h;
         tri_h= temp;
       }
       //calculate the 3 vertex points (p0, p1, p2) of the view cone/traingle
       vec2 p0= vec2(en_position[i].x+displace, en_position[i].y+vdisplace);
       vec2 p1= p0+ vec2(tri_w, -tri_h);
-      vec2 p2= p1 + vec2(0,tri_h*2);
+      vec2 p2= p1 + vec2(a*tri_w,b*tri_h*2);
       float Area = 0.5 *(-p1.y*p2.x + p0.y*(-p1.x + p2.x) + p0.x*(p1.y - p2.y) + p1.x*p2.y);
       if (i == k){
         //use barycentric coordinate's implicit equation to decide if a point is inside the triangle
