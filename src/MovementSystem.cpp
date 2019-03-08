@@ -54,7 +54,7 @@ void MovementSystem::update(float elapsed_ms)
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
           if (entity->label.compare("Torch") == 0)
           {
-              torch_couldron_collision(entity->id, entityTransform);
+              torch_cauldron_collision(entity->id, entityTransform);
           }
           if (is_movement_interrupted(entity->id, entityTransform))
           {
@@ -72,7 +72,7 @@ void MovementSystem::update(float elapsed_ms)
           entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
           if (entity->label.compare("Torch") == 0)
           {
-              torch_couldron_collision(entity->id, entityTransform);
+              torch_cauldron_collision(entity->id, entityTransform);
           }
           if (is_movement_interrupted(entity->id, entityTransform))
           {
@@ -147,7 +147,7 @@ bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTran
 
     return false;
 }
-void MovementSystem::torch_couldron_collision(int entityId, Transform* entityTransform)
+void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
     for (auto& it2 : collisionComponent.getmap())
     {
@@ -156,13 +156,12 @@ void MovementSystem::torch_couldron_collision(int entityId, Transform* entityTra
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-            if (otherEntity->label.compare("Couldron") == 0)
+            if (otherEntity->label.compare("Cauldron") == 0)
             {
                 Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
-                    std::cout << "Couldron hit" << std::endl;
                     otherEntity->active = true;
                 }
             }

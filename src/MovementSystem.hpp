@@ -13,7 +13,7 @@ public:
 	void update(float elapsed_ms);
   bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void stopEntityMovement(Entity* entity);
-	void torch_couldron_collision(int entityId, Transform* entityTransform);
+	void torch_cauldron_collision(int entityId, Transform* entityTransform);
 
 private:
 	TransformCmp transformComponent;

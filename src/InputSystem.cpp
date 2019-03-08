@@ -229,7 +229,7 @@ vec2 InputSystem::tryThrowHorizontal(Entity* heldEntity, Transform* entityTransf
   entityTransform->m_position = torch_position;
   bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
 
-  torch_couldron_collision(heldEntity->id, entityTransform);
+  torch_cauldron_collision(heldEntity->id, entityTransform);
 
   if (movementInterrupted) {
     torch_position = { torch_position.x - offset, torch_position.y };
@@ -266,7 +266,8 @@ bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransfo
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-            if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+            if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0) ||
+            (otherEntity->label.compare("Cauldron") == 0))
             {
                 Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 
@@ -280,7 +281,7 @@ bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransfo
 
     return false;
 }
-void InputSystem::torch_couldron_collision(int entityId, Transform* entityTransform)
+void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
   for (auto& it2 : collisionComponent.getmap())
   {
@@ -289,7 +290,7 @@ void InputSystem::torch_couldron_collision(int entityId, Transform* entityTransf
     {
       Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-      if (otherEntity->label.compare("Couldron") == 0)
+      if (otherEntity->label.compare("Cauldron") == 0)
       {
         Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 

@@ -272,21 +272,21 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					collisionCmp.add(entity);
 					break;
 				}
-				case UNLIT_LIGHT: {
-					entity = objectManager->makeEntity("UNLIT_LIGHT");
+				case UNLIT_CAULDRON: {
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/UNLIT_LIGHT.png"));
+					drawCmp.add(entity, textures_path("Dungeon/UNLIT_CAULDRON.png"));
 					collisionCmp.add(entity);
 					break;
 				}
-				case LIT_LIGHT: {
-					entity = objectManager->makeEntity("Couldron");
+				case LIT_CAULDRON: {
+					entity = objectManager->makeEntity("Cauldron");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/LIT_LIGHT.png"));
+					drawCmp.add(entity, textures_path("Dungeon/LIT_CAULDRON.png"));
 					collisionCmp.add(entity);
 					entity->active = false;
 					break;
