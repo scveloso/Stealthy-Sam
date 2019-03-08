@@ -3,15 +3,15 @@
 // Class to create and store entities for a given room
 SoundSystem::SoundSystem()
 {
-    background_music = Mix_LoadMUS(audio_path("spooky_background.mp3"));
+    background_music = Mix_LoadMUS(audio_path("spooky_background.wav"));
     death_sound = Mix_LoadWAV(audio_path("death_sound.wav"));
     boss_background_music = Mix_LoadMUS(audio_path("boss_background.wav"));
     if (background_music == nullptr || death_sound == nullptr || boss_background_music == nullptr)
     {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("spooky_background.mp3"),
+                audio_path("spooky_background.wav"),
                 audio_path("death_sound.wav"),
-                audio_path("spooky_background.mp3"));
+                audio_path("boss_background.wav"));
     }
 }
 
