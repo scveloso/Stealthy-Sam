@@ -17,3 +17,5 @@ const int RESET_GAME = 5;
 
 // Game Logic actions
 const int SAM_DEATH = 7;
+// Used to trigger sound effects
+const int KEY_PICKUP_EVENT = 8;
