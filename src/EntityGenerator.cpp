@@ -76,7 +76,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					entity = objectManager->getEntity(SAMS_GUID);
 
 					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/sam.png"));
+					drawCmp.addFull(entity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
+					textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
+					textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
+					textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png")
+					, textures_path("Dungeon/sam_step2.png"));
 					//drawCmp.add(entity, textures_path("sam/16.png"));
 					inputCmp.add(entity);
 					movementCmp.add(entity, 200.f, 0);

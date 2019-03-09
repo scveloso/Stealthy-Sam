@@ -141,7 +141,20 @@ void DrawSystem::update(const mat3 projection)
 			// Enabling and binding texture to slot 0
 			glActiveTexture(GL_TEXTURE0);
 			//gets first texture need to make it work for changing textures
-			glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+
+			if (entity->label == "Player") {
+                Transform* samTransform = transformComponent.getTransform(entity);
+              gameState->sam_position = samTransform->m_position;
+
+                if (samTransform->facingDirection % 2 == 0) {
+                    glBindTexture(GL_TEXTURE_2D, draw->up.id);
+                } else {
+                    glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+                }
+            } else {
+                glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+            }
+
 
 			// Setting uniform values to the currently bound program
 			glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&draw->transform);
