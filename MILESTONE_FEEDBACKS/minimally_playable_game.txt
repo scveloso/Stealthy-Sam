@@ -1,0 +1,19 @@
+TEAM 5 -- Stealthy Sam
+
+===================================================================
+OVERALL GRADING (87.5)
+
+* Core part:
+  - Game is almost playable for two minutes (-2.5).
+  - Decision trees are implemented for the ghosts.
+  - Help window is included.
+  - Assets included. Player and ghosts faces the right direction based on user input.
+  - Game executes and terminates smoothly. Game resets smoothly.
+  - Noticeable bug: Light following the player (-5).
+* Creative Part (20/25):
+  - Fog of mansion (war) (+5).
+  - The visuals and sprites are overhauled (+10)
+  - Refactoring towards ECS design paradigm (+5)
+  
+
+- Got credit from last time: interaction with closet.
