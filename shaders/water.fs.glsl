@@ -73,11 +73,13 @@ void main()
       }
       j++;
     }
-    bool dt1 = d_torch[1] <= 70*70;
-    bool dt2 = d_torch[2] <= 70*70;
-    bool dt3 = d_torch[3] <= 70*70;
-    bool dt4 = d_torch[4] <= 70*70;
-    bool dt0 = d_torch[0] <= 70*70;
+
+	int r = 150;
+    bool dt1 = d_torch[1] <= r*r;
+    bool dt2 = d_torch[2] <= r*r;
+    bool dt3 = d_torch[3] <= r*r;
+    bool dt4 = d_torch[4] <= r*r;
+    bool dt0 = d_torch[0] <= r*r;
     // float dt= (x- tor_position[0].x)*(x- tor_position[0].x)+ (y-tor_position[0].y)*(y-tor_position[0].y);
     float p = dimmer(d);
 
@@ -134,7 +136,22 @@ void main()
         color= in_color;
       }
       else if (dt1 || dt2 || dt3 || dt4 || dt0){
-        color= in_color;
+		
+		float k;
+		if(dt1){k = dimmer(d_torch[1]);}
+		if(dt2){k = dimmer(d_torch[2]);}
+		if(dt3){k = dimmer(d_torch[3]);}
+		if(dt4){k = dimmer(d_torch[4]);}
+		if(dt0){k = dimmer(d_torch[0]);}
+
+
+		if(p > k){
+        color= in_color*p;
+		}else{
+		//if (in_color[0] <= in_color[0]*k || in_color[1] <= in_color[1]*k || in_color[2] <= in_color[2]*k || in_color[3] <= in_color[3]*k){
+		color= in_color*k;
+		}
+
       }
       else if (x <= x0+w && x >= x0-w && y <= y0+h && y >= y0-h && text_cond == 1){
         color= (in_color);
