@@ -8,12 +8,15 @@
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
 	transformComponent = tc;
+	movementComponent = mc;
 	gameState = gameStateCmp;
+	stepTimer = 10;
+	curStep = true;
 }
 
 bool DrawSystem::setup()
@@ -144,13 +147,56 @@ void DrawSystem::update(const mat3 projection)
 
 			if (entity->label == "Player") {
                 Transform* samTransform = transformComponent.getTransform(entity);
-              gameState->sam_position = samTransform->m_position;
+                gameState->sam_position = samTransform->m_position;
+                int movDir = movementComponent.getMovement(entity)->movementDirection;
 
-                if (samTransform->facingDirection % 2 == 0) {
-                    glBindTexture(GL_TEXTURE_2D, draw->up.id);
+                if (samTransform->facingDirection == 2) {
+                    if (movDir != 1) {
+                        if (curStep) {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepup1.id);
+                        } else {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepup2.id);
+                        }
+                        stepTimer--;
+                        if (stepTimer < 1) {
+                            curStep = !curStep;
+                            stepTimer = 10;
+                        }
+                    } else {
+                        glBindTexture(GL_TEXTURE_2D, draw->up.id);
+                    }
+                } else if (samTransform->facingDirection == 3) {
+                    if (movDir != 1) {
+                        if (curStep) {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepdown1.id);
+                        } else {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepdown2.id);
+                        }
+                        stepTimer--;
+                        if (stepTimer < 1) {
+                            curStep = !curStep;
+                            stepTimer = 10;
+                        }
+                    } else {
+                        glBindTexture(GL_TEXTURE_2D, draw->down.id);
+                    }
                 } else {
-                    glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+                    if (movDir != 1) {
+                        if (curStep) {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepside1.id);
+                        } else {
+                            glBindTexture(GL_TEXTURE_2D, draw->stepside2.id);
+                        }
+                        stepTimer--;
+                        if (stepTimer < 1) {
+                            curStep = !curStep;
+                            stepTimer = 10;
+                        }
+                    } else {
+                        glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+                    }
                 }
+
             } else {
                 glBindTexture(GL_TEXTURE_2D, draw->texture.id);
             }

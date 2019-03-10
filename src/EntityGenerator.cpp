@@ -1152,7 +1152,7 @@ void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, C
 // Set-up DrawSystem, InputSystem, CollisionSystem, etc.
 void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
 {
-	drawSystem->init(*objectManager, dc, tc, gameState);
+	drawSystem->init(*objectManager, dc, tc, mc, gameState);
 	inputSystem->init(*objectManager, ic, tc, cc, mc, ec, itc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, itc, gameState);
 	enemySystem->init(*objectManager, tc, ec, mc, itc);

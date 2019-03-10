@@ -1,11 +1,12 @@
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"
+#include "Components/MovementCmp.hpp"
 #include "ObjectManager.hpp"
 
 class DrawSystem
 {
 public:
-	void init(ObjectManager om, DrawCmp dc, TransformCmp tc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager om, DrawCmp dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp);
 	void update(const mat3 projection);
 	bool setup();
 	vec2 s_position;
@@ -16,6 +17,10 @@ public:
 private:
 	DrawCmp drawComponent;
 	TransformCmp transformComponent;
+	MovementCmp movementComponent;
 	ObjectManager objectManager;
 	GameStateCmp* gameState;
+
+	int stepTimer;
+	bool curStep;
 };
