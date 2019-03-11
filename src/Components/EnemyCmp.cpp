@@ -8,6 +8,8 @@ void EnemyCmp::add(Entity* entity, int patrolX, int patrolY) {
 	enemy->patrolX = patrolX;
 	enemy->patrolY = patrolY;
 	enemy->start = { 0,0 };
+	enemy->t = 0.0f;
+	enemy->dir = 1;
 	enemy_map[entity->id] = enemy;
 }
 

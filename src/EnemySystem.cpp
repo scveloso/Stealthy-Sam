@@ -72,7 +72,7 @@ void EnemySystem::update(float elapsed_ms) {
 		Transform *et =  transformComponent.getTransform(enemyEntity);
 
 		if (enemy->action == PATROL) {
-			patrolEnemy(enemy, enemyEntity, et);
+			patrolEnemy(enemy, enemyEntity, et, elapsed_ms);
 		} else if (enemy->action == CHASE_SAM) {
 			chaseTarget(enemy, et, samTransform, enemyEntity);
 		} else if (enemy->action == RETURN_TO_PATROL) {
@@ -184,45 +184,83 @@ void EnemySystem::returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* en
 }
 
 // Set the enemy on patrol
-void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et) {
-	if (enemy->patrolX != 0) {
-		if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
-			movementComponent.setMovementDirection(enemyEntity, RIGHT);
-			enemy->start = et->m_position;
-			et->facingDirection = RIGHT;
-		}
+void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, float elapsed_ms) {
 
-		if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
-			movementComponent.removeMovementDirection(enemyEntity, RIGHT);
-			movementComponent.setMovementDirection(enemyEntity, LEFT);
-			et->facingDirection = LEFT;
+	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
+		enemy->start = et->m_position;
+		movementComponent.setMovementDirection(enemyEntity, 99);
 		}
-
-		if (et->m_position.x < enemy->start.x) {
-			movementComponent.removeMovementDirection(enemyEntity, LEFT);
-			movementComponent.setMovementDirection(enemyEntity, RIGHT);
-			et->facingDirection = RIGHT;
-		}
-	}
 	else {
-		if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
-			movementComponent.setMovementDirection(enemyEntity, UP);
-			enemy->start = et->m_position;
-			et->facingDirection = UP;
+
+		vec2 b = enemy->start;
+		vec2 c = { b.x + enemy->patrolX + 100, b.y };
+		vec2 a = { b.x, b.y - 900 };
+		vec2 d = { c.x, c.y - 900 };
+		std::vector<vec2> spline;
+		spline.emplace_back(a);
+		spline.emplace_back(b);
+		spline.emplace_back(c);
+		spline.emplace_back(d);
+
+		if (enemy->t < 0.99f) {
+
+			vec2 ans = crSpline(enemy->t += 0.005, spline, enemy->dir);
+			transformComponent.getTransform(enemyEntity)->m_position = ans;
+			
+		}
+		else {
+			enemy->t = 0.0f;
+			
+			if (enemy->dir == 1) {
+				enemy->dir = 0;
+			}
+			else {
+				enemy->dir = 1;
+			}
 		}
 
-		if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
-			movementComponent.removeMovementDirection(enemyEntity, UP);
-			movementComponent.setMovementDirection(enemyEntity, DOWN);
-			et->facingDirection = DOWN;
-		}
-
-		if (et->m_position.y < enemy->start.y) {
-			movementComponent.removeMovementDirection(enemyEntity, DOWN);
-			movementComponent.setMovementDirection(enemyEntity, UP);
-			et->facingDirection = UP;
-		}
+		
 	}
+
+
+	//if (enemy->patrolX != 0) {
+	//	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
+	//		movementComponent.setMovementDirection(enemyEntity, RIGHT);
+	//		enemy->start = et->m_position;
+	//		et->facingDirection = RIGHT;
+	//	}
+
+	//	if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
+	//		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
+	//		movementComponent.setMovementDirection(enemyEntity, LEFT);
+	//		et->facingDirection = LEFT;
+	//	}
+
+	//	if (et->m_position.x < enemy->start.x) {
+	//		movementComponent.removeMovementDirection(enemyEntity, LEFT);
+	//		movementComponent.setMovementDirection(enemyEntity, RIGHT);
+	//		et->facingDirection = RIGHT;
+	//	}
+	//}
+	//else {
+	//	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
+	//		movementComponent.setMovementDirection(enemyEntity, UP);
+	//		enemy->start = et->m_position;
+	//		et->facingDirection = UP;
+	//	}
+
+	//	if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
+	//		movementComponent.removeMovementDirection(enemyEntity, UP);
+	//		movementComponent.setMovementDirection(enemyEntity, DOWN);
+	//		et->facingDirection = DOWN;
+	//	}
+
+	//	if (et->m_position.y < enemy->start.y) {
+	//		movementComponent.removeMovementDirection(enemyEntity, DOWN);
+	//		movementComponent.setMovementDirection(enemyEntity, UP);
+	//		et->facingDirection = UP;
+	//	}
+	//}
 }
 
 // Given an enemy and where Sam is, decide what the next action of the

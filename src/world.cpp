@@ -143,8 +143,8 @@ bool World::init(vec2 screen)
 
 	for (float i = 0; i < (float)spline.size() - 3; i += 0.01f) {
 
-		vec2 ans = crSpline(i, spline);
-		printf("%f x:%f y:%f \n", i, ans.x, ans.y);
+		vec2 ans = crSpline(i, spline, 1);
+		//printf("%f x:%f y:%f \n", i, ans.x, ans.y);
 	}
 
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
