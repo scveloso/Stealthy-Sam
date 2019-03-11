@@ -213,9 +213,11 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, 
 			
 			if (enemy->dir == 1) {
 				enemy->dir = 0;
+				et->facingDirection = LEFT;
 			}
 			else {
 				enemy->dir = 1;
+				et->facingDirection = RIGHT;
 			}
 		}
 
