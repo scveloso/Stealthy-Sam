@@ -14,6 +14,14 @@ public:
 struct Draw : public Renderable
 {
 	Texture texture;
+	Texture up;
+	Texture down;
+	Texture stepup1;
+	Texture stepup2;
+	Texture stepdown1;
+    Texture stepdown2;
+    Texture stepside1;
+    Texture stepside2;
 };
 
 struct Transform
