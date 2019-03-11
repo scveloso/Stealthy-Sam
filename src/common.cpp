@@ -282,3 +282,31 @@ void Renderable::transform_end()
 {
 	//
 }
+
+vec2 crSpline(float t, std::vector<vec2> path)
+{
+	int pt1;
+	int pt2;
+	int pt3;
+	int pt4;
+
+	pt2 = floor(t) + 1;
+	pt3 = pt2 + 1;
+	pt4 = pt3 + 1;
+	pt1 = pt2 - 1;
+
+	t = t - floor(t);
+
+	printf("%d, %d, %d, %d \n", pt1, pt2, pt3, pt4);
+
+	float m1 = -t*t*t + 2.0f*t*t - t;
+	float m2 = 3.0*t*t*t - 5.0*t*t + 2.0f;
+	float m3 = -3.0f*t*t*t + 4.0f*t*t + t;
+	float m4 = t*t*t - t * t;
+
+	float x = path[pt1].x * m1 + path[pt2].x *m2 + path[pt3].x * m3 + path[pt4].x * m4;
+	float y = path[pt1].y * m1 + path[pt2].y *m2 + path[pt3].y * m3 + path[pt4].y * m4;
+
+	vec2 ans = { x*0.5f, y*0.5f };
+	return ans;
+}
