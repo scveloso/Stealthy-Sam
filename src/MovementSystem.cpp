@@ -49,6 +49,10 @@ void MovementSystem::update(float elapsed_ms)
 
     if (transformComponent.getTransform(entity)->visible)
     {
+
+		if (movementDirection % 99 == 0) {
+			//do nothing
+		}
       if (movementDirection % LEFT == 0)
       {
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };

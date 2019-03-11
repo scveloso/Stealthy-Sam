@@ -42,6 +42,9 @@ vec2  normalize(vec2 v);
 void gl_flush_errors();
 bool gl_has_errors();
 
+//Spline stuff
+vec2 crSpline(float t, std::vector<vec2>, int i);
+
 // Single Vertex Buffer element for non-textured meshes (colored.vs.glsl)
 struct Vertex
 {

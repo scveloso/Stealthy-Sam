@@ -131,6 +131,22 @@ bool World::init(vec2 screen)
 	m_water->clearSamLight();
 	m_water->clearTorchPositions();
 
+	vec2 a = { 0,0 };
+	vec2 b = { 0,10 };
+	vec2 c = { 10,10 };
+	vec2 d = { 10,0 };
+	std::vector<vec2> spline;
+	spline.emplace_back(a);
+	spline.emplace_back(b);
+	spline.emplace_back(c);
+	spline.emplace_back(d);
+
+	for (float i = 0; i < (float)spline.size() - 3; i += 0.01f) {
+
+		vec2 ans = crSpline(i, spline, 1);
+		//printf("%f x:%f y:%f \n", i, ans.x, ans.y);
+	}
+
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("level_one.json"));
 
@@ -170,6 +186,7 @@ void World::setupWindow()
 	glfwSetWindowUserPointer(m_window, this);
 	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
 	glfwSetKeyCallback(m_window, key_redirect);
+
 }
 
 // Clear objects in map for reinitialization of entities when rooms switch

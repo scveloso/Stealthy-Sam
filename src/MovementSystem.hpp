@@ -3,6 +3,7 @@
 #include "Components/TransformCmp.hpp"
 #include "Components/CollisionCmp.hpp"
 #include "Components/MovementCmp.hpp"
+#include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
 #include "common.hpp"
 

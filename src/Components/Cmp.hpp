@@ -43,6 +43,8 @@ struct Collision
 
 struct Enemy
 {
+	int dir;
+	float t;
 	int type;
 	int patrolX;
 	int patrolY;
