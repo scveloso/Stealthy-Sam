@@ -58,7 +58,7 @@ void MovementSystem::update(float elapsed_ms)
           entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
           cauldronCheck(entity, entityTransform);
 
-          if (is_movement_interrupted(entity->id, entityTransform))
+          if (is_movement_interrupted(entity, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
@@ -73,7 +73,7 @@ void MovementSystem::update(float elapsed_ms)
       {
           entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
           cauldronCheck(entity, entityTransform);
-          if (is_movement_interrupted(entity->id, entityTransform))
+          if (is_movement_interrupted(entity, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
@@ -88,7 +88,7 @@ void MovementSystem::update(float elapsed_ms)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
           cauldronCheck(entity, entityTransform);
-          if (is_movement_interrupted(entity->id, entityTransform))
+          if (is_movement_interrupted(entity, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
@@ -103,7 +103,7 @@ void MovementSystem::update(float elapsed_ms)
       {
           entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
           cauldronCheck(entity, entityTransform);
-          if (is_movement_interrupted(entity->id, entityTransform))
+          if (is_movement_interrupted(entity, entityTransform))
           {
             movementComponent.setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
@@ -133,30 +133,36 @@ void MovementSystem::stopEntityMovement(Entity* entity)
 }
 
 // Checks if movement to new position will be interrupted by a Wall entity
-bool MovementSystem::is_movement_interrupted(int entityId, Transform* entityTransform)
+bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTransform)
 {
-    for (auto& it2 : collisionComponent.getmap())
-    {
-        int otherEntityId = it2.first;
-        if (otherEntityId != entityId)
-        {
-            Entity* otherEntity = objectManager.getEntity(otherEntityId);
-
-            if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
-            {
-                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
-
-                if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
-                {
-                    return true;
-                }
-            }
-
-        }
-    }
-
+  // Basic ghost enemies can go through walls
+  if (entity->label == "Enemy") {
     return false;
+  }
+
+  for (auto& it2 : collisionComponent.getmap())
+  {
+      int otherEntityId = it2.first;
+      if (otherEntityId != entity->id)
+      {
+          Entity* otherEntity = objectManager.getEntity(otherEntityId);
+
+          if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+          {
+              Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+
+              if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
+              {
+                  return true;
+              }
+          }
+
+      }
+  }
+
+  return false;
 }
+
 void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
     for (auto& it2 : collisionComponent.getmap())
