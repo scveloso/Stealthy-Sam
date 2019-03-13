@@ -1,6 +1,7 @@
 #include <iostream>
 #include "EntityGenerator.hpp"
 #include "TileConstants.hpp"
+#include "SpawnPoints.hpp"
 #include <string>
 #include <vector>
 
@@ -43,6 +44,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
 	Entity* playerEntity = objectManager->makeEntity("Player");
 
+
 	// Read JSON map file
 	std::ifstream data(room_path);
 	json map = json::parse(data);
@@ -71,23 +73,6 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 			Entity* entity;
 
 			switch (val) {
-				// Generate main player
-				case SAM: {
-					entity = objectManager->getEntity(SAMS_GUID);
-
-					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
-					drawCmp.addFull(entity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
-					textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
-					textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
-					textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png")
-					, textures_path("Dungeon/sam_step2.png"));
-					//drawCmp.add(entity, textures_path("sam/16.png"));
-					inputCmp.add(entity);
-					movementCmp.add(entity, 200.f, 0);
-					collisionCmp.add(entity);
-					vec2 s_position = transformCmp.getTransform(entity)->m_position;
-					break;
-				}
 				case TORCH: {
 					entity = objectManager->makeEntity("Torch");
 
@@ -1085,6 +1070,57 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		}
 	}
 
+	// Add Player entity to components
+	// Spawn Sam depending on previous room and current room
+	if (gameState->previous_room == "")
+	{
+		transformCmp.add(playerEntity, SPAWN_ROOM_ONE_START, {2.5f, 2.0f}, 0.0);
+	}
+	else if (gameState->previous_room == ROOM_ONE_GUID)
+	{
+		if (gameState->current_room == ROOM_TWO_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_ONE_TO_TWO, {2.5f, 2.0f}, 0.0);
+		}
+		else if (gameState->current_room == ROOM_FOUR_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_ONE_TO_FOUR, {2.5f, 2.0f}, 0.0);
+		}
+	}
+	else if (gameState->previous_room == ROOM_TWO_GUID)
+	{
+		if (gameState->current_room == ROOM_ONE_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_TWO_TO_ONE, {2.5f, 2.0f}, 0.0);
+		}
+		else if (gameState->current_room == ROOM_THREE_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_TWO_TO_THREE, {2.5f, 2.0f}, 0.0);
+		}
+	}
+	else if (gameState->previous_room == ROOM_THREE_GUID)
+	{
+		if (gameState->current_room == ROOM_TWO_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_THREE_TO_TWO, {2.5f, 2.0f}, 0.0);
+		}
+	}
+	else if (gameState->previous_room == ROOM_FOUR_GUID)
+	{
+		if (gameState->current_room == ROOM_ONE_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_ROOM_FOUR_TO_ONE, {2.5f, 2.0f}, 0.0);
+		}
+	}
+	drawCmp.addFull(playerEntity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
+	textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
+	textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
+	textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png")
+	, textures_path("Dungeon/sam_step2.png"));
+	inputCmp.add(playerEntity);
+	movementCmp.add(playerEntity, 200.f, 0);
+	collisionCmp.add(playerEntity);
+
 	// Proceed to handle the text box entities
 	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
 
@@ -1093,7 +1129,8 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		generateBoss(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
 	}
 }
-// Separate call to generate text box entitities
+
+// Separate call to generate boss entity
 void EntityGenerator::generateBoss(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
 {
 	// TODO

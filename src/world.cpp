@@ -246,6 +246,7 @@ void World::handleUpdateAction(int updateAction)
 			case CHANGE_ROOM_ONE_TO_TWO:
 			{
 				clearMap();
+				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities(map_path("level_one_to_two.json"));
 				m_water->clear_enemy_position();
@@ -257,12 +258,14 @@ void World::handleUpdateAction(int updateAction)
 				if (gameState->level_two_key && gameState->level_three_key)
 				{
 					clearMap();
+					gameState->previous_room = gameState->current_room;
 					gameState->current_room = ROOM_ONE_GUID;
 					generateEntities(map_path("level_two_to_one_with_key.json"));
 				}
 				else
 				{
 					clearMap();
+					gameState->previous_room = gameState->current_room;
 					gameState->current_room = ROOM_ONE_GUID;
 					generateEntities(map_path("level_two_to_one.json"));
 				}
@@ -271,6 +274,7 @@ void World::handleUpdateAction(int updateAction)
 			case CHANGE_ROOM_TWO_TO_THREE:
 			{
 				clearMap();
+				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
 				generateEntities(map_path("level_two_to_three.json"));
 				m_water->clear_enemy_position();
@@ -279,6 +283,7 @@ void World::handleUpdateAction(int updateAction)
 			case CHANGE_ROOM_THREE_TO_TWO:
 			{
 				clearMap();
+				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities(map_path("level_three_to_two.json"));
 				m_water->clear_enemy_position();
@@ -287,6 +292,7 @@ void World::handleUpdateAction(int updateAction)
 			case CHANGE_ROOM_ONE_TO_FOUR:
 			{
 				clearMap();
+				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities(map_path("level_one_to_four.json"));
 				m_water->clear_enemy_position();
