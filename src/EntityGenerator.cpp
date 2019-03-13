@@ -1,6 +1,7 @@
 #include <iostream>
 #include "EntityGenerator.hpp"
 #include "TileConstants.hpp"
+#include "SpawnPoints.hpp"
 #include <string>
 #include <vector>
 
@@ -75,7 +76,47 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 				case SAM: {
 					entity = objectManager->getEntity(SAMS_GUID);
 
-					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
+					// Spawn Sam depending on previous room and current room
+					if (gameState->previous_room == "")
+					{
+						transformCmp.add(entity, SPAWN_ROOM_ONE_START, {2.5f, 2.0f}, 0.0);
+					}
+					else if (gameState->previous_room == ROOM_ONE_GUID)
+					{
+						if (gameState->current_room == ROOM_TWO_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_ONE_TO_TWO, {2.5f, 2.0f}, 0.0);
+						}
+						else if (gameState->current_room == ROOM_FOUR_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_ONE_TO_FOUR, {2.5f, 2.0f}, 0.0);
+						}
+					}
+					else if (gameState->previous_room == ROOM_TWO_GUID)
+					{
+						if (gameState->current_room == ROOM_ONE_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_TWO_TO_ONE, {2.5f, 2.0f}, 0.0);
+						}
+						else if (gameState->current_room == ROOM_THREE_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_TWO_TO_THREE, {2.5f, 2.0f}, 0.0);
+						}
+					}
+					else if (gameState->previous_room == ROOM_THREE_GUID)
+					{
+						if (gameState->current_room == ROOM_TWO_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_THREE_TO_TWO, {2.5f, 2.0f}, 0.0);
+						}
+					}
+					else if (gameState->previous_room == ROOM_FOUR_GUID)
+					{
+						if (gameState->current_room == ROOM_ONE_GUID)
+						{
+							transformCmp.add(entity, SPAWN_ROOM_FOUR_TO_ONE, {2.5f, 2.0f}, 0.0);
+						}
+					}
 					drawCmp.addFull(entity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
 					textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
 					textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
@@ -1093,7 +1134,8 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		generateBoss(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
 	}
 }
-// Separate call to generate text box entitities
+
+// Separate call to generate boss entity
 void EntityGenerator::generateBoss(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
 {
 	// TODO
