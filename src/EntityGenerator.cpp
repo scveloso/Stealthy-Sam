@@ -805,7 +805,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					break;
 				}
 				case LEFT_COUNTER_BL: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Counter");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -832,7 +832,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					break;
 				}
 				case LEFT_COUNTER_BR: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Counter");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -895,7 +895,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					break;
 				}
 				case RIGHT_COUNTER_BL: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Counter");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -922,7 +922,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					break;
 				}
 				case RIGHT_COUNTER_BR: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Counter");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
