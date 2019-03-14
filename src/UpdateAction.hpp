@@ -13,6 +13,9 @@ const int ROOM_FOUR = 4;
 // Resetting game
 const int RESET_GAME = 5;
 
+// Toggle pause game
+const int TOGGLE_PAUSE_GAME = 6;
+
 
 // Game Logic actions
 const int SAM_DEATH = 7;

@@ -17,6 +17,8 @@ public:
     bool has_moved;
     bool has_pressed_E;
 
+    bool is_game_paused;
+
     int held_item; // Used to regenerate held entities when switching rooms
     Entity* held_entity;
 

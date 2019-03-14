@@ -1,5 +1,6 @@
 #include "GameStateCmp.hpp"
 
+// Start a new game
 void GameStateCmp::init() {
     sam_is_alive = true;
     level_two_key = false;
@@ -10,6 +11,9 @@ void GameStateCmp::init() {
     // Tutorial status
     has_moved = false;
     has_pressed_E = false;
+
+    // New game is unpaused
+    is_game_paused = false;
 
     // Held entity
     held_item = -1;

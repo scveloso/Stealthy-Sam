@@ -232,6 +232,10 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
+	if (gameState->is_game_paused) {
+		return true;
+	}
+
 	// Update Systems
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
@@ -314,6 +318,12 @@ void World::handleUpdateAction(int updateAction)
 				soundSystem->playBackgroundMusic();
 				break;
 			}
+			case TOGGLE_PAUSE_GAME:
+			{
+				gameState->is_game_paused = !gameState->is_game_paused;
+				std::cout << "Game is paused: " << gameState->is_game_paused << std::endl;
+				break;
+			}
 			case SAM_DEATH:
 			{
 				soundSystem->playDeath();
@@ -336,6 +346,10 @@ void World::handleUpdateAction(int updateAction)
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void World::draw()
 {
+	if (gameState->is_game_paused) {
+		return;
+	}
+	
 	// Clearing error buffer
 	gl_flush_errors();
 
