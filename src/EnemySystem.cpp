@@ -1,3 +1,4 @@
+#include <Components/GameStateCmp.hpp>
 #include "EnemySystem.hpp"
 
 // System to update enemies based on decision tree AI.
@@ -19,12 +20,13 @@
 |           5 | End                            | Maintain Action             | Maintain Action                 |
 |           6 | End                            | Chase Sam                   | Chase Sam                       |
 +-------------+--------------------------------+-----------------------------+---------------------------------+ */
-void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc) {
+void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, GameStateCmp* gsc) {
 	objectManager = om;
 	transformComponent = tc;
 	enemyComponent = ec;
 	movementComponent = mc;
 	itemComponent = itc;
+	gameStateComponent = gsc;
 
 	initDecisionTree();
 }
@@ -67,18 +69,44 @@ void EnemySystem::update(float elapsed_ms) {
 
 		Enemy *enemy = it.second;
 		// Set enemy to either chase or patrol depending on decision tree
-		handleEnemyDecisionTree(enemy, samTransform);
+		if (enemy->type == BOSS_ENEMY_TYPE) {
+			handleBossDecisionTree(enemy, samTransform);
+		} else {
+			handleEnemyDecisionTree(enemy, samTransform);
+		}
 		Entity* enemyEntity = objectManager.getEntity(it.first);
 		Transform *et =  transformComponent.getTransform(enemyEntity);
 
-		if (enemy->action == PATROL) {
-			patrolEnemy(enemy, enemyEntity, et, elapsed_ms);
-		} else if (enemy->action == CHASE_SAM) {
-			chaseTarget(enemy, et, samTransform, enemyEntity);
-		} else if (enemy->action == RETURN_TO_PATROL) {
-			returnToPatrolPosition(enemy, et, enemyEntity, elapsed_ms);
-		} else if (enemy->action == CHASE_TORCH) {
-			tryChaseThrownTorch(enemy, et, enemyEntity);
+		switch (enemy->action)
+		{
+			case PATROL:
+				patrolEnemy(enemy, enemyEntity, et, elapsed_ms);
+				break;
+			case CHASE_SAM:
+				chaseTarget(enemy, et, samTransform, enemyEntity);
+				break;
+			case RETURN_TO_PATROL:
+				returnToPatrolPosition(enemy, et, enemyEntity, elapsed_ms);
+				break;
+			case CHASE_TORCH:
+				tryChaseThrownTorch(enemy, et, enemyEntity);
+				break;
+			case MOVE_TO_TOP_RIGHT_QUAD:
+				goToTarget(et->m_position, { 860.f, 335.f }, enemyEntity);
+				break;
+			case MOVE_TO_BOTTOM_LEFT_QUAD:
+				goToTarget(et->m_position, { 250.f, 650.f }, enemyEntity);
+				break;
+			case MOVE_TO_BOTTOM_RIGHT_QUAD:
+				goToTarget(et->m_position, { 860.f, 650.f }, enemyEntity);
+				break;
+			case FADE_AWAY:
+				// TODO: initiate a fade over time
+				break;
+		    case MAINTAIN_ACTION:
+		        break;
+			default:
+				printf("enemy action not recognized: %d\n", enemy->action);
 		}
 	}
 }
@@ -220,49 +248,7 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, 
 				et->facingDirection = RIGHT;
 			}
 		}
-
-		
 	}
-
-
-	//if (enemy->patrolX != 0) {
-	//	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
-	//		movementComponent.setMovementDirection(enemyEntity, RIGHT);
-	//		enemy->start = et->m_position;
-	//		et->facingDirection = RIGHT;
-	//	}
-
-	//	if (et->m_position.x >= (enemy->start.x + enemy->patrolX)) {
-	//		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
-	//		movementComponent.setMovementDirection(enemyEntity, LEFT);
-	//		et->facingDirection = LEFT;
-	//	}
-
-	//	if (et->m_position.x < enemy->start.x) {
-	//		movementComponent.removeMovementDirection(enemyEntity, LEFT);
-	//		movementComponent.setMovementDirection(enemyEntity, RIGHT);
-	//		et->facingDirection = RIGHT;
-	//	}
-	//}
-	//else {
-	//	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
-	//		movementComponent.setMovementDirection(enemyEntity, UP);
-	//		enemy->start = et->m_position;
-	//		et->facingDirection = UP;
-	//	}
-
-	//	if (et->m_position.y > (enemy->start.y + enemy->patrolY)) {
-	//		movementComponent.removeMovementDirection(enemyEntity, UP);
-	//		movementComponent.setMovementDirection(enemyEntity, DOWN);
-	//		et->facingDirection = DOWN;
-	//	}
-
-	//	if (et->m_position.y < enemy->start.y) {
-	//		movementComponent.removeMovementDirection(enemyEntity, DOWN);
-	//		movementComponent.setMovementDirection(enemyEntity, UP);
-	//		et->facingDirection = UP;
-	//	}
-	//}
 }
 
 // Given an enemy and where Sam is, decide what the next action of the
@@ -297,3 +283,43 @@ void EnemySystem::handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform)
 		enemy->action = action;
 	}
 }
+
+void EnemySystem::goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity) {
+	float diff_y= (startPosition.y-targetPosition.y)*(startPosition.y-targetPosition.y);
+	float diff_x= (startPosition.x-targetPosition.x)*(startPosition.x-targetPosition.x);
+
+	if (startPosition.y > targetPosition.y){
+		movementComponent.removeMovementDirection(entity, DOWN);
+		movementComponent.setMovementDirection(entity, UP);
+		if (diff_y > diff_x){
+			transformComponent.setFacingDirection(entity, UP);
+		}
+	}
+	if(startPosition.y < targetPosition.y) {
+		movementComponent.removeMovementDirection(entity, UP);
+		movementComponent.setMovementDirection(entity, DOWN);
+		if (diff_y > diff_x ){
+			transformComponent.setFacingDirection(entity, DOWN);
+		}
+	}
+	if (startPosition.x > targetPosition.x) {
+		movementComponent.removeMovementDirection(entity, RIGHT);
+		movementComponent.setMovementDirection(entity, LEFT);
+		if (diff_y <= diff_x){
+			transformComponent.setFacingDirection(entity, LEFT);
+		}
+	}
+	if (startPosition.x < targetPosition.x) {
+		movementComponent.removeMovementDirection(entity, LEFT);
+		movementComponent.setMovementDirection(entity, RIGHT);
+		if (diff_y <= diff_x){
+			transformComponent.setFacingDirection(entity, RIGHT);
+		}
+	}
+}
+
+void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* samTransform) {
+	// TODO(sam): shoot missile, go to other locations, etc
+	enemy->action = BossStrategy::handleAction(gameStateComponent);
+}
+

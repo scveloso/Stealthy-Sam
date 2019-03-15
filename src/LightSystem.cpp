@@ -48,7 +48,7 @@ void LightSystem::update()
   }
 
   // Grab all existing enemies and send their directions and positions to shader
-  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel("Enemy");
+  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel(ENEMY_LABEL);
 
   int i = 0;
   for (auto& enemyEntity : enemyEntities)

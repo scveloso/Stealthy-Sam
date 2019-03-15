@@ -3,7 +3,7 @@
 #include "InputSystem.hpp"
 #include "Components/Cmp.hpp"
 #include "UpdateAction.hpp"
-#include "EnemyAction.hpp"
+#include "Strategies/strategies_common.hpp"
 #include "TileConstants.hpp"
 #include "CollisionSystem.hpp"
 #include <iostream>

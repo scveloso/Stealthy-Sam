@@ -80,7 +80,7 @@ set(SOURCE_FILES
 		src/Components/ItemCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
-        src/SoundSystem.cpp src/SoundSystem.hpp)
+        src/SoundSystem.cpp src/SoundSystem.hpp src/Strategies/BossStrategy.cpp src/Strategies/BossStrategy.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC src/)

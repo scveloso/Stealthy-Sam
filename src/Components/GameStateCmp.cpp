@@ -14,4 +14,6 @@ void GameStateCmp::init() {
     // Held entity
     held_item = -1;
     held_entity = NULL;
+
+    num_lit_cauldrons = 0;
 }

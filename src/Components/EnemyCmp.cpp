@@ -1,5 +1,5 @@
 #include "EnemyCmp.hpp"
-#include "EnemyAction.hpp"
+#include "Strategies/strategies_common.hpp"
 
 void EnemyCmp::add(Entity* entity, int patrolX, int patrolY) {
 	Enemy *enemy = new Enemy();

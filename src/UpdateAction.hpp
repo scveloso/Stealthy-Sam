@@ -5,7 +5,7 @@
 const int NO_CHANGE = 0;
 
 // Room changes
-const int ROOM_ONE = 1;
+const int CHANGE_TO_ROOM_ONE_ACTION = 1;
 const int ROOM_TWO = 2;
 const int ROOM_THREE = 3;
 const int ROOM_FOUR = 4;
