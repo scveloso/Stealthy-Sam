@@ -15,9 +15,9 @@ const int RESET_GAME = 5;
 
 // Toggle pause game
 const int TOGGLE_PAUSE_GAME = 6;
-
+const int LOAD_GAME = 7;
 
 // Game Logic actions
-const int SAM_DEATH = 7;
+const int SAM_DEATH = 8;
 // Used to trigger sound effects
-const int KEY_PICKUP_EVENT = 8;
+const int KEY_PICKUP_EVENT = 9;

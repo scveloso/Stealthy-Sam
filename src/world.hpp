@@ -33,8 +33,8 @@ public:
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
 
-	// Generate entities from a given path to a JSON map file
-	void generateEntities(std::string room_path);
+	// Generate entities based on game state
+	void generateEntities();
 
 	// Set-up DrawSystem, InputSystem, CollisionSystem
 	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec,

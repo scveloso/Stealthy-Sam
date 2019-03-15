@@ -152,12 +152,30 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
       case GLFW_KEY_P:
         returnAction = RESET_GAME;
         break;
+      case GLFW_KEY_B:
+        saveGame();
+        break;
+      case GLFW_KEY_N: {
+        bool loadResult = loadGame();
+        if (loadResult) {
+          returnAction = LOAD_GAME;
+        }
+        break;
+      }
       default:
         break;
     }
   }
 
 	return returnAction;
+}
+
+void InputSystem::saveGame() {
+  gameState->saveGame();
+}
+
+bool InputSystem::loadGame() {
+  return gameState->loadGame();
 }
 
 void InputSystem::handleThrowable(Entity* entity) {

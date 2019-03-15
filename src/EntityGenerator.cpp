@@ -1073,7 +1073,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 
 	// Add Player entity to components
 	// Spawn Sam depending on previous room and current room
-	if (gameState->previous_room == "")
+	if (gameState->is_game_loading) {
+		transformCmp.add(playerEntity, gameState->sam_position, {2.5f, 2.0f}, 0.0);
+		gameState->is_game_loading = false;
+	}
+	else if (gameState->previous_room == "")
 	{
 		transformCmp.add(playerEntity, SPAWN_ROOM_ONE_START, {2.5f, 2.0f}, 0.0);
 	}

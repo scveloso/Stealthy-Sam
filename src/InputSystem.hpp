@@ -15,6 +15,8 @@ public:
 	int on_key(GLFWwindow *, int key, int _, int action, int mod);
 	bool setup(GLFWwindow* m_window);
 	void handleThrowable(Entity* entity);
+	void saveGame();
+	bool loadGame();
 	bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void torch_cauldron_collision(int entityId, Transform *entityTransform);
 	vec2 tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
