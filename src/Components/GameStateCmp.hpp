@@ -17,6 +17,7 @@ public:
     std::string current_room;
 
     vec2 sam_position;
+    bool hidden;
 
     bool has_moved;
     bool has_pressed_E;

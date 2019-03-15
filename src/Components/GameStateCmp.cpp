@@ -17,8 +17,10 @@ void GameStateCmp::init() {
     has_moved = false;
     has_pressed_E = false;
 
-    // New game is unpaused
+    // New game is unpaused, not loading and not hidden
     is_game_paused = false;
+    is_game_loading = false;
+    hidden = false;
 
     // Held entity
     held_item = -1;
@@ -38,6 +40,7 @@ void GameStateCmp::saveGame() {
     savefile["current_room"] = current_room;
     savefile["sam_position_x"] = sam_position.x;
     savefile["sam_position_y"] = sam_position.y;
+    savefile["hidden"] = hidden;
     savefile["has_moved"] = has_moved;
     savefile["has_pressed_E"] = has_pressed_E;
     savefile["held_item"] = held_item;
@@ -60,20 +63,28 @@ bool GameStateCmp::loadGame() {
   	json savefile = json::parse(data);
 
     // Populate game state based on save file
+
+    // Load Sam progress
   	level_two_key = savefile["level_two_key"];
     level_three_key = savefile["level_three_key"];
     previous_room = savefile["previous_room"];
     current_room = savefile["current_room"];
+    sam_is_alive = true;
+
+    // Load Sam position
     float sam_position_x = savefile["sam_position_x"];
     float sam_position_y = savefile["sam_position_y"];
     sam_position = { sam_position_x, sam_position_y };
+
+    hidden = savefile["hidden"];
+
+    // Load tutorial attributes
     has_moved = savefile["has_moved"];
     has_pressed_E = savefile["has_pressed_E"];
     held_item = savefile["held_item"];
 
+    // Start game when reloaded
     is_game_paused = false;
-    sam_is_alive = true;
-
     is_game_loading = true;
 
     return true;

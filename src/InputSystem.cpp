@@ -93,10 +93,12 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
               if (transformComponent.getTransform(entity)->visible == false)
               {
                 transformComponent.getTransform(entity)->visible = true;
+                gameState->hidden = false;
               }
               else
               {
                 transformComponent.getTransform(entity)->visible = false;
+                gameState->hidden = true;
               }
             }
             gameState->has_pressed_E = true;
