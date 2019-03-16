@@ -87,6 +87,31 @@ int CollisionSystem::update(float elapsed_ms)
 		samCollision->closet = false;
 	}
 
+	std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
+	for (auto& torchEntity : torchEntities)
+	{
+		std::vector<Entity*> ghostEntities = objectManager.getEntitiesByLabel("Enemy");
+		for (auto& ghostEntity : ghostEntities)
+		{
+			if (AABB(transformComponent.getTransform(torchEntity), transformComponent.getTransform(ghostEntity)))
+			{
+				Collision* torchCmp = collisionComponent.getCollision(torchEntity);
+				if (torchCmp->torch_light_countdown_ms < 0.f)
+				{
+					torchCmp->torch_light_countdown_ms = 2000.f;
+				}
+			}
+		}
+        Collision* torchCmp = collisionComponent.getCollision(torchEntity);
+		if (torchCmp->torch_light_countdown_ms > 0.f)
+        {
+            torchCmp->torch_light_countdown_ms -= elapsed_ms;
+            if (torchCmp->torch_light_countdown_ms <= 0.f)
+            {
+                torchEntity->active = false;
+            }
+        }
+	}
 	return NO_CHANGE;
 }
 

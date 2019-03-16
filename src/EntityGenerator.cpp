@@ -80,6 +80,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/torch.png"));
 					collisionCmp.add(entity);
+
                     itemCmp.add(entity);
 					break;
 				}
