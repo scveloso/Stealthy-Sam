@@ -58,6 +58,7 @@ bool GameStateCmp::loadGame() {
     // Read JSON save file
   	std::ifstream data(saves_path("save_file.json"));
     if (data.fail()) {
+      std::cout << "Couldn't read save file. " << std::endl;
       return false;
     }
   	json savefile = json::parse(data);
