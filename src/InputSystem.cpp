@@ -101,11 +101,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             }
             gameState->has_pressed_E = true;
             break;
-          case GLFW_KEY_P:
-            // Print out current position
-            printf("X:%f , Y:%f \n", transformComponent.getTransform(entity)->m_position.x,
-            transformComponent.getTransform(entity)->m_position.y);
-            break;
           case GLFW_KEY_C:
           {
             // Print out collision stuff
@@ -151,7 +146,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   if (action == GLFW_RELEASE)
   {
     switch (key) {
-      case GLFW_KEY_R:
+      case GLFW_KEY_P:
         returnAction = RESET_GAME;
         break;
       default:

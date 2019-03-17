@@ -1155,7 +1155,7 @@ void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc,
 
 	// Text box if you're dead
 	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
-	dc.add(rToRestart, textures_path("text/rtorestart.png"));
+	dc.add(rToRestart, textures_path("text/ptorestart.png"));
 	tc.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 	rToRestart->active = false; // Died text initially invisible
 
