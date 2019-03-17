@@ -299,6 +299,7 @@ void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransf
         if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
         {
           otherEntity->active = true;
+          gameState->num_lit_cauldrons++;
         }
       }
     }

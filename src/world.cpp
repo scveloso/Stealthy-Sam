@@ -311,6 +311,7 @@ void World::handleUpdateAction(int updateAction)
 				m_water->clear_enemy_position();
 
 				soundSystem->haltMusic();
+				soundSystem->playBackgroundMusic();
 				break;
 			}
 			case SAM_DEATH:
