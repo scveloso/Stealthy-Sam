@@ -93,10 +93,12 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
               if (transformComponent.getTransform(entity)->visible == false)
               {
                 transformComponent.getTransform(entity)->visible = true;
+                gameState->hidden = false;
               }
               else
               {
                 transformComponent.getTransform(entity)->visible = false;
+                gameState->hidden = true;
               }
             }
             gameState->has_pressed_E = true;
@@ -146,15 +148,36 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   if (action == GLFW_RELEASE)
   {
     switch (key) {
+      case GLFW_KEY_SPACE:
+        returnAction = TOGGLE_PAUSE_GAME;
+        break;
       case GLFW_KEY_P:
         returnAction = RESET_GAME;
         break;
+      case GLFW_KEY_B:
+        saveGame();
+        break;
+      case GLFW_KEY_N: {
+        bool loadResult = loadGame();
+        if (loadResult) {
+          returnAction = LOAD_GAME;
+        }
+        break;
+      }
       default:
         break;
     }
   }
 
 	return returnAction;
+}
+
+void InputSystem::saveGame() {
+  gameState->saveGame();
+}
+
+bool InputSystem::loadGame() {
+  return gameState->loadGame();
 }
 
 void InputSystem::handleThrowable(Entity* entity) {
@@ -242,7 +265,7 @@ vec2 InputSystem::tryThrowVertical(Entity* heldEntity, Transform* entityTransfor
   bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
 
   torch_cauldron_collision(heldEntity->id, entityTransform);
-  
+
   if (movementInterrupted) {
     torch_position = { torch_position.x, torch_position.y - offset};
     entityTransform->m_position = torch_position;

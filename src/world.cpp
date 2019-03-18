@@ -147,8 +147,7 @@ bool World::init(vec2 screen)
 		//printf("%f x:%f y:%f \n", i, ans.x, ans.y);
 	}
 
-	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
-	generateEntities(map_path("level_one.json"));
+	generateEntities();
 
 	/* Uncomment if you want to start on level 4
     clearMap();
@@ -162,9 +161,25 @@ bool World::init(vec2 screen)
 	return true;
 }
 
-// Generate entities from a given path to a JSON map file
-void World::generateEntities(std::string room_path)
+// Generate entities based on game state
+void World::generateEntities()
 {
+	std::string room_path = "";
+	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
+		room_path = map_path("level_one_with_key.json");
+	}
+	else if (gameState->current_room == ROOM_ONE_GUID) {
+		room_path = map_path("level_one.json");
+	}
+	else if (gameState->current_room == ROOM_TWO_GUID) {
+		room_path = map_path("level_two.json");
+	}
+	else if (gameState->current_room == ROOM_THREE_GUID) {
+		room_path = map_path("level_three.json");
+	}
+	else if (gameState->current_room == ROOM_FOUR_GUID) {
+		room_path = map_path("level_four.json");
+	}
 
 	makeSystems();
 
@@ -232,6 +247,10 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
+	if (gameState->is_game_paused) {
+		return true;
+	}
+
 	// Update Systems
 	es->update(elapsed_ms);
 	int updateAction = cs->update(elapsed_ms);
@@ -261,14 +280,14 @@ void World::handleUpdateAction(int updateAction)
 					clearMap();
 					gameState->previous_room = gameState->current_room;
 					gameState->current_room = ROOM_ONE_GUID;
-					generateEntities(map_path("level_one_with_key.json"));
+					generateEntities();
 				}
 				else
 				{
 					clearMap();
 					gameState->previous_room = gameState->current_room;
 					gameState->current_room = ROOM_ONE_GUID;
-					generateEntities(map_path("level_one.json"));
+					generateEntities();
 				}
 				break;
 			}
@@ -277,7 +296,7 @@ void World::handleUpdateAction(int updateAction)
 				clearMap();
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
-				generateEntities(map_path("level_two.json"));
+				generateEntities();
 				m_water->clear_enemy_position();
 				break;
 			}
@@ -286,7 +305,7 @@ void World::handleUpdateAction(int updateAction)
 				clearMap();
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
-				generateEntities(map_path("level_three.json"));
+				generateEntities();
 				m_water->clear_enemy_position();
 				break;
 			}
@@ -295,7 +314,7 @@ void World::handleUpdateAction(int updateAction)
 				clearMap();
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
-				generateEntities(map_path("level_four.json"));
+				generateEntities();
 				m_water->clear_enemy_position();
 
 				// Trigger boss music
@@ -306,12 +325,27 @@ void World::handleUpdateAction(int updateAction)
 			{
 				gameState->init();
 				clearMap();
-				generateEntities(map_path("level_one.json"));
+				generateEntities();
 				m_water->restart();
 				m_water->clear_enemy_position();
 
 				soundSystem->haltMusic();
 				soundSystem->playBackgroundMusic();
+				break;
+			}
+			case LOAD_GAME:
+			{
+				clearMap();
+				generateEntities();
+				m_water->restart();
+				m_water->clear_enemy_position();
+				std::cout << "Loaded game." << std::endl;
+				break;
+			}
+			case TOGGLE_PAUSE_GAME:
+			{
+				gameState->is_game_paused = !gameState->is_game_paused;
+				std::cout << "Game is paused: " << gameState->is_game_paused << std::endl;
 				break;
 			}
 			case SAM_DEATH:
@@ -336,6 +370,10 @@ void World::handleUpdateAction(int updateAction)
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void World::draw()
 {
+	if (gameState->is_game_paused) {
+		return;
+	}
+
 	// Clearing error buffer
 	gl_flush_errors();
 

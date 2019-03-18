@@ -5,6 +5,10 @@ class GameStateCmp : public Cmp
 {
 public:
     void init();
+
+    void saveGame();
+    bool loadGame();
+
     bool sam_is_alive;
     bool level_two_key;
     bool level_three_key;
@@ -13,9 +17,16 @@ public:
     std::string current_room;
 
     vec2 sam_position;
+    bool hidden;
 
     bool has_moved;
     bool has_pressed_E;
+
+    bool is_game_paused;
+
+    // Used in EntityGenerator to decide whether to use sam position in game state
+    // to spawn Sam
+    bool is_game_loading;
 
     int held_item; // Used to regenerate held entities when switching rooms
     Entity* held_entity;
