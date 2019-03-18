@@ -80,6 +80,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					transformCmp.add(entity, {x, y}, {2.5f, 2.0f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/torch.png"));
 					collisionCmp.add(entity);
+
                     itemCmp.add(entity);
 					break;
 				}
@@ -1156,7 +1157,7 @@ void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc,
 
 	// Text box if you're dead
 	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
-	dc.add(rToRestart, textures_path("text/rtorestart.png"));
+	dc.add(rToRestart, textures_path("text/ptorestart.png"));
 	tc.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 	rToRestart->active = false; // Died text initially invisible
 

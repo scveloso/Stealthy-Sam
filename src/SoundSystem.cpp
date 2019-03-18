@@ -24,7 +24,7 @@ void SoundSystem::haltMusic() {
 
 void SoundSystem::playBackgroundMusic()
 {
-    // Playing background music undefinitely
+    // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
 }
 

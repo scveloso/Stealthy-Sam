@@ -23,6 +23,7 @@ private:
 	CollisionCmp collisionComponent;
 	TransformCmp transformComponent;
 	ItemCmp itemComponent;
-  ObjectManager objectManager;
-  GameStateCmp* gameStateComponent;
+  	ObjectManager objectManager;
+  	GameStateCmp* gameStateComponent;
+
 };
