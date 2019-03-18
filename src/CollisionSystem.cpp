@@ -98,7 +98,7 @@ int CollisionSystem::update(float elapsed_ms)
 				Collision* torchCmp = collisionComponent.getCollision(torchEntity);
 				if (torchCmp->torch_light_countdown_ms < 0.f)
 				{
-					torchCmp->torch_light_countdown_ms = 2000.f;
+					torchCmp->torch_light_countdown_ms = 2500.f;
 				}
 			}
 		}
