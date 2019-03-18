@@ -91,7 +91,7 @@ void EnemySystem::tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemy
 	if (thrownTorchId != -1) {
 		Entity* thrownTorchEntity = objectManager.getEntity(thrownTorchId);
 
-		if (thrownTorchEntity->label.compare("Torch") == 0) {
+		if (thrownTorchEntity->label.compare("Torch") == 0 && thrownTorchEntity->active) {
 			Transform *tt =  transformComponent.getTransform(thrownTorchEntity);
 			chaseTarget(enemy, et, tt, enemyEntity);
 			return;
