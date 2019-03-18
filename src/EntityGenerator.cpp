@@ -1051,7 +1051,7 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 					break;
 				}
 				case ENEMY: {
-					entity = objectManager->makeEntity("Enemy");
+					entity = objectManager->makeEntity(ENEMY_LABEL);
 
 					movementCmp.add(entity, 50.f, 0);
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -1122,19 +1122,20 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 	movementCmp.add(playerEntity, 200.f, 0);
 	collisionCmp.add(playerEntity);
 
+
+	if (gameState->current_room == ROOM_FOUR_GUID)
+	{
+		Entity* entity = objectManager->makeEntity(BOSS_GUID);
+
+		movementCmp.add(entity, 50.f, 0);
+		transformCmp.add(entity, {400.f, 400.f}, {3.125f, 3.125f}, 0.0);
+		drawCmp.add(entity, textures_path("Dungeon/boss.png"));
+		collisionCmp.add(entity);
+		enemyCmp.add(entity, 100, 0);
+		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;
+	}
 	// Proceed to handle the text box entities
 	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
-
-	if (room_path == map_path("level_one.json"))
-	{
-		generateBoss(drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, water);
-	}
-}
-
-// Separate call to generate boss entity
-void EntityGenerator::generateBoss(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, Water* water)
-{
-	// TODO
 }
 
 // Separate call to generate text box entitities
@@ -1193,10 +1194,10 @@ void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic
 	drawSystem->init(*objectManager, dc, tc, mc, gameState);
 	inputSystem->init(*objectManager, ic, tc, cc, mc, ec, itc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, itc, gameState);
-	enemySystem->init(*objectManager, tc, ec, mc, itc);
+	enemySystem->init(*objectManager, tc, ec, mc, itc, gameState);
 	movementSystem->init(*objectManager, tc, cc, mc, gameState);
 	textSystem->init(*objectManager, gameState, water);
 	lightSystem->init(*objectManager, gameState, tc, water);
 
-		drawSystem->setup();
-	}
+	drawSystem->setup();
+}

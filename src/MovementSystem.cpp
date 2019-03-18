@@ -136,7 +136,7 @@ void MovementSystem::stopEntityMovement(Entity* entity)
 bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTransform)
 {
   // Basic ghost enemies can go through walls
-  if (entity->label == "Enemy") {
+  if (entity->label == ENEMY_LABEL) {
     return false;
   }
 
@@ -172,13 +172,18 @@ void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTra
         {
             Entity* otherEntity = objectManager.getEntity(otherEntityId);
 
-            if (otherEntity->label.compare("Cauldron") == 0)
+            if (otherEntity->label == "Cauldron")
             {
                 Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {
-                    otherEntity->active = true;
+                    if (!otherEntity->active)
+                    {
+                        // if the torch is being lit for the first time, increment torch count
+                        otherEntity->active = true;
+                        gameState->num_lit_cauldrons += 1;
+                    }
                 }
             }
         }

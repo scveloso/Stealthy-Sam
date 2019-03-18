@@ -150,6 +150,15 @@ bool World::init(vec2 screen)
 	// Textures_path needs to be sent this way (can't seem to make it work inside the function)
 	generateEntities(map_path("level_one.json"));
 
+	/* Uncomment if you want to start on level 4
+    clearMap();
+    gameState->previous_room = ROOM_ONE_GUID;
+    gameState->current_room = ROOM_FOUR_GUID;
+    generateEntities(map_path("level_four.json"));
+    m_water->clear_enemy_position();
+    soundSystem->playBossMusic();
+    */
+
 	return true;
 }
 
@@ -244,7 +253,7 @@ void World::handleUpdateAction(int updateAction)
 		switch (updateAction)
 		{
 
-			case ROOM_ONE:
+			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
 				m_water->clear_enemy_position();
 				if (gameState->level_two_key && gameState->level_three_key)
@@ -300,6 +309,9 @@ void World::handleUpdateAction(int updateAction)
 				generateEntities(map_path("level_one.json"));
 				m_water->restart();
 				m_water->clear_enemy_position();
+
+				soundSystem->haltMusic();
+				soundSystem->playBackgroundMusic();
 				break;
 			}
 			case SAM_DEATH:

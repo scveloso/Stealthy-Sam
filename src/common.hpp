@@ -130,3 +130,6 @@ const std::string ROOM_ONE_GUID = "ROOM_ONE";
 const std::string ROOM_TWO_GUID = "ROOM_TWO";
 const std::string ROOM_THREE_GUID = "ROOM_THREE";
 const std::string ROOM_FOUR_GUID = "ROOM_FOUR";
+
+const std::string ENEMY_LABEL = "Enemy.Ghost";
+const std::string BOSS_GUID = "Enemy.Boss";

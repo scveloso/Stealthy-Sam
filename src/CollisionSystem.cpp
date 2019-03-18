@@ -124,7 +124,7 @@ int CollisionSystem::handleDoors(Entity* entity)
 	}
 	else if (entity->label.compare("DoorRoom2To1") == 0)
 	{
-		return ROOM_ONE;
+		return CHANGE_TO_ROOM_ONE_ACTION;
 	}
 	else if (entity->label.compare("DoorRoom2To3") == 0)
 	{
@@ -145,7 +145,7 @@ int CollisionSystem::handleDoors(Entity* entity)
 // Returns an UpdateAction to trigger death if an enemy is collided with
 int CollisionSystem::handleEnemies(Entity* entity)
 {
-	if (entity->label.compare("Enemy") == 0)
+	if (entity->label == ENEMY_LABEL || entity->label == BOSS_GUID)
 	{
 	    if (gameStateComponent->sam_is_alive) {
 			gameStateComponent->sam_is_alive = false;

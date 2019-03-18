@@ -69,6 +69,7 @@ struct Item
 };
 
 const int NORMAL = 11;
+const int BOSS_ENEMY_TYPE = 12;
 
 const int UP = 2;
 const int DOWN = 3;
