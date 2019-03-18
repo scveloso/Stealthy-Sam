@@ -328,6 +328,9 @@ void World::handleUpdateAction(int updateAction)
 				generateEntities();
 				m_water->restart();
 				m_water->clear_enemy_position();
+
+				soundSystem->haltMusic();
+				soundSystem->playBackgroundMusic();
 				break;
 			}
 			case LOAD_GAME:
@@ -336,13 +339,7 @@ void World::handleUpdateAction(int updateAction)
 				generateEntities();
 				m_water->restart();
 				m_water->clear_enemy_position();
-<<<<<<< HEAD
-
-				soundSystem->haltMusic();
-				soundSystem->playBackgroundMusic();
-=======
 				std::cout << "Loaded game." << std::endl;
->>>>>>> Can save and reload the game to one save file, when game is paused.
 				break;
 			}
 			case TOGGLE_PAUSE_GAME:
