@@ -8,6 +8,7 @@
 // stlib
 #include <chrono>
 #include <iostream>
+#include <algorithm>
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -29,20 +30,25 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	auto t = Clock::now();
+	auto currentTime = Clock::now();
+	const float dt = 16.667; // around 1/60th of a second, in milliseconds
 
-	// variable timestep loop.. can be improved (:
 	while (!world.is_over())
 	{
 		// Processes system messages, if this wasn't present the window would become unresponsive
 		glfwPollEvents();
 
 		// Calculating elapsed times in milliseconds from the previous iteration
-		auto now = Clock::now();
-		float elapsed_sec = (float)(std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count() / 1000;
-		t = now;
+		auto newTime = Clock::now();
+		float frameTime = (float) (std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime)).count() / 1000;
+		currentTime = newTime;
 
-		world.update(elapsed_sec);
+		while (frameTime > 0.f) {
+			float deltaTime = std::min(frameTime, dt);
+			world.update(deltaTime);
+			frameTime -= deltaTime;
+		}
+
 		world.draw();
 	}
 
