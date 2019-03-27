@@ -29,7 +29,8 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 }
 
 // Parse .json file to generate entities
-void EntityGenerator::generateEntities(std::string room_path, Water* water)
+// void EntityGenerator::generateEntities(std::string room_path, Water* water)
+void EntityGenerator::generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text)
 {
 	// Components
 	DrawCmp drawCmp;
@@ -1143,11 +1144,11 @@ void EntityGenerator::generateEntities(std::string room_path, Water* water)
 		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;
 	}
 	// Proceed to handle the text box entities
-	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, water);
+	generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, light, enemy, text);
 }
 
 // Separate call to generate text box entitities
-void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
+void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text)
 {
 	// Create text boxes if we're in room one:
 	if (map_path("level_one.json") == room_path)
@@ -1170,12 +1171,12 @@ void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc,
 	rToRestart->active = false; // Died text initially invisible
 
 	// Proceed to handle held item, if applicable
-	handleHeldItem(dc, tc, ic, cc, ec, mc, itc, water);
+	handleHeldItem(dc, tc, ic, cc, ec, mc, itc, light,enemy,text);
 }
 
 // When room changes, Sam's held item is deleted but we still want to generate
 // it in the new room
-void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
+void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text)
 {
 	// Check GameStateCmp to see if any held entities from other rooms should be generated in this room
 	if (gameState->held_item != -1) {
@@ -1193,19 +1194,19 @@ void EntityGenerator::handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, C
 	}
 
 	// Done generating entities, proceed to initialize systems
-	initializeSystems(dc, tc, ic, cc, ec, mc, itc, water);
+	initializeSystems(dc, tc, ic, cc, ec, mc, itc, light, enemy, text);
 }
 
 // Set-up DrawSystem, InputSystem, CollisionSystem, etc.
-void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water)
+void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text)
 {
 	drawSystem->init(*objectManager, dc, tc, mc, gameState);
 	inputSystem->init(*objectManager, ic, tc, cc, mc, ec, itc, gameState);
 	collisionSystem->init(*objectManager, cc, tc, itc, gameState);
 	enemySystem->init(*objectManager, tc, ec, mc, itc, gameState);
 	movementSystem->init(*objectManager, tc, cc, mc, gameState);
-	textSystem->init(*objectManager, gameState, water);
-	lightSystem->init(*objectManager, gameState, tc, water);
+	textSystem->init(*objectManager, gameState, text, light, enemy);
+	lightSystem->init(*objectManager, gameState, tc, light,enemy);
 
 	drawSystem->setup();
 }

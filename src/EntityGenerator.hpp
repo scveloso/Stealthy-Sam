@@ -19,7 +19,9 @@
 #include "TextSystem.hpp"
 #include "LightSystem.hpp"
 #include "Entity.hpp"
-#include "water.hpp"
+#include "light.hpp"
+#include "text.hpp"
+#include "EnemyCone.hpp"
 
 #include <vector>
 #include <string>
@@ -30,10 +32,14 @@ public:
 	EntityGenerator(ObjectManager* objectManager, CollisionSystem* collisionSystem, DrawSystem* drawSystem,
 		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, TextSystem* textSystem,
 		LightSystem* lightSystem, GameStateCmp* gameState);
-	void generateEntities(std::string room_path, Water* water);
-	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
-	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
-	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	// void generateEntities(std::string room_path, Water* water);
+	void generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text);
+	// void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	// void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	// void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text);
+	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc,  Light* light, EnemyCone* enemy, Text* text);
+	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text);
 
 private:
 	ObjectManager* objectManager;

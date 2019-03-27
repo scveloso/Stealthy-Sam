@@ -1,9 +1,8 @@
-#include "water.hpp"
+#include "text.hpp"
 
 #include <iostream>
 
-bool Water::init() {
-	m_dead_time = -1;
+bool Text::init() {
 	death = 0;
 	showWASDText = 1;
 	showEText = 0;
@@ -35,13 +34,13 @@ bool Water::init() {
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("water.vs.glsl"), shader_path("water.fs.glsl")))
+	if (!effect.load_from_file(shader_path("text.vs.glsl"), shader_path("text.fs.glsl")))
 		return false;
 
 	return true;
 }
 
-void Water::destroy() {
+void Text::destroy() {
 	glDeleteBuffers(1, &mesh.vbo);
 
 	glDeleteShader(effect.vertex);
@@ -49,57 +48,8 @@ void Water::destroy() {
 	glDeleteShader(effect.program);
 }
 
-void Water::set_salmon_dead() {
-	m_dead_time = glfwGetTime();
-}
 
-// Adds a circle of light at the given position
-void Water::add_position(vec2 position){
-	circle_light_position = position;
-}
-
-void Water::add_enemy_position(int i, vec2 position){
-  float x= position.x;
-	float y= position.y;
-	enemy_position[i]=x;
-	enemy_position[i+1]=y;
-}
-
-void Water::clearTorchPositions() {
-	for (int i=0; i < 10; i++){
-		torch_light[i]= -1000.f;
-	}
-}
-
-void Water::addTorchPosition(int i, vec2 position) {
-  float x= position.x;
-	float y= position.y;
-	torch_light[i]=x;
-	torch_light[i+1]=y;
-}
-
-void Water::add_enemy_direction(int i, float direction){
-	enemy_direction[i] = direction;
-	enemy_direction[i+1]=0;
-}
-
-void Water::clear_enemy_position(){
-	for (int i=0; i < 10; i++){
-		enemy_position[i]=-1000.f;
-		enemy_direction[i]=0;
-		// torch_light[i]= -1000.f;
-	}
-}
-
-void Water::reset_salmon_dead_time() {
-	m_dead_time = -1;
-}
-
-float Water::get_salmon_dead_time() const {
-	return glfwGetTime() - m_dead_time;
-}
-
-void Water::draw(const mat3& projection) {
+void Text::draw(const mat3& projection) {
 	// Enabling alpha channel for textures
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
@@ -111,18 +61,14 @@ void Water::draw(const mat3& projection) {
 	// Set clock
 	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
-	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
-	GLint s_position= glGetUniformLocation(effect.program, "circle_light_position");
 	GLint t_position= glGetUniformLocation(effect.program, "text_position");
 	GLint e_position= glGetUniformLocation(effect.program, "e_position");
 	GLint r_position= glGetUniformLocation(effect.program, "r_position");
   GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
-	GLint tor_position= glGetUniformLocation(effect.program, "torch_light");
 
 	GLint re_cond= glGetUniformLocation(effect.program, "remove_r");
 	GLint text_cond= glGetUniformLocation(effect.program, "text_cond");
 	GLint key_cond= glGetUniformLocation(effect.program, "key_cond");
-	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
 	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
 
 	glUniform1i(death_cond, death);
@@ -130,17 +76,11 @@ void Water::draw(const mat3& projection) {
 	glUniform1i(text_cond, showWASDText);
 	glUniform1i(key_cond, showEText);
 	glUniform2f(t_position, textWASD_position.x, textWASD_position.y);
-	glUniform2fv(en_position, 5, enemy_position);
-	glUniform2fv(en_direction, 5, enemy_direction);
-	glUniform2fv(tor_position, 5, torch_light);
-
-
 	glUniform2f(e_position, textE_position.x, textE_position.y );
-	glUniform2f(s_position, circle_light_position.x, circle_light_position.y);
 	glUniform2f(r_position, textR_position.x, textR_position.y);
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
-	glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);
+	// glUniform1f(dead_timer_uloc, (m_dead_time > 0) ? (float)((glfwGetTime() - m_dead_time) * 10.0f) : -1);
 
 	// Draw the screen texture on the quad geometry
 	// Setting vertices
@@ -156,12 +96,8 @@ void Water::draw(const mat3& projection) {
 }
 
 // Game is restarted, change to default values
-void Water::restart() {
+void Text::restart() {
 	showWASDText = 1;
 	showEText = 0;
 	death = 0;
-}
-
-void Water::clearSamLight() {
-	circle_light_position = { -1000.f, -1000.f };
 }

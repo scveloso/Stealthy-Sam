@@ -52,6 +52,5 @@ private:
 	vec2 textR_position;
 	GLfloat enemy_position[10];
 	GLfloat enemy_direction[10];
-	// GLfloat torch_light[10]= {-100};
 
 };
