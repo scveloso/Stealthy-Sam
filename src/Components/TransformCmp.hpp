@@ -30,6 +30,8 @@ public:
 	void removeFacingDirection(Entity *entity, int facingDirection);
 	int getFacingDirection(Entity *entity);
 
+	void mapdel();
+
 private:
 	std::unordered_map<int, Transform*> transform_map;
 };

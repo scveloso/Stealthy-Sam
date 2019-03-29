@@ -100,3 +100,15 @@ std::vector<std::pair<Entity*, Draw *>> DrawCmp::getmap()
 {
 	return draw_vec;
 }
+
+void DrawCmp::mapdel() {
+
+	for (auto& it : draw_vec) {
+
+		it.second->texture.~Texture();
+
+		delete it.first;
+		delete it.second;
+	}
+	draw_vec.clear();
+}
