@@ -216,7 +216,7 @@ void World::setupWindow()
 // Clear objects in map for reinitialization of entities when rooms switch
 void World::clearMap()
 {
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 	entityGenerator->del();
 	delete entityGenerator;
 	delete objectManager;
