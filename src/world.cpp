@@ -450,11 +450,10 @@ void World::draw()
 
 	// m_water->draw(projection_2D);
 	// m_light->draw(projection_2D);
-	// m_cone->draw(projection_2D);
-	// m_text->draw(projection_2D);
-	// m_text->draw(projection_2D);
-	// m_cone->draw(projection_2D);
-	m_light->draw(projection_2D);
+	m_cone->draw(projection_2D);
+	// m_light->draw(projection_2D);
+	m_text->draw(projection_2D);
+
 
 
 	//////////////////

@@ -77,6 +77,8 @@ void main()
   if (death_cond ==0){
     if (st1 || st2 || st3 || st4 || st0){
       color= in_color;
+    }else{
+      color= vec4(1,1,1,0.3)*in_color;
     }
-
+  }
 }
