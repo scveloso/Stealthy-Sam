@@ -1,3 +1,8 @@
+//Memory leak debug information for Visual Studio
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 // Header
 #include "world.hpp"
 #include "TileConstants.hpp"
@@ -216,6 +221,7 @@ void World::setupWindow()
 // Clear objects in map for reinitialization of entities when rooms switch
 void World::clearMap()
 {
+	_CrtDumpMemoryLeaks();
 	entityGenerator->del();
 	delete entityGenerator;
 	delete objectManager;
