@@ -9,6 +9,8 @@ public:
 	    , const char* file4, const char* file5, const char* file6, const char* file7
 	    , const char* file8, const char* file9);
 	std::vector<std::pair<Entity*, Draw *>> getmap();
+
+	void mapdel();
 private:
 	std::vector<std::pair<Entity*, Draw *>> draw_vec;
 };

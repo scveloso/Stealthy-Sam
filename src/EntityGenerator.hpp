@@ -34,8 +34,17 @@ public:
 	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
 	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
 	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Water* water);
+	void del();
 
 private:
+	DrawCmp drawCmp;
+	TransformCmp transformCmp;
+	InputCmp inputCmp;
+	CollisionCmp collisionCmp;
+	EnemyCmp enemyCmp;
+	MovementCmp movementCmp;
+	ItemCmp itemCmp;
+
 	ObjectManager* objectManager;
 	CollisionSystem* collisionSystem;
 	DrawSystem* drawSystem;

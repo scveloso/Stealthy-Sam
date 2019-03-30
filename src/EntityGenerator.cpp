@@ -32,13 +32,6 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 void EntityGenerator::generateEntities(std::string room_path, Water* water)
 {
 	// Components
-	DrawCmp drawCmp;
-	TransformCmp transformCmp;
-	InputCmp inputCmp;
-	CollisionCmp collisionCmp;
-	EnemyCmp enemyCmp;
-	MovementCmp movementCmp;
-	ItemCmp itemCmp;
 
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
@@ -1208,4 +1201,12 @@ void EntityGenerator::initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic
 	lightSystem->init(*objectManager, gameState, tc, water);
 
 	drawSystem->setup();
+}
+
+void EntityGenerator::del() {
+	drawCmp.mapdel();
+	transformCmp.mapdel();
+	collisionCmp.mapdel();
+	enemyCmp.mapdel();
+	movementCmp.mapdel();
 }

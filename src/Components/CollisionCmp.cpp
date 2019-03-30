@@ -15,3 +15,11 @@ std::unordered_map<int, Collision *> CollisionCmp::getmap()
 Collision* CollisionCmp::getCollision(Entity *entity) {
 	return collision_map[entity->id];
 }
+
+void CollisionCmp::mapdel() {
+
+	for (auto& it : collision_map) {
+		delete it.second;
+	}
+	collision_map.clear();
+}

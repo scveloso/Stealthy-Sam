@@ -30,6 +30,13 @@ void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp tc, Collision
     gameState = gameStateCmp;
 }
 
+void InputSystem::del() {
+	//transformComponent.mapdel();
+	//collisionComponent.mapdel();
+	//movementComponent.mapdel();
+	//enemyComponent.mapdel();
+}
+
 bool InputSystem::setup(GLFWwindow* m_window)
 {
 	return true;
