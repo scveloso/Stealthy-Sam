@@ -11,7 +11,8 @@ Entity* ObjectManager::makeEntity(std::string label) {
 	Entity *entity = new Entity();
 	entity->id = num_of_entities;
 	entity->label = label;
-  entity->active = true;
+	entity->active = true;
+	entity->ui = false;
 	entities.emplace_back(entity);
 	num_of_entities++;
 	return entity;
