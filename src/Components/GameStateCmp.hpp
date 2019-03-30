@@ -19,6 +19,8 @@ public:
     vec2 sam_position;
     bool hidden;
 
+    vec2 cursor_pos;
+
     bool has_moved;
     bool has_pressed_E;
 

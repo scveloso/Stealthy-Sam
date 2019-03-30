@@ -209,8 +209,11 @@ void World::setupWindow()
 
 	glfwSetWindowUserPointer(m_window, this);
 	auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+	auto click_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_click(wnd, _0, _1, _2); };
+	auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
 	glfwSetKeyCallback(m_window, key_redirect);
-
+	glfwSetMouseButtonCallback(m_window, click_redirect);
+	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 }
 
 // Clear objects in map for reinitialization of entities when rooms switch
@@ -446,4 +449,14 @@ void World::on_key(GLFWwindow*, int key, int _, int action, int mod)
 {
     int resultingAction = inputSys->on_key(m_window, key, _, action, mod);
     handleUpdateAction(resultingAction);
+}
+
+void World::on_mouse_click(GLFWwindow* window, int button, int action, int mods)
+{
+    inputSys->on_click(m_window, button, action, mods);
+}
+
+void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
+{
+    gameState->cursor_pos = { (float) xpos, (float) ypos };
 }

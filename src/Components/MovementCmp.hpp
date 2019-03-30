@@ -9,8 +9,10 @@ public:
 
 	Movement* getMovement(Entity* entity);
 	void setMovementDirection(Entity *entity, int movementDirection);
+	void setVecDirection(Entity *entity, vec2 vecDirection);
 	void removeMovementDirection(Entity *entity, int movementDirection);
 	int getMovementDirection(Entity *entity);
+	vec2 getVecDirection(Entity *entity);
 	void resetMovementDirection(Entity *entity);
 
 	bool isGoingLeft(Entity *entity);
