@@ -70,7 +70,7 @@ void main()
     }
 
     else if (death_cond == 1) {
-      vec4 i= vec4(1,0,0,0.7);
+      vec4 i= vec4(1,0,0,0.3);
       if (d <= 100*100){
         color= i*in_color;
       }

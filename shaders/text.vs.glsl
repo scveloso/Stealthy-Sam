@@ -18,6 +18,6 @@ void main()
 
     keye_position= vec2(e_position.x-15, 800-e_position.y+12);
     t_position= vec2(text_position.x-15, 800-text_position.y+12);
-    re_position= vec2(r_position.x-5, 800-r_position.y+12);
+    re_position= vec2(r_position.x-15, 800-r_position.y+12);
 
 }

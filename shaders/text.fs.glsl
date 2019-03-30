@@ -48,7 +48,7 @@ layout(location = 0) out vec4 color;
     }
 
     else if (death_cond == 1) {
-      if (x <= x2+wr && x >= x2-wr && y <= y2+h && y >= y2-h && re_cond == 0){
+      if (x <= x2+wr+7 && x >= x2-wr-7 && y <= y2+h && y >= y2-h && re_cond == 0){
         color= in_color;
       }
       else{

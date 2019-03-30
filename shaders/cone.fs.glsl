@@ -82,9 +82,9 @@ void main()
       color= in_color;
     }
     else{
-      color= vec4(1,1,1,0.1)*in_color;
+      color= vec4(0,0,0,0.2)*in_color;
     }
   }else{
-    color= vec4(1,1,1,0.1)*in_color;
+    color= vec4(0,0,0,0.2)*in_color;
   }
 }
