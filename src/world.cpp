@@ -449,10 +449,12 @@ void World::draw()
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	// m_water->draw(projection_2D);
-	// m_light->draw(projection_2D);
-	m_cone->draw(projection_2D);
-	// m_light->draw(projection_2D);
 	m_text->draw(projection_2D);
+	m_cone->draw(projection_2D);
+	m_light->draw(projection_2D);
+	// glBindFramebuffer(GL_FRAMEBUFFER, 1);
+	// glBindTexture(GL_TEXTURE_2D, 1);
+	// m_text->draw(projection_2D);
 
 
 

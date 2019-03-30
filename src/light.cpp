@@ -70,7 +70,7 @@ void Light::clearSamLight() {
 void Light::draw(const mat3& projection) {
 	// Enabling alpha channel for textures
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	// Setting shaders
 	glUseProgram(effect.program);
