@@ -136,7 +136,7 @@ void main()
         color= in_color;
       }
       else if (dt1 || dt2 || dt3 || dt4 || dt0){
-		
+
 		float k;
 		if(dt1){k = dimmer(d_torch[1]);}
 		if(dt2){k = dimmer(d_torch[2]);}

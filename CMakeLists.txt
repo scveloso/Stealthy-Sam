@@ -33,7 +33,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 set(SOURCE_FILES
 		src/main.cpp
 		src/common.cpp
-		src/water.cpp
+		#src/water.cpp
 		src/world.cpp
 		src/ObjectManager.cpp
 		src/DrawSystem.cpp
@@ -45,10 +45,13 @@ set(SOURCE_FILES
 		src/LightSystem.cpp
 		src/DecisionNode.cpp
 		src/EntityGenerator.cpp
+    src/light.cpp
+    src/EnemyCone.cpp
+    src/text.cpp
 
 		src/project_path.hpp
 		src/common.hpp
-		src/water.hpp
+		#src/water.hpp
 		src/world.hpp
 		src/ObjectManager.hpp
 		src/Entity.hpp
@@ -61,6 +64,9 @@ set(SOURCE_FILES
 		src/LightSystem.hpp
 		src/DecisionNode.hpp
 		src/EntityGenerator.hpp
+    src/light.hpp
+    src/EnemyCone.hpp
+    src/text.hpp
 
 		src/common.hpp
 		src/Components/Cmp.hpp
