@@ -4,7 +4,7 @@
 #include "common.hpp"
 #include "water.hpp"
 #include "light.hpp"
-#include "Enemycone.hpp"
+#include "EnemyCone.hpp"
 #include "text.hpp"
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"

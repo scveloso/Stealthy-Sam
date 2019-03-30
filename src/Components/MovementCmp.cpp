@@ -100,3 +100,11 @@ bool MovementCmp::isGoingDown(Entity *entity)
 {
 	return movement_map[entity->id]->movementDirection % DOWN == 0;
 }
+
+void MovementCmp::mapdel() {
+
+	for (auto& it : movement_map) {
+		delete it.second;
+	}
+	movement_map.clear();
+}

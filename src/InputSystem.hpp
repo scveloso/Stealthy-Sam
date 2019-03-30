@@ -21,6 +21,7 @@ public:
 	void torch_cauldron_collision(int entityId, Transform *entityTransform);
 	vec2 tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
 	vec2 tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
+	void del();
 
 private:
 	InputCmp inputComponent;

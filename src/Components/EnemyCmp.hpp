@@ -7,6 +7,7 @@ public:
 	void add(Entity* entity, int patrolX, int patrolY);
 	std::unordered_map<int, Enemy *> getmap();
 	void updateEnemyAction(int currEnemyAction, int newEnemyAction);
+	void mapdel();
 
 private:
 	std::unordered_map<int, Enemy *> enemy_map;

@@ -43,7 +43,7 @@ layout(location = 0) out vec4 color;
       else if (x <= x1+we && x >= x1-we && y <= y1+h && y >= y1-h && key_cond == 1){
         color= (in_color);
       }else{
-        color= vec4(1,1,1,0.1)*in_color;
+        color= vec4(0,0,0,0.1)*in_color;
       }
     }
 
@@ -52,7 +52,7 @@ layout(location = 0) out vec4 color;
         color= in_color;
       }
       else{
-        color= vec4(1,1,1,0.1)*in_color;
+        color= vec4(0,0,0,0.1)*in_color;
       }
     }
   }

@@ -27,3 +27,11 @@ void EnemyCmp::updateEnemyAction(int currEnemyAction, int newEnemyAction) {
 		}
 	}
 }
+
+void EnemyCmp::mapdel() {
+
+	for (auto& it : enemy_map) {
+		delete it.second;
+	}
+	enemy_map.clear();
+}
