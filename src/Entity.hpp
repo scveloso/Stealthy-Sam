@@ -5,5 +5,4 @@ struct Entity {
 	int id;
 	bool active;
 	std::string label;
-	bool ui;
 };

@@ -8,7 +8,6 @@ class DrawSystem
 public:
 	void init(ObjectManager om, DrawCmp dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp);
 	void update(const mat3 projection);
-	void updateUI(const mat3 projection);
 	bool setup();
 	void del();
 	vec2 s_position;

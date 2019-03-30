@@ -432,10 +432,6 @@ void World::draw()
 
 	m_water->draw(projection_2D);
 
-	ds->updateUI(projection_2D);
-
-	//..
-
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);
