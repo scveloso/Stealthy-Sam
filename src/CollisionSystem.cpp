@@ -90,7 +90,7 @@ int CollisionSystem::update(float elapsed_ms)
 	std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
 	for (auto& torchEntity : torchEntities)
 	{
-		std::vector<Entity*> ghostEntities = objectManager.getEntitiesByLabel("Enemy");
+		std::vector<Entity*> ghostEntities = objectManager.getEntitiesByLabel("Enemy.Ghost");
 		for (auto& ghostEntity : ghostEntities)
 		{
 			if (AABB(transformComponent.getTransform(torchEntity), transformComponent.getTransform(ghostEntity)))
