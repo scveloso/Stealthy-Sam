@@ -80,7 +80,7 @@ void DrawSystem::update(const mat3 projection)
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities
-		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true && entity->ui == false) {
+		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true) {
 
 			if (!entity->active) {
 				continue;
@@ -216,65 +216,8 @@ void DrawSystem::update(const mat3 projection)
 	}
 }
 
-void DrawSystem::updateUI(const mat3 projection)
-{
-	for (auto& it : drawComponent.getmap())
-	{
-		Entity *entity = it.first;
-		Draw *draw = it.second;
-
-		// Don't draw inactive entities
-		if (entity->ui) {
-
-
-			draw->transform_begin();
-			draw->transform_translate(transformComponent.getTransform(entity)->m_position);
-			draw->transform_rotate(transformComponent.getTransform(entity)->m_rotation);
-			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
-			draw->transform_end();
-
-			// Setting shaders
-			glUseProgram(draw->effect.program);
-
-			// Enabling alpha channel for textures
-			glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_DEPTH_TEST);
-
-			// Getting uniform locations for glUniform* calls
-			GLint transform_uloc = glGetUniformLocation(draw->effect.program, "transform");
-			GLint color_uloc = glGetUniformLocation(draw->effect.program, "fcolor");
-			GLint projection_uloc = glGetUniformLocation(draw->effect.program, "projection");
-
-			// Setting vertices and indices
-			glBindVertexArray(draw->mesh.vao);
-			glBindBuffer(GL_ARRAY_BUFFER, draw->mesh.vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, draw->mesh.ibo);
-
-			// Input data location as in the vertex buffer
-			GLint in_position_loc = glGetAttribLocation(draw->effect.program, "in_position");
-			GLint in_texcoord_loc = glGetAttribLocation(draw->effect.program, "in_texcoord");
-			glEnableVertexAttribArray(in_position_loc);
-			glEnableVertexAttribArray(in_texcoord_loc);
-			glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-			glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
-
-			// Enabling and binding texture to slot 0
-			glActiveTexture(GL_TEXTURE0);
-			//gets first texture need to make it work for changing textures
-
-			glBindTexture(GL_TEXTURE_2D, draw->texture.id);
-
-
-			// Setting uniform values to the currently bound program
-			glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&draw->transform);
-			float color[] = { 1.f, 1.f, 1.f };
-			glUniform3fv(color_uloc, 1, color);
-			glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-
-			// Drawing!
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-
-			//printf("DRAWING\n");
-		}
-	}
+void DrawSystem::del() {
+	drawComponent.mapdel();
+	transformComponent.mapdel();
+	movementComponent.mapdel();
 }
