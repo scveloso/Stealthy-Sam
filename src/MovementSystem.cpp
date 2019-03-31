@@ -32,9 +32,12 @@ void MovementSystem::update(float elapsed_ms)
 
     // For non-linear entities, check if it came to a halt
     // and rotate it sideways for comedic effect
+    vec2 zeroVec = {0, 0};
+
     if (step < 0) {
       movementComponent.setCurrSpeed(entity, 0);
       movementComponent.resetMovementDirection(entity);
+      movementComponent.setVecDirection(entity, zeroVec);
     }
 
     // If Sam is dead, continue
@@ -45,6 +48,7 @@ void MovementSystem::update(float elapsed_ms)
 
     Transform* entityTransform = transformComponent.getTransform(entity);
     int movementDirection = movementComponent.getMovementDirection(entity);
+    vec2 vecDirection = movementComponent.getVecDirection(entity);
     vec2 oldPosition = entityTransform->m_position;
 
     if (transformComponent.getTransform(entity)->visible)
@@ -53,9 +57,9 @@ void MovementSystem::update(float elapsed_ms)
 		if (movementDirection % 99 == 0) {
 			//do nothing
 		}
-      if (movementDirection % LEFT == 0)
+      if (vecDirection.x != 0 || vecDirection.y != 0)
       {
-          entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+          entityTransform->m_position = { oldPosition.x + (step * vecDirection.x), oldPosition.y + (step * vecDirection.y)};
           cauldronCheck(entity, entityTransform);
 
           if (is_movement_interrupted(entity, entityTransform))
@@ -67,7 +71,25 @@ void MovementSystem::update(float elapsed_ms)
           {
             oldPosition = entityTransform->m_position;
           }
+
+          continue;
       }
+
+      if (movementDirection % LEFT == 0)
+        {
+            entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+            cauldronCheck(entity, entityTransform);
+
+            if (is_movement_interrupted(entity, entityTransform))
+            {
+              movementComponent.setCurrSpeed(entity, 0);
+              entityTransform->m_position = oldPosition;
+            }
+            else
+            {
+              oldPosition = entityTransform->m_position;
+            }
+        }
 
       if (movementDirection % RIGHT == 0)
       {

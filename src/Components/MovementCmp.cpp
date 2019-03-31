@@ -61,6 +61,11 @@ void MovementCmp::setMovementDirection(Entity *entity, int movementDirection)
   }
 }
 
+void MovementCmp::setVecDirection(Entity *entity, vec2 vecDir)
+{
+  movement_map[entity->id]->vecDirection = vecDir;
+}
+
 void MovementCmp::removeMovementDirection(Entity *entity, int movementDirection)
 {
 	int entityDirection = movement_map[entity->id]->movementDirection;
@@ -74,6 +79,11 @@ void MovementCmp::removeMovementDirection(Entity *entity, int movementDirection)
 int MovementCmp::getMovementDirection(Entity *entity)
 {
 	return movement_map[entity->id]->movementDirection;
+}
+
+vec2 MovementCmp::getVecDirection(Entity *entity)
+{
+	return movement_map[entity->id]->vecDirection;
 }
 
 void MovementCmp::resetMovementDirection(Entity *entity)

@@ -8,6 +8,7 @@
 #include "CollisionSystem.hpp"
 #include <iostream>
 #include <string>
+#include <math.h>
 
 // System to update game based on user input.
 //
@@ -187,6 +188,48 @@ bool InputSystem::loadGame() {
   return gameState->loadGame();
 }
 
+void InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
+    if (button == 0 && action == GLFW_PRESS) {
+        Entity* heldEntity = gameState->held_entity;
+
+        // If a torch is thrown
+        if (heldEntity && heldEntity->label.compare("Torch") == 0) {
+            // Throw direction is in direction of mouse, normalized
+            vec2 sampos = gameState->sam_position;
+            vec2 curpos = gameState->cursor_pos;
+            double xval = curpos.x - sampos.x;
+            double yval = curpos.y - sampos.y;
+            double normval = sqrt( pow(xval,2) + pow(yval,2) );
+            vec2 throwDir = { (xval / normval) , (yval / normval) };
+
+
+            Transform* entityTransform = transformComponent.getTransform(heldEntity);
+            vec2 torch_position = gameState->sam_position;
+            torch_position = tryThrowVecDirection(heldEntity, entityTransform, torch_position, throwDir);
+
+            // If torch movement won't be interrupted by a wall/closet
+            if (torch_position.x != gameState->sam_position.x ||
+                  torch_position.y != gameState->sam_position.y) {
+                // Torch is now active and thrown
+                heldEntity->active = true;
+                itemComponent.throwItem(heldEntity);
+
+                // Set its position and get it moving
+                transformComponent.setPosition(heldEntity, torch_position);
+                Movement* entityMovement = movementComponent.getMovement(heldEntity);
+                movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
+
+                // Update enemies chasing Sam to chase torch instead
+                enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
+
+                // No longer holding torch
+                gameState->held_item = -1;
+                gameState->held_entity = NULL;
+            }
+        }
+    }
+}
+
 void InputSystem::handleThrowable(Entity* entity) {
   Entity* heldEntity = gameState->held_entity;
 
@@ -247,6 +290,23 @@ void InputSystem::handleThrowable(Entity* entity) {
       }
     }
   }
+}
+
+vec2 InputSystem::tryThrowVecDirection(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, vec2 throwDir) {
+  torch_position = { torch_position.x + (2 * TILE_WIDTH * throwDir.x), torch_position.y + (TILE_HEIGHT * throwDir.y)};
+  entityTransform->m_position = torch_position;
+  bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
+
+  torch_cauldron_collision(heldEntity->id, entityTransform);
+
+  if (movementInterrupted) {
+    torch_position = gameState->sam_position;
+    entityTransform->m_position = torch_position;
+  } else {
+    movementComponent.setVecDirection(heldEntity, throwDir);
+  }
+
+  return torch_position;
 }
 
 vec2 InputSystem::tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset) {

@@ -61,6 +61,7 @@ struct Movement
 	float baseSpeed;
 	float currSpeed;
 	float acceleration;
+	vec2 vecDirection;
 };
 
 struct Item
