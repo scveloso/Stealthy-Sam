@@ -463,6 +463,8 @@ void World::draw()
 
 
 
+	ds->updateUI(projection_2D);
+
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);

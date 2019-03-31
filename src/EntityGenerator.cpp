@@ -1163,6 +1163,12 @@ void EntityGenerator::generateTextBoxEntities(std::string room_path, DrawCmp dc,
 	tc.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 	rToRestart->active = false; // Died text initially invisible
 
+	//Entity* example = objectManager->makeEntity("UI");
+	//example->ui = true;
+	//dc.add(example, textures_path("Dungeon/boss.png"));
+	//tc.add(example, { 500,500 }, { 10,10 }, 0.0);
+	//Set ui to true to overlay over everything
+
 	// Proceed to handle held item, if applicable
 	handleHeldItem(dc, tc, ic, cc, ec, mc, itc, light,enemy,text);
 }
