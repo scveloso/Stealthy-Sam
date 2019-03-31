@@ -100,3 +100,13 @@ int TransformCmp::getFacingDirection(Entity *entity)
 {
 	return transform_map[entity->id]->facingDirection;
 }
+
+void TransformCmp::mapdel() {
+	for (int i = 0; i < transform_map.size(); i++) {
+		Transform *t = (transform_map[i]);
+		delete t;
+
+		//printf("Pointer: %d\n", t);
+	}
+	transform_map.clear();
+}

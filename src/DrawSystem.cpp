@@ -215,3 +215,9 @@ void DrawSystem::update(const mat3 projection)
 		}
 	}
 }
+
+void DrawSystem::del() {
+	drawComponent.mapdel();
+	transformComponent.mapdel();
+	movementComponent.mapdel();
+}

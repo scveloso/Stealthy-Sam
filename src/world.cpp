@@ -123,13 +123,23 @@ bool World::init(vec2 screen)
 	gameState = new GameStateCmp();
 	gameState->init();
 
-	m_water = new Water();
-	m_water->init();
+	// m_water = new Water();
+	// m_water->init();
+	m_light= new Light();
+	m_light->init();
+	m_cone= new EnemyCone();
+	m_cone->init();
+	m_text= new Text();
+	m_text->init();
 
 	// Clear fragment shader arrays
-	m_water->clear_enemy_position();
-	m_water->clearSamLight();
-	m_water->clearTorchPositions();
+	// m_water->clear_enemy_position();
+	// m_water->clearSamLight();
+	// m_water->clearTorchPositions();
+	m_light->clearSamLight();
+	m_light->clearTorchPositions();
+	m_cone->clear_enemy_position();
+
 
 	vec2 a = { 0,0 };
 	vec2 b = { 0,10 };
@@ -154,7 +164,7 @@ bool World::init(vec2 screen)
     gameState->previous_room = ROOM_ONE_GUID;
     gameState->current_room = ROOM_FOUR_GUID;
     generateEntities(map_path("level_four.json"));
-    m_water->clear_enemy_position();
+    m_cone->clear_enemy_position();
     soundSystem->playBossMusic();
     */
 
@@ -184,7 +194,8 @@ void World::generateEntities()
 	makeSystems();
 
 	// EntityGenerator create entities and init systems
-	entityGenerator->generateEntities(room_path, m_water);
+	// entityGenerator->generateEntities(room_path, m_water);
+	entityGenerator->generateEntities(room_path, m_light, m_cone, m_text);
 	setupWindow();
 }
 
@@ -219,6 +230,8 @@ void World::setupWindow()
 // Clear objects in map for reinitialization of entities when rooms switch
 void World::clearMap()
 {
+	//_CrtDumpMemoryLeaks();
+	entityGenerator->del();
 	delete entityGenerator;
 	delete objectManager;
 	delete ds;
@@ -277,7 +290,8 @@ void World::handleUpdateAction(int updateAction)
 
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
-				m_water->clear_enemy_position();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 				if (gameState->level_two_key && gameState->level_three_key)
 				{
 					clearMap();
@@ -300,7 +314,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities();
-				m_water->clear_enemy_position();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 				break;
 			}
 			case ROOM_THREE:
@@ -309,7 +324,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
 				generateEntities();
-				m_water->clear_enemy_position();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 				break;
 			}
 			case ROOM_FOUR:
@@ -318,7 +334,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities();
-				m_water->clear_enemy_position();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 
 				// Trigger boss music
 				soundSystem->playBossMusic();
@@ -329,8 +346,11 @@ void World::handleUpdateAction(int updateAction)
 				gameState->init();
 				clearMap();
 				generateEntities();
-				m_water->restart();
-				m_water->clear_enemy_position();
+				// m_water->restart();
+				m_light->restart();
+				m_text->restart();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 
 				soundSystem->haltMusic();
 				soundSystem->playBackgroundMusic();
@@ -340,8 +360,10 @@ void World::handleUpdateAction(int updateAction)
 			{
 				clearMap();
 				generateEntities();
-				m_water->restart();
-				m_water->clear_enemy_position();
+				m_light->restart();
+				m_text->restart();
+				// m_water->clear_enemy_position();
+				m_cone->clear_enemy_position();
 				std::cout << "Loaded game." << std::endl;
 				break;
 			}
@@ -431,7 +453,15 @@ void World::draw()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-	m_water->draw(projection_2D);
+	// m_water->draw(projection_2D);
+	m_text->draw(projection_2D);
+	m_cone->draw(projection_2D);
+	m_light->draw(projection_2D);
+	// glBindFramebuffer(GL_FRAMEBUFFER, 1);
+	// glBindTexture(GL_TEXTURE_2D, 1);
+	// m_text->draw(projection_2D);
+
+
 
 	//////////////////
 	// Presenting

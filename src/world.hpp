@@ -3,6 +3,9 @@
 // internal
 #include "common.hpp"
 #include "water.hpp"
+#include "light.hpp"
+#include "EnemyCone.hpp"
+#include "text.hpp"
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"
 #include "Components/InputCmp.hpp"
@@ -79,6 +82,9 @@ private:
 
 	// Water effect
 	Water* m_water;
+	Light* m_light;
+	EnemyCone* m_cone;
+	Text* m_text;
 
 	// Number of fish eaten by the salmon, displayed in the window title
 	unsigned int m_points;

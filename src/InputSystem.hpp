@@ -23,6 +23,7 @@ public:
 	vec2 tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
 	vec2 tryThrowVecDirection(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, vec2 throwDir);
 	vec2 tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
+	void del();
 
 private:
 	InputCmp inputComponent;
