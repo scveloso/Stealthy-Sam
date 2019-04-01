@@ -8,7 +8,7 @@
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp* tc, MovementCmp mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
@@ -148,7 +148,7 @@ void DrawSystem::update(const mat3 projection)
 			if (entity->label == "Player") {
                 Transform* samTransform = transformComponent->getTransform(entity);
                 gameState->sam_position = samTransform->m_position;
-                int movDir = movementComponent.getMovement(entity)->movementDirection;
+                int movDir = movementComponent->getMovement(entity)->movementDirection;
 
                 if (samTransform->facingDirection == 2) {
                     if (movDir != 1) {

@@ -25,7 +25,7 @@ public:
 	float getStep(Entity* entity, float elapsed_ms);
 	void setCurrSpeed(Entity* entity, float currSpeed);
 
-	void mapdel();
+	~MovementCmp();
 private:
   std::unordered_map<int, Movement*> movement_map;
 };

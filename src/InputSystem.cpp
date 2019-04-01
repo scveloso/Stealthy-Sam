@@ -19,7 +19,7 @@
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
 // Has access to ItemCmp to toggle items as thrown.
-void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
+void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp* mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;
@@ -51,12 +51,12 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
     {
       if (action == GLFW_PRESS)
       {
-        float direction = movementComponent.getMovementDirection(entity);
+        float direction = movementComponent->getMovementDirection(entity);
         switch (key) {
           case GLFW_KEY_A:
-            if (!movementComponent.isGoingLeft(entity))
+            if (!movementComponent->isGoingLeft(entity))
             {
-              movementComponent.setMovementDirection(entity, LEFT);
+              movementComponent->setMovementDirection(entity, LEFT);
               if (gameState->sam_is_alive) {
                 transformComponent->faceLeft(entity); // this is to rotate Sam texture
                 transformComponent->setFacingDirection(entity, LEFT);
@@ -65,9 +65,9 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             }
             break;
           case GLFW_KEY_D:
-            if (!movementComponent.isGoingRight(entity))
+            if (!movementComponent->isGoingRight(entity))
             {
-              movementComponent.setMovementDirection(entity, RIGHT);
+              movementComponent->setMovementDirection(entity, RIGHT);
               if (gameState->sam_is_alive) {
                 transformComponent->faceRight(entity); // this is to rotate Sam texture
                 transformComponent->setFacingDirection(entity, RIGHT);
@@ -76,14 +76,14 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             }
             break;
           case GLFW_KEY_S:
-            movementComponent.setMovementDirection(entity, DOWN);
+            movementComponent->setMovementDirection(entity, DOWN);
             if (gameState->sam_is_alive) {
               transformComponent->setFacingDirection(entity, DOWN);
             }
             gameState->has_moved = true;
             break;
           case GLFW_KEY_W:
-            movementComponent.setMovementDirection(entity, UP);
+            movementComponent->setMovementDirection(entity, UP);
             if (gameState->sam_is_alive) {
               transformComponent->setFacingDirection(entity, UP);
             }
@@ -129,16 +129,16 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
       {
         switch (key) {
           case GLFW_KEY_A:
-            movementComponent.removeMovementDirection(entity, LEFT);
+            movementComponent->removeMovementDirection(entity, LEFT);
             break;
           case GLFW_KEY_D:
-            movementComponent.removeMovementDirection(entity, RIGHT);
+            movementComponent->removeMovementDirection(entity, RIGHT);
             break;
           case GLFW_KEY_S:
-            movementComponent.removeMovementDirection(entity, DOWN);
+            movementComponent->removeMovementDirection(entity, DOWN);
             break;
           case GLFW_KEY_W:
-            movementComponent.removeMovementDirection(entity, UP);
+            movementComponent->removeMovementDirection(entity, UP);
             break;
           default:
             break;
@@ -210,8 +210,8 @@ void InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
 
                 // Set its position and get it moving
                 transformComponent->setPosition(heldEntity, torch_position);
-                Movement* entityMovement = movementComponent.getMovement(heldEntity);
-                movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
+                Movement* entityMovement = movementComponent->getMovement(heldEntity);
+                movementComponent->setCurrSpeed(heldEntity, entityMovement->baseSpeed);
 
                 // Update enemies chasing Sam to chase torch instead
                 enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
@@ -233,7 +233,7 @@ void InputSystem::handleThrowable(Entity* entity) {
     // Figure out what direction to throw the torch in,
     // MovementDirection is prioritized, facing direction used at rest
     int throwDirection = NO_DIRECTION;
-    int movementDirection = movementComponent.getMovementDirection(entity);
+    int movementDirection = movementComponent->getMovementDirection(entity);
     int facingDirection = transformComponent->getFacingDirection(entity);
     if (movementDirection != NO_DIRECTION) {
       throwDirection = movementDirection;
@@ -244,7 +244,7 @@ void InputSystem::handleThrowable(Entity* entity) {
     // Throw torch if there is a valid direction to throw it in
     if (throwDirection != NO_DIRECTION) {
       Transform* entityTransform = transformComponent->getTransform(heldEntity);
-      movementComponent.resetMovementDirection(heldEntity);
+      movementComponent->resetMovementDirection(heldEntity);
 
       vec2 torch_position = gameState->sam_position;
       if (throwDirection % LEFT == 0) {
@@ -272,8 +272,8 @@ void InputSystem::handleThrowable(Entity* entity) {
 
         // Set its position and get it moving
         transformComponent->setPosition(heldEntity, torch_position);
-        Movement* entityMovement = movementComponent.getMovement(heldEntity);
-        movementComponent.setCurrSpeed(heldEntity, entityMovement->baseSpeed);
+        Movement* entityMovement = movementComponent->getMovement(heldEntity);
+        movementComponent->setCurrSpeed(heldEntity, entityMovement->baseSpeed);
 
         // Update enemies chasing Sam to chase torch instead
         enemyComponent.updateEnemyAction(CHASE_SAM, CHASE_TORCH);
@@ -297,7 +297,7 @@ vec2 InputSystem::tryThrowVecDirection(Entity* heldEntity, Transform* entityTran
     torch_position = gameState->sam_position;
     entityTransform->m_position = torch_position;
   } else {
-    movementComponent.setVecDirection(heldEntity, throwDir);
+    movementComponent->setVecDirection(heldEntity, throwDir);
   }
 
   return torch_position;
@@ -314,7 +314,7 @@ vec2 InputSystem::tryThrowHorizontal(Entity* heldEntity, Transform* entityTransf
     torch_position = { torch_position.x - offset, torch_position.y };
     entityTransform->m_position = torch_position;
   } else {
-    movementComponent.setMovementDirection(heldEntity, direction);
+    movementComponent->setMovementDirection(heldEntity, direction);
   }
 
   return torch_position;
@@ -331,7 +331,7 @@ vec2 InputSystem::tryThrowVertical(Entity* heldEntity, Transform* entityTransfor
     torch_position = { torch_position.x, torch_position.y - offset};
     entityTransform->m_position = torch_position;
   } else {
-    movementComponent.setMovementDirection(heldEntity, direction);
+    movementComponent->setMovementDirection(heldEntity, direction);
   }
 
   return torch_position;
