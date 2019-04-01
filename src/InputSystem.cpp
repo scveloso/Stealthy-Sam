@@ -198,7 +198,7 @@ void InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
             double xval = curpos.x - sampos.x;
             double yval = curpos.y - sampos.y;
             double normval = sqrt( pow(xval,2) + pow(yval,2) );
-            vec2 throwDir = {static_cast<float>(xval / normval) , static_cast<float>(yval / normval) };
+            vec2 throwDir = { static_cast<float>(xval / normval) , static_cast<float>(yval / normval) };
 
 
             Transform* entityTransform = transformComponent->getTransform(heldEntity);
