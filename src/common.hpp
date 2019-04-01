@@ -125,7 +125,8 @@ const vec2 TEXT_POSITION = { 300, 150 };
 
 const std::string USE_WASD_TEXT_LABEL = "Textbox.UseWASD";
 const std::string USE_E_INTERACT_LABEL = "Textbox.UseE";
-const std::string USE_R_RESTART = "Textbox.RtoRestart";
+const std::string USE_P_RESTART = "Textbox.RtoRestart";
+const std::string TUTORIAL_SCREEN_LABEL = "Tutorial_Screen";
 
 const std::string ROOM_ONE_GUID = "ROOM_ONE";
 const std::string ROOM_TWO_GUID = "ROOM_TWO";

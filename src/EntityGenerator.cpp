@@ -1118,8 +1118,8 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	drawCmp.addFull(playerEntity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
 	textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
 	textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
-	textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png")
-	, textures_path("Dungeon/sam_step2.png"));
+	textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png"),
+	textures_path("Dungeon/sam_step2.png"));
 	inputCmp.add(playerEntity);
 	movementCmp.add(playerEntity, 200.f, 0);
 	collisionCmp.add(playerEntity);
@@ -1155,7 +1155,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	}
 
 	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
+	Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
 	drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
 	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 	rToRestart->active = false; // Died text initially invisible
@@ -1165,6 +1165,14 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	//dc.add(example, textures_path("Dungeon/boss.png"));
 	//tc.add(example, { 500,500 }, { 10,10 }, 0.0);
 	//Set ui to true to overlay over everything
+
+	//Tutorial help screen for player
+	Entity* tutorial_keyboard = objectManager->makeEntity("Tutorial_Screen");
+	drawCmp.add(tutorial_keyboard, textures_path("text/keyboard.png"));
+	transformCmp.add(tutorial_keyboard, {600,400}, {1.2,1.2}, 0.0);
+	tutorial_keyboard->ui = false;
+	tutorial_keyboard->active = false; // Invisible until H_KEY pressed
+
 
 	// Proceed to handle held item, if applicable
 	//handleHeldItem(dc, tc, ic, cc, ec, mc, itc, light, enemy, text);

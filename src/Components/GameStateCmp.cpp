@@ -16,6 +16,7 @@ void GameStateCmp::init() {
     // Tutorial status
     has_moved = false;
     has_pressed_E = false;
+    has_pressed_H = false;
 
     // New game is unpaused, not loading and not hidden
     is_game_paused = false;
@@ -27,6 +28,7 @@ void GameStateCmp::init() {
     held_entity = NULL;
 
     num_lit_cauldrons = 0;
+
 }
 
 // Save game to file, provided Sam is alive and the game is paused

@@ -42,14 +42,23 @@ void TextSystem::update()
     text->showWASDText = 0;
   }
 
+  // If player has pressed H, enable or disable tutorial screen
+  if (gameState->has_pressed_H)
+  {
+    enableTutorialScreen();
+  } else
+  {
+    disableTutorialScreen();
+  }
   // If Sam died, disable tutorial text, enable death text
   if (!gameState->sam_is_alive)
   {
     disableEText();
+    disableTutorialScreen();
     text->death = 1;
     light->death=1;
     enemy->death=1;
-    objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
+    objectManager->getEntityByLabel(USE_P_RESTART)->active = true;
   }
 }
 
@@ -74,5 +83,21 @@ void TextSystem::disableEText() {
   if (eEntity) {
     eEntity->active = false;
     text->showEText = 0;
+  }
+}
+
+void TextSystem::enableTutorialScreen() {
+  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN_LABEL);
+  if (tutEntity) {
+    tutEntity->active = true;
+    tutEntity->ui = true;
+  }
+}
+
+void TextSystem::disableTutorialScreen() {
+  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN_LABEL);
+  if (tutEntity) {
+    tutEntity->active = false;
+    tutEntity->ui = false;
   }
 }

@@ -16,6 +16,8 @@ public:
 	void enableEText();
 	void disableEText();
 	void disableWASDText();
+	void enableTutorialScreen();
+	void disableTutorialScreen();
 
 private:
 	ObjectManager* objectManager;

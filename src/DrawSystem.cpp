@@ -106,7 +106,7 @@ void DrawSystem::update(const mat3 projection)
 			  EBox = transformComponent->getTransform(entity)->m_position;
 			}
 
-			if (entity->label == USE_R_RESTART){
+			if (entity->label == USE_P_RESTART){
 				rRestart= transformComponent->getTransform(entity)->m_position;
 			}
 
