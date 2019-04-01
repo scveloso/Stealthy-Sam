@@ -134,3 +134,5 @@ const std::string ROOM_FOUR_GUID = "ROOM_FOUR";
 
 const std::string ENEMY_LABEL = "Enemy.Ghost";
 const std::string BOSS_GUID = "Enemy.Boss";
+
+const std::string SAM_GUID = "Player";

@@ -17,7 +17,7 @@ public:
 	void initDecisionTree();
 	int update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
-	void handleBossDecisionTree(Enemy* enemy, Transform* samTransform);
+	void handleBossDecisionTree(Enemy* enemy, Transform* enemyTransform);
 	void patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, float elapsed_ms);
 	void tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity);
 	void chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity);

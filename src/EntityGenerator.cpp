@@ -15,7 +15,9 @@ using json = nlohmann::json;
 // After, handleHeldItem() is called to generate Sam's held item on room changes
 // Lastly, initializeSystems() is called to add all the components to their relevant systems
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
-								 EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
+								 EnemySystem* es, InputSystem* is, MovementSystem* ms,
+                                 TextSystem* ts, LightSystem* ls, GameStateCmp* gs,
+                                 MissileSystem* missileSys)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -26,6 +28,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	textSystem = ts;
 	lightSystem = ls;
 	gameState = gs;
+	missileSystem = missileSys;
 }
 
 // Parse .json file to generate entities
@@ -36,7 +39,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
-	Entity* playerEntity = objectManager->makeEntity("Player");
+	Entity* playerEntity = objectManager->makeEntity(SAM_GUID);
 
 
 	// Read JSON map file
@@ -1237,6 +1240,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	movementSystem->	init(		objectManager, &transformCmp, &collisionCmp	, &movementCmp	, gameState);
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
 	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
+    missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp);
 
 	drawSystem->setup(effect);
 }

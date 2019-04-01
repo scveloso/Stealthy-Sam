@@ -71,14 +71,14 @@ int EnemySystem::update(float elapsed_ms) {
 	for (auto& it : enemyComponent.getmap()) {
 
 		Enemy *enemy = it.second;
+        Entity* enemyEntity = objectManager->getEntity(it.first);
+        Transform *et =  transformComponent->getTransform(enemyEntity);
 		// Set enemy to either chase or patrol depending on decision tree
 		if (enemy->type == BOSS_ENEMY_TYPE) {
-			handleBossDecisionTree(enemy, samTransform);
+			handleBossDecisionTree(enemy, et);
 		} else {
 			handleEnemyDecisionTree(enemy, samTransform);
 		}
-		Entity* enemyEntity = objectManager->getEntity(it.first);
-		Transform *et =  transformComponent->getTransform(enemyEntity);
 
 		switch (enemy->action)
 		{
@@ -326,8 +326,8 @@ void EnemySystem::goToTarget(vec2 startPosition, vec2 targetPosition, Entity* en
 	}
 }
 
-void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* samTransform) {
+void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* bossTransform) {
 	// TODO(sam): shoot missile, go to other locations, etc
-	enemy->action = BossStrategy::handleAction(gameStateComponent);
+	enemy->action = BossStrategy::handleAction(gameStateComponent, bossTransform->m_position);
 }
 
