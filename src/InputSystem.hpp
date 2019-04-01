@@ -11,7 +11,7 @@
 class InputSystem
 {
 public:
-	void init(ObjectManager om, InputCmp ic, TransformCmp tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp);
 	int on_key(GLFWwindow *, int key, int _, int action, int mod);
 	void on_click(GLFWwindow *, int button, int action, int mods);
 	bool setup(GLFWwindow* m_window);
@@ -23,11 +23,10 @@ public:
 	vec2 tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
 	vec2 tryThrowVecDirection(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, vec2 throwDir);
 	vec2 tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
-	void del();
 
 private:
 	InputCmp inputComponent;
-	TransformCmp transformComponent;
+	TransformCmp* transformComponent;
 	CollisionCmp collisionComponent;
 	MovementCmp movementComponent;
 	EnemyCmp enemyComponent;

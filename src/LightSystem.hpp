@@ -12,13 +12,13 @@
 class LightSystem
 {
 public:
-	void init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCmp tc, Light* light, EnemyCone* enemy);
+	void init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCmp* tc, Light* light, EnemyCone* enemy);
 	void update();
 
 private:
 	ObjectManager objectManager;
 	GameStateCmp* gameState;
-	TransformCmp transformCmp;
+	TransformCmp* transformCmp;
   // Water* water;
 	Light* light;
 	EnemyCone* enemy;

@@ -17,6 +17,13 @@ void DrawCmp::add(Entity *entity, const char* file)
 
 DrawCmp::~DrawCmp() {
 	printf("DRAWCMP DESTRUCTOR \n");
+
+	for (auto& it : draw_vec) {
+		delete it.second;
+	}
+	draw_vec.clear();
+
+	// 281 MB to 261MB
 }
 
 void DrawCmp::addFull(Entity *entity, const char* file1, const char* file2, const char* file3

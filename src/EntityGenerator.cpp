@@ -1188,13 +1188,13 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	// Done generating entities, proceed to initialize systems
 	//initializeSystems(drawCmp, tc, ic, cc, ec, mc, itemCmp, light, enemy, text);
 
-	drawSystem->init(*objectManager, &drawCmp, transformCmp, movementCmp, gameState);
-	inputSystem->init(*objectManager, inputCmp, transformCmp, collisionCmp, movementCmp, enemyCmp, itemCmp, gameState);
-	collisionSystem->init(*objectManager, collisionCmp, transformCmp, itemCmp, gameState);
-	enemySystem->init(*objectManager, transformCmp, enemyCmp, movementCmp, itemCmp, gameState);
-	movementSystem->init(*objectManager, transformCmp, collisionCmp, movementCmp, gameState);
+	drawSystem->init(*objectManager, &drawCmp, &transformCmp, movementCmp, gameState);
+	inputSystem->init(*objectManager, inputCmp, &transformCmp, collisionCmp, movementCmp, enemyCmp, itemCmp, gameState);
+	collisionSystem->init(*objectManager, collisionCmp, &transformCmp, itemCmp, gameState);
+	enemySystem->init(*objectManager, &transformCmp, enemyCmp, movementCmp, itemCmp, gameState);
+	movementSystem->init(*objectManager, &transformCmp, collisionCmp, movementCmp, gameState);
 	textSystem->init(*objectManager, gameState, text, light, enemy);
-	lightSystem->init(*objectManager, gameState, transformCmp, light, enemy);
+	lightSystem->init(*objectManager, gameState, &transformCmp, light, enemy);
 
 	drawSystem->setup();
 }

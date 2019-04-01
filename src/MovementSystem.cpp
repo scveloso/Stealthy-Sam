@@ -10,7 +10,7 @@
 // Has access to MovementCmp to know at what rate to move each and every entity.
 // Has access to CollisionCmp to know if an entity will obstruct movement.
 // Has access to TransformCmp to know where everything is.
-void MovementSystem::init(ObjectManager om, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp)
+void MovementSystem::init(ObjectManager om, TransformCmp* tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     transformComponent = tc;
@@ -46,12 +46,12 @@ void MovementSystem::update(float elapsed_ms)
         continue;
     }
 
-    Transform* entityTransform = transformComponent.getTransform(entity);
+    Transform* entityTransform = transformComponent->getTransform(entity);
     int movementDirection = movementComponent.getMovementDirection(entity);
     vec2 vecDirection = movementComponent.getVecDirection(entity);
     vec2 oldPosition = entityTransform->m_position;
 
-    if (transformComponent.getTransform(entity)->visible)
+    if (transformComponent->getTransform(entity)->visible)
     {
 
 		if (movementDirection % 99 == 0) {
@@ -171,7 +171,7 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
 
           if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
           {
-              Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+              Transform *otherEntityTransform = transformComponent->getTransform(otherEntity);
 
               if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
               {
@@ -196,7 +196,7 @@ void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTra
 
             if (otherEntity->label == "Cauldron")
             {
-                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+                Transform *otherEntityTransform = transformComponent->getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {

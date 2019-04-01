@@ -12,6 +12,16 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	transform_map[entity->id] = tb;
 }
 
+TransformCmp::~TransformCmp() {
+	printf("TRANSFORM DESTRUCTOR\n"); //called 6 times intially
+	//printf("%d \n", transform_map.size());
+	
+	for (int i = 0; i < transform_map.size(); i++) {
+		delete transform_map[i];
+	}
+	transform_map.clear();
+}
+
 std::unordered_map<int, Transform *> TransformCmp::getmap()
 {
 	return transform_map;
@@ -99,14 +109,4 @@ void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
 int TransformCmp::getFacingDirection(Entity *entity)
 {
 	return transform_map[entity->id]->facingDirection;
-}
-
-void TransformCmp::mapdel() {
-	for (int i = 0; i < transform_map.size(); i++) {
-		Transform *t = (transform_map[i]);
-		delete t;
-
-		//printf("Pointer: %d\n", t);
-	}
-	transform_map.clear();
 }

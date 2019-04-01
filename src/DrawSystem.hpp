@@ -6,7 +6,7 @@
 class DrawSystem
 {
 public:
-	void init(ObjectManager om, DrawCmp* dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager om, DrawCmp* dc, TransformCmp* tc, MovementCmp mc, GameStateCmp* gameStateCmp);
 	void update(const mat3 projection);
 	void updateUI(const mat3 projection);
 	bool setup();
@@ -17,7 +17,7 @@ public:
 	// int en_direction;
 private:
 	DrawCmp* drawComponent;
-	TransformCmp transformComponent;
+	TransformCmp* transformComponent;
 	MovementCmp movementComponent;
 	ObjectManager objectManager;
 	GameStateCmp* gameState;

@@ -8,7 +8,7 @@
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp* tc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
@@ -26,8 +26,8 @@ bool DrawSystem::setup()
 		Entity *entity = it.first;
 		Draw *draw = it.second;
 
-		transformComponent.setHeight(entity, draw->texture.height);
-		transformComponent.setWidth(entity, draw->texture.width);
+		transformComponent->setHeight(entity, draw->texture.height);
+		transformComponent->setWidth(entity, draw->texture.width);
 
 		// The position corresponds to the center of the texture
 		float wr = draw->texture.width * 0.5f;
@@ -80,20 +80,20 @@ void DrawSystem::update(const mat3 projection)
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities
-		if (transformComponent.getTransform(objectManager.getEntity(entity->id))->visible == true && entity->ui == false) {
+		if (transformComponent->getTransform(objectManager.getEntity(entity->id))->visible == true && entity->ui == false) {
 
 			if (!entity->active) {
 				continue;
 			}
 
 			draw->transform_begin();
-			draw->transform_translate(transformComponent.getTransform(entity)->m_position);
-			draw->transform_rotate(transformComponent.getTransform(entity)->m_rotation);
-			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
+			draw->transform_translate(transformComponent->getTransform(entity)->m_position);
+			draw->transform_rotate(transformComponent->getTransform(entity)->m_rotation);
+			draw->transform_scale(transformComponent->getTransform(entity)->m_scale);
 			draw->transform_end();
 
 			if (entity->label == "Player") {
-				Transform* samTransform = transformComponent.getTransform(entity);
+				Transform* samTransform = transformComponent->getTransform(entity);
 			  gameState->sam_position = samTransform->m_position;
 
 				// If sam is dead, we should also rotate him sideways:
@@ -104,11 +104,11 @@ void DrawSystem::update(const mat3 projection)
 			}
 
 			if (entity->label == USE_E_INTERACT_LABEL) {
-			  EBox = transformComponent.getTransform(entity)->m_position;
+			  EBox = transformComponent->getTransform(entity)->m_position;
 			}
 
 			if (entity->label == USE_R_RESTART){
-				rRestart= transformComponent.getTransform(entity)->m_position;
+				rRestart= transformComponent->getTransform(entity)->m_position;
 			}
 
 			// if (entity->label == "Enemy"){
@@ -146,7 +146,7 @@ void DrawSystem::update(const mat3 projection)
 			//gets first texture need to make it work for changing textures
 
 			if (entity->label == "Player") {
-                Transform* samTransform = transformComponent.getTransform(entity);
+                Transform* samTransform = transformComponent->getTransform(entity);
                 gameState->sam_position = samTransform->m_position;
                 int movDir = movementComponent.getMovement(entity)->movementDirection;
 
@@ -228,9 +228,9 @@ void DrawSystem::updateUI(const mat3 projection)
 
 
 			draw->transform_begin();
-			draw->transform_translate(transformComponent.getTransform(entity)->m_position);
-			draw->transform_rotate(transformComponent.getTransform(entity)->m_rotation);
-			draw->transform_scale(transformComponent.getTransform(entity)->m_scale);
+			draw->transform_translate(transformComponent->getTransform(entity)->m_position);
+			draw->transform_rotate(transformComponent->getTransform(entity)->m_rotation);
+			draw->transform_scale(transformComponent->getTransform(entity)->m_scale);
 			draw->transform_end();
 
 			// Setting shaders
