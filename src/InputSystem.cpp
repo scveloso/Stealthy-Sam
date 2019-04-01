@@ -103,7 +103,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
                 gameState->hidden = true;
               }
             }
-            gameState->has_pressed_E = true;
             break;
           case GLFW_KEY_C:
           {

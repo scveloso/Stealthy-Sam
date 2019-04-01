@@ -1140,20 +1140,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	//generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, light, enemy, text);
 
 
-	// Create text boxes if we're in room one:
-	if (map_path("level_one.json") == room_path)
-	{
-		// Text boxes
-		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
-		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-		transformCmp.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-
-		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
-		drawCmp.add(useEText, textures_path("text/etointeract.png"));
-		transformCmp.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-		useEText->active = false; // E text initially invisible
-	}
-
 	// Text box if you're dead
 	Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
 	drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));

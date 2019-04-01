@@ -58,8 +58,6 @@ void Light::addTorchPosition(int i, vec2 position) {
 }
 
 void Light::restart() {
-	// showWASDText = 1;
-	// showEText = 0;
 	death = 0;
 }
 

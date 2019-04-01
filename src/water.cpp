@@ -5,10 +5,6 @@
 bool Water::init() {
 	m_dead_time = -1;
 	death = 0;
-	showWASDText = 1;
-	showEText = 0;
-	textWASD_position = TEXT_POSITION;
-	textE_position = TEXT_POSITION;
 	textR_position = TEXT_POSITION;
 
 	// Since we are not going to apply transformation to this screen geometry
@@ -113,8 +109,6 @@ void Water::draw(const mat3& projection) {
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
 	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
 	GLint s_position= glGetUniformLocation(effect.program, "circle_light_position");
-	GLint t_position= glGetUniformLocation(effect.program, "text_position");
-	GLint e_position= glGetUniformLocation(effect.program, "e_position");
 	GLint r_position= glGetUniformLocation(effect.program, "r_position");
   GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint tor_position= glGetUniformLocation(effect.program, "torch_light");
@@ -127,15 +121,11 @@ void Water::draw(const mat3& projection) {
 
 	glUniform1i(death_cond, death);
   glUniform1i(re_cond, remove_r);
-	glUniform1i(text_cond, showWASDText);
-	glUniform1i(key_cond, showEText);
-	glUniform2f(t_position, textWASD_position.x, textWASD_position.y);
+
 	glUniform2fv(en_position, 5, enemy_position);
 	glUniform2fv(en_direction, 5, enemy_direction);
 	glUniform2fv(tor_position, 5, torch_light);
 
-
-	glUniform2f(e_position, textE_position.x, textE_position.y );
 	glUniform2f(s_position, circle_light_position.x, circle_light_position.y);
 	glUniform2f(r_position, textR_position.x, textR_position.y);
 	glUniform1i(screen_text_uloc, 0);
@@ -157,8 +147,6 @@ void Water::draw(const mat3& projection) {
 
 // Game is restarted, change to default values
 void Water::restart() {
-	showWASDText = 1;
-	showEText = 0;
 	death = 0;
 }
 

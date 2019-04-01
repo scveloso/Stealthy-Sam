@@ -30,8 +30,7 @@ public:
 	void addTorchPosition(int i, vec2 position);
 	void clearTorchPositions();
 
-	int showWASDText;
-	int showEText;
+
 	int showRText;
 	int death;
 	int remove_r;
@@ -47,8 +46,6 @@ private:
 	// When salmon is alive, the time is set to -1
 	float m_dead_time;
 	vec2 circle_light_position;
-	vec2 textWASD_position;
-	vec2 textE_position;
 	vec2 textR_position;
 	GLfloat enemy_position[10];
 	GLfloat enemy_direction[10];
