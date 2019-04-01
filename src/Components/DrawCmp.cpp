@@ -16,7 +16,7 @@ void DrawCmp::add(Entity *entity, const char* file)
 }
 
 DrawCmp::~DrawCmp() {
-	printf("DRAWCMP DESTRUCTOR \n");
+	//printf("DRAWCMP DESTRUCTOR \n");
 
 	for (auto& it : draw_vec) {
 		delete it.second;

@@ -13,7 +13,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 }
 
 TransformCmp::~TransformCmp() {
-	printf("TRANSFORM DESTRUCTOR\n"); //called 6 times intially
+	//printf("TRANSFORM DESTRUCTOR\n"); //called 6 times intially
 	//printf("%d \n", transform_map.size());
 	
 	for (int i = 0; i < transform_map.size(); i++) {

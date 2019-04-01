@@ -10,6 +10,11 @@ void CollisionCmp::add(Entity *entity) {
 
 CollisionCmp::~CollisionCmp() {
 	//printf("COLLISIONCMP DESTRUCTOR\n");
+	//printf("%d SIZE \n", collision_map.size());
+	for (auto& it : collision_map) {
+		delete it.second;
+	}
+	collision_map.clear();
 }
 
 std::unordered_map<int, Collision *> CollisionCmp::getmap()

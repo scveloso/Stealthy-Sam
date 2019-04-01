@@ -11,7 +11,7 @@
 class InputSystem
 {
 public:
-	void init(ObjectManager* om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp* mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager* om, InputCmp ic, TransformCmp* tc, CollisionCmp* cc, MovementCmp* mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp);
 	int on_key(GLFWwindow *, int key, int _, int action, int mod);
 	void on_click(GLFWwindow *, int button, int action, int mods);
 	bool setup(GLFWwindow* m_window);
@@ -27,7 +27,7 @@ public:
 private:
 	InputCmp inputComponent;
 	TransformCmp* transformComponent;
-	CollisionCmp collisionComponent;
+	CollisionCmp* collisionComponent;
 	MovementCmp* movementComponent;
 	EnemyCmp enemyComponent;
 	ItemCmp itemComponent;

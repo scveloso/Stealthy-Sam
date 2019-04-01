@@ -12,7 +12,7 @@
 // Has access to CollisionCmp and GameStateCmp to update.
 // Has access to TransformCmp to know where everything is.
 // Has access to ItemCmp to toggle items as held.
-void CollisionSystem::init(ObjectManager* om, CollisionCmp cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc)
+void CollisionSystem::init(ObjectManager* om, CollisionCmp* cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;
@@ -32,11 +32,11 @@ int CollisionSystem::update(float elapsed_ms)
 	// Get Sam and only check his collisions
 	Entity *sam = objectManager->getEntity(SAMS_GUID);
 	samTransform = transformComponent->getTransform(sam);
-	samCollision = collisionComponent.getmap()[SAMS_GUID];
+	samCollision = collisionComponent->getmap()[SAMS_GUID];
 
 	bool collisionEvent = false;
 
-	for (auto& it2 : collisionComponent.getmap())
+	for (auto& it2 : collisionComponent->getmap())
 	{
 		int entityId = it2.first;
 		if (entityId != SAMS_GUID)
@@ -95,14 +95,14 @@ int CollisionSystem::update(float elapsed_ms)
 		{
 			if (AABB(transformComponent->getTransform(torchEntity), transformComponent->getTransform(ghostEntity)))
 			{
-				Collision* torchCmp = collisionComponent.getCollision(torchEntity);
+				Collision* torchCmp = collisionComponent->getCollision(torchEntity);
 				if (torchCmp->torch_light_countdown_ms < 0.f)
 				{
 					torchCmp->torch_light_countdown_ms = 2500.f;
 				}
 			}
 		}
-        Collision* torchCmp = collisionComponent.getCollision(torchEntity);
+        Collision* torchCmp = collisionComponent->getCollision(torchEntity);
 		if (torchCmp->torch_light_countdown_ms > 0.f)
         {
             torchCmp->torch_light_countdown_ms -= elapsed_ms;

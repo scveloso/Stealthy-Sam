@@ -19,7 +19,7 @@ Entity* ObjectManager::makeEntity(std::string label) {
 }
 
 ObjectManager::~ObjectManager() {
-	printf("OBJECTMANAGER DESTRUCTOR\n");
+	//printf("OBJECTMANAGER DESTRUCTOR\n");
 	for (auto& it : entities) {
 		delete it;
 	}

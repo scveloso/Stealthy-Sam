@@ -13,7 +13,7 @@ void MovementCmp::add(Entity *entity, float speed, float acceleration) {
 }
 
 MovementCmp::~MovementCmp() {
-	printf("MOVEMENTCMP DESTRUCTOR\n");
+	//printf("MOVEMENTCMP DESTRUCTOR\n");
 	for (auto& it : movement_map) {
 		delete it.second;
 	}

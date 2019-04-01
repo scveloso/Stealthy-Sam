@@ -10,7 +10,7 @@
 // Has access to MovementCmp to know at what rate to move each and every entity.
 // Has access to CollisionCmp to know if an entity will obstruct movement.
 // Has access to TransformCmp to know where everything is.
-void MovementSystem::init(ObjectManager* om, TransformCmp* tc, CollisionCmp cc, MovementCmp* mc, GameStateCmp* gameStateCmp)
+void MovementSystem::init(ObjectManager* om, TransformCmp* tc, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     transformComponent = tc;
@@ -162,7 +162,7 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
     return false;
   }
 
-  for (auto& it2 : collisionComponent.getmap())
+  for (auto& it2 : collisionComponent->getmap())
   {
       int otherEntityId = it2.first;
       if (otherEntityId != entity->id)
@@ -187,7 +187,7 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
 
 void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
-    for (auto& it2 : collisionComponent.getmap())
+    for (auto& it2 : collisionComponent->getmap())
     {
         int otherEntityId = it2.first;
         if (otherEntityId != entityId)
