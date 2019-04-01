@@ -11,7 +11,7 @@
 //
 // Has access to text to allow enable/disable the shaders
 // from showing text box entities.
-void TextSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy)
+void TextSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy)
 {
   objectManager = om;
   gameState = gameStateCmp;
@@ -49,12 +49,12 @@ void TextSystem::update()
     text->death = 1;
     light->death=1;
     enemy->death=1;
-    objectManager.getEntityByLabel(USE_R_RESTART)->active = true;
+    objectManager->getEntityByLabel(USE_R_RESTART)->active = true;
   }
 }
 
 void TextSystem::disableWASDText() {
-  Entity* wasdEntity = objectManager.getEntityByLabel(USE_WASD_TEXT_LABEL);
+  Entity* wasdEntity = objectManager->getEntityByLabel(USE_WASD_TEXT_LABEL);
   if (wasdEntity) {
     wasdEntity->active = false;
     text->showWASDText = 0;
@@ -62,7 +62,7 @@ void TextSystem::disableWASDText() {
 }
 
 void TextSystem::enableEText() {
-  Entity* eEntity = objectManager.getEntityByLabel(USE_E_INTERACT_LABEL);
+  Entity* eEntity = objectManager->getEntityByLabel(USE_E_INTERACT_LABEL);
   if (eEntity) {
     eEntity->active = true;
     text->showEText = 1;
@@ -70,7 +70,7 @@ void TextSystem::enableEText() {
 }
 
 void TextSystem::disableEText() {
-  Entity* eEntity = objectManager.getEntityByLabel(USE_E_INTERACT_LABEL);
+  Entity* eEntity = objectManager->getEntityByLabel(USE_E_INTERACT_LABEL);
   if (eEntity) {
     eEntity->active = false;
     text->showEText = 0;

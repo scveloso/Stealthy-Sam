@@ -19,7 +19,7 @@
 // Has access to TransformCmp to know where everything is.
 // Has access to MovementCmp to allow Sam to throw held items (move those items).
 // Has access to ItemCmp to toggle items as thrown.
-void InputSystem::init(ObjectManager om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp* mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
+void InputSystem::init(ObjectManager* om, InputCmp ic, TransformCmp* tc, CollisionCmp cc, MovementCmp* mc, EnemyCmp ec, ItemCmp itc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     inputComponent = ic;
@@ -44,7 +44,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   // Update relevant entities based on input key
 	for (auto& it : inputComponent.getmap())
 	{
-    Entity* entity = objectManager.getEntity(it.first);
+    Entity* entity = objectManager->getEntity(it.first);
 
     // Handle inputs for Sam
     if (entity->label.compare("Player") == 0)
@@ -345,7 +345,7 @@ bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransfo
         int otherEntityId = it2.first;
         if (otherEntityId != entityId)
         {
-            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+            Entity* otherEntity = objectManager->getEntity(otherEntityId);
 
             if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0) ||
             (otherEntity->label.compare("Cauldron") == 0))
@@ -369,7 +369,7 @@ void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransf
     int otherEntityId = it2.first;
     if (otherEntityId != entityId)
     {
-      Entity* otherEntity = objectManager.getEntity(otherEntityId);
+      Entity* otherEntity = objectManager->getEntity(otherEntityId);
 
       if (otherEntity->label.compare("Cauldron") == 0)
       {

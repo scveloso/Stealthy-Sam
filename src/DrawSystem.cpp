@@ -8,7 +8,7 @@
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
@@ -80,7 +80,7 @@ void DrawSystem::update(const mat3 projection)
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities
-		if (transformComponent->getTransform(objectManager.getEntity(entity->id))->visible == true && entity->ui == false) {
+		if (transformComponent->getTransform(objectManager->getEntity(entity->id))->visible == true && entity->ui == false) {
 
 			if (!entity->active) {
 				continue;

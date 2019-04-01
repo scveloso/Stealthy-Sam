@@ -20,7 +20,7 @@
 |           5 | End                            | Maintain Action             | Maintain Action                 |
 |           6 | End                            | Chase Sam                   | Chase Sam                       |
 +-------------+--------------------------------+-----------------------------+---------------------------------+ */
-void EnemySystem::init(ObjectManager om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc) {
+void EnemySystem::init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc) {
 	objectManager = om;
 	transformComponent = tc;
 	enemyComponent = ec;
@@ -62,7 +62,7 @@ void EnemySystem::initDecisionTree() {
 }
 
 void EnemySystem::update(float elapsed_ms) {
-	Entity *sam = objectManager.getEntity(SAMS_GUID);
+	Entity *sam = objectManager->getEntity(SAMS_GUID);
 	Transform* samTransform = transformComponent->getTransform(sam);
 
 	for (auto& it : enemyComponent.getmap()) {
@@ -74,7 +74,7 @@ void EnemySystem::update(float elapsed_ms) {
 		} else {
 			handleEnemyDecisionTree(enemy, samTransform);
 		}
-		Entity* enemyEntity = objectManager.getEntity(it.first);
+		Entity* enemyEntity = objectManager->getEntity(it.first);
 		Transform *et =  transformComponent->getTransform(enemyEntity);
 
 		switch (enemy->action)
@@ -117,7 +117,7 @@ void EnemySystem::tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemy
 	int thrownTorchId = itemComponent.getThrownTorchId();
 
 	if (thrownTorchId != -1) {
-		Entity* thrownTorchEntity = objectManager.getEntity(thrownTorchId);
+		Entity* thrownTorchEntity = objectManager->getEntity(thrownTorchId);
 
 		if (thrownTorchEntity->label.compare("Torch") == 0 && thrownTorchEntity->active) {
 			Transform *tt =  transformComponent->getTransform(thrownTorchEntity);

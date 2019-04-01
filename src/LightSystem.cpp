@@ -13,7 +13,7 @@
 // to show polygons of light.
 //
 // Has access to TransformCmp to know where everything is.
-void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCmp* tc, Light* light, EnemyCone* enemy)
+void LightSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, TransformCmp* tc, Light* light, EnemyCone* enemy)
 {
   objectManager = om;
   gameState = gameStateCmp;
@@ -25,7 +25,7 @@ void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCm
 void LightSystem::update()
 {
   // Grab all existing and active torches, draw circles of light around them
-  std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
+  std::vector<Entity*> torchEntities = objectManager->getEntitiesByLabel("Torch");
   int e = 0;
   light->clearTorchPositions();
   for (auto& torchEntity : torchEntities)
@@ -38,7 +38,7 @@ void LightSystem::update()
   }
 
   // Grab all existing and active cauldrons, draw circles of light around them
-  std::vector<Entity*> cauldronEntities = objectManager.getEntitiesByLabel("Cauldron");
+  std::vector<Entity*> cauldronEntities = objectManager->getEntitiesByLabel("Cauldron");
   for (auto& cauldronEntity : cauldronEntities)
   {
     if (cauldronEntity->active) {
@@ -49,7 +49,7 @@ void LightSystem::update()
   }
 
   // Grab all existing enemies and send their directions and positions to shader
-  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel(ENEMY_LABEL);
+  std::vector<Entity*> enemyEntities= objectManager->getEntitiesByLabel(ENEMY_LABEL);
 
   int i = 0;
   for (auto& enemyEntity : enemyEntities)

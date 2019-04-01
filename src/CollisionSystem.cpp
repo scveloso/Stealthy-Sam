@@ -12,7 +12,7 @@
 // Has access to CollisionCmp and GameStateCmp to update.
 // Has access to TransformCmp to know where everything is.
 // Has access to ItemCmp to toggle items as held.
-void CollisionSystem::init(ObjectManager om, CollisionCmp cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc)
+void CollisionSystem::init(ObjectManager* om, CollisionCmp cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc)
 {
 	objectManager = om;
 	collisionComponent = cc;
@@ -30,7 +30,7 @@ int CollisionSystem::update(float elapsed_ms)
 	Collision *samCollision;
 
 	// Get Sam and only check his collisions
-	Entity *sam = objectManager.getEntity(SAMS_GUID);
+	Entity *sam = objectManager->getEntity(SAMS_GUID);
 	samTransform = transformComponent->getTransform(sam);
 	samCollision = collisionComponent.getmap()[SAMS_GUID];
 
@@ -41,13 +41,13 @@ int CollisionSystem::update(float elapsed_ms)
 		int entityId = it2.first;
 		if (entityId != SAMS_GUID)
 		{
-			entityTransform = transformComponent->getTransform(objectManager.getEntity(entityId));
+			entityTransform = transformComponent->getTransform(objectManager->getEntity(entityId));
 
 			// Check for Sam collisions with other entities
 			if (AABB(samTransform, entityTransform))
 			{
 				collisionEvent = true;
-				Entity* entity = objectManager.getEntity(entityId);
+				Entity* entity = objectManager->getEntity(entityId);
 
 				// Handle door collisions
 				int doorUpdateAction = handleDoors(entity);
@@ -87,10 +87,10 @@ int CollisionSystem::update(float elapsed_ms)
 		samCollision->closet = false;
 	}
 
-	std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
+	std::vector<Entity*> torchEntities = objectManager->getEntitiesByLabel("Torch");
 	for (auto& torchEntity : torchEntities)
 	{
-		std::vector<Entity*> ghostEntities = objectManager.getEntitiesByLabel("Enemy.Ghost");
+		std::vector<Entity*> ghostEntities = objectManager->getEntitiesByLabel("Enemy.Ghost");
 		for (auto& ghostEntity : ghostEntities)
 		{
 			if (AABB(transformComponent->getTransform(torchEntity), transformComponent->getTransform(ghostEntity)))
