@@ -25,7 +25,6 @@ public:
     void goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity);
 
 private:
-	CollisionCmp collisionComponent;
 	TransformCmp* transformComponent;
 	EnemyCmp enemyComponent;
 	MovementCmp* movementComponent;
