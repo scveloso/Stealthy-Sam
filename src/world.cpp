@@ -270,8 +270,10 @@ bool World::update(float elapsed_ms)
 	}
 
 	// Update Systems
-	es->update(elapsed_ms);
-	int updateAction = cs->update(elapsed_ms);
+	int updateAction = es->update(elapsed_ms);
+    handleUpdateAction(updateAction);
+
+	updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
 	ts->update();
 	ls->update();
@@ -375,6 +377,16 @@ void World::handleUpdateAction(int updateAction)
 				soundSystem->playKeyPickup();
 				break;
 			}
+            case GAME_WIN:
+            {
+                // TODO(Nic): ui stuff for victory
+                break;
+            }
+            case SHOOT_MISSILE:
+            {
+                // TODO(Sam): make missile system and shoot it at player
+                break;
+            }
 			default:
 			{
 			    printf("Update Action %d was not recognized", updateAction);

@@ -1131,7 +1131,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 		movementCmp.add(entity, 50.f, 0);
 		transformCmp.add(entity, {400.f, 400.f}, {3.125f, 3.125f}, 0.0);
-		drawCmp.add(entity, textures_path("Dungeon/boss.png"));
+		// TODO: we should really change this to make it more specific for the boss, but this will do
+        drawCmp.addFull(entity, textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss_attack.png"),
+                        textures_path("Dungeon/boss_running.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"));
 		collisionCmp.add(entity);
 		enemyCmp.add(entity, 100, 0);
 		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;

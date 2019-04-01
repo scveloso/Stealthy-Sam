@@ -15,7 +15,7 @@ class EnemySystem
 public:
 	void init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc);
 	void initDecisionTree();
-	void update(float elapsed_ms);
+	int update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
 	void handleBossDecisionTree(Enemy* enemy, Transform* samTransform);
 	void patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, float elapsed_ms);
