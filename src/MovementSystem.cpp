@@ -10,7 +10,7 @@
 // Has access to MovementCmp to know at what rate to move each and every entity.
 // Has access to CollisionCmp to know if an entity will obstruct movement.
 // Has access to TransformCmp to know where everything is.
-void MovementSystem::init(ObjectManager om, TransformCmp tc, CollisionCmp cc, MovementCmp mc, GameStateCmp* gameStateCmp)
+void MovementSystem::init(ObjectManager* om, TransformCmp* tc, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp)
 {
     objectManager = om;
     transformComponent = tc;
@@ -23,21 +23,21 @@ void MovementSystem::init(ObjectManager om, TransformCmp tc, CollisionCmp cc, Mo
 // If movement to a new position will be interrupted, cancel movement
 void MovementSystem::update(float elapsed_ms)
 {
-	for (auto& it : movementComponent.getmap())
+	for (auto& it : movementComponent->getmap())
   {
-    Entity* entity = objectManager.getEntity(it.first);
+    Entity* entity = objectManager->getEntity(it.first);
 
     // Calculate step
-    float step = movementComponent.getStep(entity, elapsed_ms);
+    float step = movementComponent->getStep(entity, elapsed_ms);
 
     // For non-linear entities, check if it came to a halt
     // and rotate it sideways for comedic effect
     vec2 zeroVec = {0, 0};
 
     if (step < 0) {
-      movementComponent.setCurrSpeed(entity, 0);
-      movementComponent.resetMovementDirection(entity);
-      movementComponent.setVecDirection(entity, zeroVec);
+      movementComponent->setCurrSpeed(entity, 0);
+      movementComponent->resetMovementDirection(entity);
+      movementComponent->setVecDirection(entity, zeroVec);
     }
 
     // If Sam is dead, continue
@@ -46,12 +46,12 @@ void MovementSystem::update(float elapsed_ms)
         continue;
     }
 
-    Transform* entityTransform = transformComponent.getTransform(entity);
-    int movementDirection = movementComponent.getMovementDirection(entity);
-    vec2 vecDirection = movementComponent.getVecDirection(entity);
+    Transform* entityTransform = transformComponent->getTransform(entity);
+    int movementDirection = movementComponent->getMovementDirection(entity);
+    vec2 vecDirection = movementComponent->getVecDirection(entity);
     vec2 oldPosition = entityTransform->m_position;
 
-    if (transformComponent.getTransform(entity)->visible)
+    if (transformComponent->getTransform(entity)->visible)
     {
 
 		if (movementDirection % 99 == 0) {
@@ -64,7 +64,7 @@ void MovementSystem::update(float elapsed_ms)
 
           if (is_movement_interrupted(entity, entityTransform))
           {
-            movementComponent.setCurrSpeed(entity, 0);
+            movementComponent->setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
           }
           else
@@ -82,7 +82,7 @@ void MovementSystem::update(float elapsed_ms)
 
             if (is_movement_interrupted(entity, entityTransform))
             {
-              movementComponent.setCurrSpeed(entity, 0);
+              movementComponent->setCurrSpeed(entity, 0);
               entityTransform->m_position = oldPosition;
             }
             else
@@ -97,7 +97,7 @@ void MovementSystem::update(float elapsed_ms)
           cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity, entityTransform))
           {
-            movementComponent.setCurrSpeed(entity, 0);
+            movementComponent->setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
           }
           else
@@ -112,7 +112,7 @@ void MovementSystem::update(float elapsed_ms)
           cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity, entityTransform))
           {
-            movementComponent.setCurrSpeed(entity, 0);
+            movementComponent->setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
           }
           else
@@ -127,7 +127,7 @@ void MovementSystem::update(float elapsed_ms)
           cauldronCheck(entity, entityTransform);
           if (is_movement_interrupted(entity, entityTransform))
           {
-            movementComponent.setCurrSpeed(entity, 0);
+            movementComponent->setCurrSpeed(entity, 0);
             entityTransform->m_position = oldPosition;
           }
           else
@@ -150,8 +150,8 @@ void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
 
 void MovementSystem::stopEntityMovement(Entity* entity)
 {
-  movementComponent.resetMovementDirection(entity);
-  movementComponent.setCurrSpeed(entity, 0);
+  movementComponent->resetMovementDirection(entity);
+  movementComponent->setCurrSpeed(entity, 0);
 }
 
 // Checks if movement to new position will be interrupted by a Wall entity
@@ -162,16 +162,16 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
     return false;
   }
 
-  for (auto& it2 : collisionComponent.getmap())
+  for (auto& it2 : collisionComponent->getmap())
   {
       int otherEntityId = it2.first;
       if (otherEntityId != entity->id)
       {
-          Entity* otherEntity = objectManager.getEntity(otherEntityId);
+          Entity* otherEntity = objectManager->getEntity(otherEntityId);
 
           if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
           {
-              Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+              Transform *otherEntityTransform = transformComponent->getTransform(otherEntity);
 
               if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
               {
@@ -187,16 +187,16 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
 
 void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
-    for (auto& it2 : collisionComponent.getmap())
+    for (auto& it2 : collisionComponent->getmap())
     {
         int otherEntityId = it2.first;
         if (otherEntityId != entityId)
         {
-            Entity* otherEntity = objectManager.getEntity(otherEntityId);
+            Entity* otherEntity = objectManager->getEntity(otherEntityId);
 
             if (otherEntity->label == "Cauldron")
             {
-                Transform *otherEntityTransform = transformComponent.getTransform(otherEntity);
+                Transform *otherEntityTransform = transformComponent->getTransform(otherEntity);
 
                 if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
                 {

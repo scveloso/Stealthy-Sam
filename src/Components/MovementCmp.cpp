@@ -12,6 +12,14 @@ void MovementCmp::add(Entity *entity, float speed, float acceleration) {
 	movement_map[entity->id] = mv;
 }
 
+MovementCmp::~MovementCmp() {
+	//printf("MOVEMENTCMP DESTRUCTOR\n");
+	for (auto& it : movement_map) {
+		delete it.second;
+	}
+	movement_map.clear();
+}
+
 std::unordered_map<int, Movement *> MovementCmp::getmap()
 {
 	return movement_map;
@@ -109,12 +117,4 @@ bool MovementCmp::isGoingUp(Entity *entity)
 bool MovementCmp::isGoingDown(Entity *entity)
 {
 	return movement_map[entity->id]->movementDirection % DOWN == 0;
-}
-
-void MovementCmp::mapdel() {
-
-	for (auto& it : movement_map) {
-		delete it.second;
-	}
-	movement_map.clear();
 }

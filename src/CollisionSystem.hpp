@@ -10,7 +10,7 @@
 class CollisionSystem
 {
 public:
-	void init(ObjectManager om, CollisionCmp cc, TransformCmp tc, ItemCmp itc, GameStateCmp* gsc);
+	void init(ObjectManager* om, CollisionCmp* cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc);
 	int update(float elapsed_ms);
 	static bool AABB(Transform *tr1, Transform *tr2);
 	int handleDoors(Entity* entity);
@@ -20,10 +20,10 @@ public:
 	void handleTorches(Entity* entity);
 
 private:
-	CollisionCmp collisionComponent;
-	TransformCmp transformComponent;
+	CollisionCmp* collisionComponent;
+	TransformCmp* transformComponent;
 	ItemCmp itemComponent;
-  	ObjectManager objectManager;
+  	ObjectManager* objectManager;
   	GameStateCmp* gameStateComponent;
 
 };

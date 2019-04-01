@@ -13,7 +13,7 @@
 class EnemySystem
 {
 public:
-	void init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, GameStateCmp* gsc);
+	void init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc);
 	void initDecisionTree();
 	void update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
@@ -25,12 +25,11 @@ public:
     void goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity);
 
 private:
-	CollisionCmp collisionComponent;
-	TransformCmp transformComponent;
+	TransformCmp* transformComponent;
 	EnemyCmp enemyComponent;
-	MovementCmp movementComponent;
+	MovementCmp* movementComponent;
 	ItemCmp itemComponent;
-	ObjectManager objectManager;
+	ObjectManager* objectManager;
 	GameStateCmp* gameStateComponent;
 
 	std::vector<DecisionNode*> decision_tree;

@@ -15,6 +15,17 @@ void DrawCmp::add(Entity *entity, const char* file)
 	draw_vec.emplace_back(std::make_pair(entity, draw));
 }
 
+DrawCmp::~DrawCmp() {
+	//printf("DRAWCMP DESTRUCTOR \n");
+
+	for (auto& it : draw_vec) {
+		delete it.second;
+	}
+	draw_vec.clear();
+
+	// 281 MB to 261MB
+}
+
 void DrawCmp::addFull(Entity *entity, const char* file1, const char* file2, const char* file3
               	    , const char* file4, const char* file5, const char* file6, const char* file7
               	    , const char* file8, const char* file9)
@@ -99,16 +110,4 @@ void DrawCmp::addFull(Entity *entity, const char* file1, const char* file2, cons
 std::vector<std::pair<Entity*, Draw *>> DrawCmp::getmap()
 {
 	return draw_vec;
-}
-
-void DrawCmp::mapdel() {
-
-	for (auto& it : draw_vec) {
-
-		it.second->texture.~Texture();
-
-		delete it.first;
-		delete it.second;
-	}
-	draw_vec.clear();
 }

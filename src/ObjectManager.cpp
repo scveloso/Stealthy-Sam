@@ -18,6 +18,14 @@ Entity* ObjectManager::makeEntity(std::string label) {
 	return entity;
 }
 
+ObjectManager::~ObjectManager() {
+	//printf("OBJECTMANAGER DESTRUCTOR\n");
+	for (auto& it : entities) {
+		delete it;
+	}
+	entities.clear();
+}
+
 Entity* ObjectManager::getEntity(int id)
 {
 	return entities[id];

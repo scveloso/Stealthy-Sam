@@ -13,7 +13,7 @@
 // to show polygons of light.
 //
 // Has access to TransformCmp to know where everything is.
-void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCmp tc, Light* light, EnemyCone* enemy)
+void LightSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, TransformCmp* tc, Light* light, EnemyCone* enemy)
 {
   objectManager = om;
   gameState = gameStateCmp;
@@ -25,49 +25,49 @@ void LightSystem::init(ObjectManager om, GameStateCmp* gameStateCmp, TransformCm
 void LightSystem::update()
 {
   // Grab all existing and active torches, draw circles of light around them
-  std::vector<Entity*> torchEntities = objectManager.getEntitiesByLabel("Torch");
+  std::vector<Entity*> torchEntities = objectManager->getEntitiesByLabel("Torch");
   int e = 0;
   light->clearTorchPositions();
   for (auto& torchEntity : torchEntities)
   {
     if (torchEntity->active) {
-      Transform* torchTransform = transformCmp.getTransform(torchEntity);
+      Transform* torchTransform = transformCmp->getTransform(torchEntity);
       light->addTorchPosition(e, torchTransform->m_position);
       e = e + 2;
     }
   }
 
   // Grab all existing and active cauldrons, draw circles of light around them
-  std::vector<Entity*> cauldronEntities = objectManager.getEntitiesByLabel("Cauldron");
+  std::vector<Entity*> cauldronEntities = objectManager->getEntitiesByLabel("Cauldron");
   for (auto& cauldronEntity : cauldronEntities)
   {
     if (cauldronEntity->active) {
-      Transform* cauldronTransform = transformCmp.getTransform(cauldronEntity);
+      Transform* cauldronTransform = transformCmp->getTransform(cauldronEntity);
       light->addTorchPosition(e, cauldronTransform->m_position);
       e = e + 2;
     }
   }
 
   // Grab all existing enemies and send their directions and positions to shader
-  std::vector<Entity*> enemyEntities= objectManager.getEntitiesByLabel(ENEMY_LABEL);
+  std::vector<Entity*> enemyEntities= objectManager->getEntitiesByLabel(ENEMY_LABEL);
 
   int i = 0;
   for (auto& enemyEntity : enemyEntities)
   {
     if (enemyEntity->active) {
-      Transform* enemyTransform = transformCmp.getTransform(enemyEntity);
+      Transform* enemyTransform = transformCmp->getTransform(enemyEntity);
       enemy->add_enemy_position(i, enemyTransform->m_position);
       // left =1; right =2; up =3; down=4;
-      if (transformCmp.isFacingLeft(enemyEntity)){
+      if (transformCmp->isFacingLeft(enemyEntity)){
         enemy->add_enemy_direction(i, 1.0);
       }
-      else if (transformCmp.isFacingRight(enemyEntity)){
+      else if (transformCmp->isFacingRight(enemyEntity)){
         enemy->add_enemy_direction(i, 2.0);
       }
-      else if (transformCmp.isFacingUp(enemyEntity)){
+      else if (transformCmp->isFacingUp(enemyEntity)){
         enemy->add_enemy_direction(i, 3.0);
       }
-      else if (transformCmp.isFacingDown(enemyEntity)){
+      else if (transformCmp->isFacingDown(enemyEntity)){
         enemy->add_enemy_direction(i, 4.0);
       }
       i = i + 2;

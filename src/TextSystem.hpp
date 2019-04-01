@@ -11,14 +11,14 @@
 class TextSystem
 {
 public:
-	void init(ObjectManager om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy);
+	void init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy);
 	void update();
 	void enableEText();
 	void disableEText();
 	void disableWASDText();
 
 private:
-	ObjectManager objectManager;
+	ObjectManager* objectManager;
 	GameStateCmp* gameState;
   Text* text;
 	Light* light;

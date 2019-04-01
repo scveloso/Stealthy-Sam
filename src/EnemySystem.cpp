@@ -20,7 +20,7 @@
 |           5 | End                            | Maintain Action             | Maintain Action                 |
 |           6 | End                            | Chase Sam                   | Chase Sam                       |
 +-------------+--------------------------------+-----------------------------+---------------------------------+ */
-void EnemySystem::init(ObjectManager om, TransformCmp tc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, GameStateCmp* gsc) {
+void EnemySystem::init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc) {
 	objectManager = om;
 	transformComponent = tc;
 	enemyComponent = ec;
@@ -62,8 +62,8 @@ void EnemySystem::initDecisionTree() {
 }
 
 void EnemySystem::update(float elapsed_ms) {
-	Entity *sam = objectManager.getEntity(SAMS_GUID);
-	Transform* samTransform = transformComponent.getTransform(sam);
+	Entity *sam = objectManager->getEntity(SAMS_GUID);
+	Transform* samTransform = transformComponent->getTransform(sam);
 
 	for (auto& it : enemyComponent.getmap()) {
 
@@ -74,8 +74,8 @@ void EnemySystem::update(float elapsed_ms) {
 		} else {
 			handleEnemyDecisionTree(enemy, samTransform);
 		}
-		Entity* enemyEntity = objectManager.getEntity(it.first);
-		Transform *et =  transformComponent.getTransform(enemyEntity);
+		Entity* enemyEntity = objectManager->getEntity(it.first);
+		Transform *et =  transformComponent->getTransform(enemyEntity);
 
 		switch (enemy->action)
 		{
@@ -117,10 +117,10 @@ void EnemySystem::tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemy
 	int thrownTorchId = itemComponent.getThrownTorchId();
 
 	if (thrownTorchId != -1) {
-		Entity* thrownTorchEntity = objectManager.getEntity(thrownTorchId);
+		Entity* thrownTorchEntity = objectManager->getEntity(thrownTorchId);
 
 		if (thrownTorchEntity->label.compare("Torch") == 0 && thrownTorchEntity->active) {
-			Transform *tt =  transformComponent.getTransform(thrownTorchEntity);
+			Transform *tt =  transformComponent->getTransform(thrownTorchEntity);
 			chaseTarget(enemy, et, tt, enemyEntity);
 			return;
 		}
@@ -137,31 +137,31 @@ void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity
 	float diff_y= (enemyPosition.y-targetPosition.y)*(enemyPosition.y-targetPosition.y);
   float diff_x= (enemyPosition.x-targetPosition.x)*(enemyPosition.x-targetPosition.x);
 	if (enemyPosition.y > targetPosition.y){
-		movementComponent.removeMovementDirection(enemyEntity, DOWN);
-		movementComponent.setMovementDirection(enemyEntity, UP);
+		movementComponent->removeMovementDirection(enemyEntity, DOWN);
+		movementComponent->setMovementDirection(enemyEntity, UP);
 		if (diff_y > diff_x){
-			transformComponent.setFacingDirection(enemyEntity, UP);
+			transformComponent->setFacingDirection(enemyEntity, UP);
 		}
 	}
 	if(enemyPosition.y < targetPosition.y) {
-		movementComponent.removeMovementDirection(enemyEntity, UP);
-		movementComponent.setMovementDirection(enemyEntity, DOWN);
+		movementComponent->removeMovementDirection(enemyEntity, UP);
+		movementComponent->setMovementDirection(enemyEntity, DOWN);
 		if (diff_y > diff_x ){
-			transformComponent.setFacingDirection(enemyEntity, DOWN);
+			transformComponent->setFacingDirection(enemyEntity, DOWN);
 		}
 	}
 	if (enemyPosition.x > targetPosition.x) {
-		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
-		movementComponent.setMovementDirection(enemyEntity, LEFT);
+		movementComponent->removeMovementDirection(enemyEntity, RIGHT);
+		movementComponent->setMovementDirection(enemyEntity, LEFT);
 		if (diff_y <= diff_x){
-			transformComponent.setFacingDirection(enemyEntity, LEFT);
+			transformComponent->setFacingDirection(enemyEntity, LEFT);
 		}
 	}
 	if (enemyPosition.x < targetPosition.x) {
-		movementComponent.removeMovementDirection(enemyEntity, LEFT);
-		movementComponent.setMovementDirection(enemyEntity, RIGHT);
+		movementComponent->removeMovementDirection(enemyEntity, LEFT);
+		movementComponent->setMovementDirection(enemyEntity, RIGHT);
 		if (diff_y <= diff_x){
-			transformComponent.setFacingDirection(enemyEntity, RIGHT);
+			transformComponent->setFacingDirection(enemyEntity, RIGHT);
 		}
 	}
 }
@@ -170,53 +170,53 @@ void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity
 void EnemySystem::returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* enemyEntity, float elapsed_ms) {
 	vec2 enemyPosition = et->m_position;
 	vec2 startPosition = enemy->start;
-	float step = movementComponent.getStep(enemyEntity, elapsed_ms);
+	float step = movementComponent->getStep(enemyEntity, elapsed_ms);
 
 	// Have to simulate movement in this method so that we can check if the enemy
 	// is back to their starting position, but leave it to MovementSystem to actually
 	// move the entity
 	if (enemyPosition.x > startPosition.x) {
 		enemyPosition = { enemyPosition.x - step, enemyPosition.y };
-		movementComponent.removeMovementDirection(enemyEntity, RIGHT);
-		movementComponent.setMovementDirection(enemyEntity, LEFT);
-		transformComponent.setFacingDirection(enemyEntity, LEFT);
+		movementComponent->removeMovementDirection(enemyEntity, RIGHT);
+		movementComponent->setMovementDirection(enemyEntity, LEFT);
+		transformComponent->setFacingDirection(enemyEntity, LEFT);
 	}
 
 	if (enemyPosition.x < startPosition.x) {
 		enemyPosition = { enemyPosition.x + step, enemyPosition.y };
-		movementComponent.removeMovementDirection(enemyEntity, LEFT);
-		movementComponent.setMovementDirection(enemyEntity, RIGHT);
-		transformComponent.setFacingDirection(enemyEntity, RIGHT);
+		movementComponent->removeMovementDirection(enemyEntity, LEFT);
+		movementComponent->setMovementDirection(enemyEntity, RIGHT);
+		transformComponent->setFacingDirection(enemyEntity, RIGHT);
 	}
 
 	if (enemyPosition.y > startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y - step };
-		movementComponent.removeMovementDirection(enemyEntity, DOWN);
-		movementComponent.setMovementDirection(enemyEntity, UP);
-		transformComponent.setFacingDirection(enemyEntity, UP);
+		movementComponent->removeMovementDirection(enemyEntity, DOWN);
+		movementComponent->setMovementDirection(enemyEntity, UP);
+		transformComponent->setFacingDirection(enemyEntity, UP);
 	}
 
 	if (enemyPosition.y < startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y + step };
-		movementComponent.removeMovementDirection(enemyEntity, UP);
-		movementComponent.setMovementDirection(enemyEntity, DOWN);
-		transformComponent.setFacingDirection(enemyEntity, DOWN);
+		movementComponent->removeMovementDirection(enemyEntity, UP);
+		movementComponent->setMovementDirection(enemyEntity, DOWN);
+		transformComponent->setFacingDirection(enemyEntity, DOWN);
 	}
 
 	// If position will no longer change (as close to starting position as possible),
 	// Set back to patrol
 	if (enemyPosition.x == et->m_position.x && enemyPosition.y == et->m_position.y) {
 		enemy->action = PATROL;
-		movementComponent.resetMovementDirection(enemyEntity);
+		movementComponent->resetMovementDirection(enemyEntity);
 	}
 }
 
 // Set the enemy on patrol
 void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, float elapsed_ms) {
 
-	if (movementComponent.getMovementDirection(enemyEntity) == NO_DIRECTION) {
+	if (movementComponent->getMovementDirection(enemyEntity) == NO_DIRECTION) {
 		enemy->start = et->m_position;
-		movementComponent.setMovementDirection(enemyEntity, 99);
+		movementComponent->setMovementDirection(enemyEntity, 99);
 		}
 	else {
 
@@ -233,7 +233,7 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, 
 		if (enemy->t < 0.99f) {
 
 			vec2 ans = crSpline(enemy->t += 0.005, spline, enemy->dir);
-			transformComponent.getTransform(enemyEntity)->m_position = ans;
+			transformComponent->getTransform(enemyEntity)->m_position = ans;
 			
 		}
 		else {
@@ -289,31 +289,31 @@ void EnemySystem::goToTarget(vec2 startPosition, vec2 targetPosition, Entity* en
 	float diff_x= (startPosition.x-targetPosition.x)*(startPosition.x-targetPosition.x);
 
 	if (startPosition.y > targetPosition.y){
-		movementComponent.removeMovementDirection(entity, DOWN);
-		movementComponent.setMovementDirection(entity, UP);
+		movementComponent->removeMovementDirection(entity, DOWN);
+		movementComponent->setMovementDirection(entity, UP);
 		if (diff_y > diff_x){
-			transformComponent.setFacingDirection(entity, UP);
+			transformComponent->setFacingDirection(entity, UP);
 		}
 	}
 	if(startPosition.y < targetPosition.y) {
-		movementComponent.removeMovementDirection(entity, UP);
-		movementComponent.setMovementDirection(entity, DOWN);
+		movementComponent->removeMovementDirection(entity, UP);
+		movementComponent->setMovementDirection(entity, DOWN);
 		if (diff_y > diff_x ){
-			transformComponent.setFacingDirection(entity, DOWN);
+			transformComponent->setFacingDirection(entity, DOWN);
 		}
 	}
 	if (startPosition.x > targetPosition.x) {
-		movementComponent.removeMovementDirection(entity, RIGHT);
-		movementComponent.setMovementDirection(entity, LEFT);
+		movementComponent->removeMovementDirection(entity, RIGHT);
+		movementComponent->setMovementDirection(entity, LEFT);
 		if (diff_y <= diff_x){
-			transformComponent.setFacingDirection(entity, LEFT);
+			transformComponent->setFacingDirection(entity, LEFT);
 		}
 	}
 	if (startPosition.x < targetPosition.x) {
-		movementComponent.removeMovementDirection(entity, LEFT);
-		movementComponent.setMovementDirection(entity, RIGHT);
+		movementComponent->removeMovementDirection(entity, LEFT);
+		movementComponent->setMovementDirection(entity, RIGHT);
 		if (diff_y <= diff_x){
-			transformComponent.setFacingDirection(entity, RIGHT);
+			transformComponent->setFacingDirection(entity, RIGHT);
 		}
 	}
 }

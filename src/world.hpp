@@ -65,6 +65,8 @@ public:
 
 	void setupWindow();
 
+	Effect standardEffect;
+
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
