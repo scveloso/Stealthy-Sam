@@ -8,7 +8,7 @@
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager om, DrawCmp* dc, TransformCmp tc, MovementCmp mc, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
@@ -21,7 +21,7 @@ void DrawSystem::init(ObjectManager om, DrawCmp dc, TransformCmp tc, MovementCmp
 
 bool DrawSystem::setup()
 {
-	for (auto& it : drawComponent.getmap())
+	for (auto& it : drawComponent->getmap())
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
@@ -74,7 +74,7 @@ bool DrawSystem::setup()
 
 void DrawSystem::update(const mat3 projection)
 {
-	for (auto& it : drawComponent.getmap())
+	for (auto& it : drawComponent->getmap())
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
@@ -218,7 +218,7 @@ void DrawSystem::update(const mat3 projection)
 
 void DrawSystem::updateUI(const mat3 projection)
 {
-	for (auto& it : drawComponent.getmap())
+	for (auto& it : drawComponent->getmap())
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
