@@ -33,10 +33,7 @@ public:
 		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, TextSystem* textSystem,
 		LightSystem* lightSystem, GameStateCmp* gameState);
 	void generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text);
-	void generateTextBoxEntities(std::string room_path, DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text);
-	void handleHeldItem(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc,  Light* light, EnemyCone* enemy, Text* text);
-	void initializeSystems(DrawCmp dc, TransformCmp tc, InputCmp ic, CollisionCmp cc, EnemyCmp ec, MovementCmp mc, ItemCmp itc, Light* light, EnemyCone* enemy, Text* text);
-  void del();
+
 private:
 	DrawCmp drawCmp;
 	TransformCmp transformCmp;
