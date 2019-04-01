@@ -1156,11 +1156,54 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	Entity* tutorial_keyboard = objectManager->makeEntity("Tutorial_Screen");
 	drawCmp.add(tutorial_keyboard, textures_path("text/keyboard.png"));
 	transformCmp.add(tutorial_keyboard, {600,400}, {1.2,1.2}, 0.0);
-	tutorial_keyboard->ui = false;
 	tutorial_keyboard->active = false; // Invisible until H_KEY pressed
 
+	// Key counter
+	Entity* key_UI = objectManager->makeEntity("key_UI");
+	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
+	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
+	key_UI->ui = true;
 
-	// Proceed to handle held item, if applicable
+    // Key counter
+    Entity* key_0_2 = objectManager->makeEntity("key0_UI");
+    drawCmp.add(key_0_2, textures_path("text/0_2.png"));
+    transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
+
+	// Key counter
+	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
+	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
+	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
+	key_1_2->active = false;
+
+	// Key counter
+	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
+	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
+	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
+	key_2_2->active = false;
+
+    if (gameState->level_two_key && gameState ->level_three_key)
+    {
+        key_1_2->ui = false;
+        key_1_2->active = false;
+        key_2_2->ui = true;
+        key_2_2->active = true;
+    }
+    else if (gameState->level_two_key || gameState ->level_three_key)
+    {
+        key_0_2->ui = false;
+        key_0_2->active = false;
+        key_1_2->ui = true;
+        key_1_2->active = true;
+    }
+    else
+    {
+        key_0_2->ui = true;
+        key_0_2->active = true;
+    }
+
+
+
+    // Proceed to handle held item, if applicable
 	//handleHeldItem(dc, tc, ic, cc, ec, mc, itc, light, enemy, text);
 
 

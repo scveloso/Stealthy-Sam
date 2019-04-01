@@ -294,20 +294,10 @@ void World::handleUpdateAction(int updateAction)
 			{
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-				if (gameState->level_two_key && gameState->level_three_key)
-				{
-					clearMap();
-					gameState->previous_room = gameState->current_room;
-					gameState->current_room = ROOM_ONE_GUID;
-					generateEntities();
-				}
-				else
-				{
-					clearMap();
-					gameState->previous_room = gameState->current_room;
-					gameState->current_room = ROOM_ONE_GUID;
-					generateEntities();
-				}
+				clearMap();
+				gameState->previous_room = gameState->current_room;
+				gameState->current_room = ROOM_ONE_GUID;
+				generateEntities();
 				break;
 			}
 			case ROOM_TWO:

@@ -165,16 +165,38 @@ int CollisionSystem::handleKeys(Entity* entity)
 		if (gameStateComponent->current_room == ROOM_TWO_GUID)
 		{
 			gameStateComponent->level_two_key = true;
+			increaseKeyCount();
 			return KEY_PICKUP_EVENT;
 		}
 		else if (gameStateComponent->current_room == ROOM_THREE_GUID)
 		{
 			gameStateComponent->level_three_key = true;
+			increaseKeyCount();
 			return KEY_PICKUP_EVENT;
 		}
 	}
 
 	return NO_CHANGE;
+}
+
+
+void CollisionSystem::increaseKeyCount() {
+	Entity* key02 = objectManager->getEntityByLabel("key0_UI");
+	Entity* key12 = objectManager->getEntityByLabel("key1_UI");
+	Entity* key22 = objectManager->getEntityByLabel("key2_UI");
+
+	if (key02->active) {
+		key02->active = false;
+		key02->ui = false;
+		key12->active = true;
+		key12->ui = true;
+	} else if (key12->active) {
+		key12->active = false;
+		key12->ui = false;
+		key22->active = true;
+		key22->ui = true;
+	}
+
 }
 
 bool CollisionSystem::handleClosets(Entity* entity)
@@ -281,3 +303,4 @@ bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
 
 	return false;
 }
+
