@@ -157,6 +157,10 @@ bool World::init(vec2 screen)
 		//printf("%f x:%f y:%f \n", i, ans.x, ans.y);
 	}
 
+	// Loading shaders
+	if (!standardEffect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+		return false;
+
 	generateEntities();
 
 	/* Uncomment if you want to start on level 4
@@ -195,7 +199,7 @@ void World::generateEntities()
 
 	// EntityGenerator create entities and init systems
 	// entityGenerator->generateEntities(room_path, m_water);
-	entityGenerator->generateEntities(room_path, m_light, m_cone, m_text);
+	entityGenerator->generateEntities(room_path, m_light, m_cone, m_text, standardEffect);
 	setupWindow();
 }
 

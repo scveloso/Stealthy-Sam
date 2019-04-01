@@ -32,7 +32,7 @@ public:
 	EntityGenerator(ObjectManager* objectManager, CollisionSystem* collisionSystem, DrawSystem* drawSystem,
 		EnemySystem* enemySystem, InputSystem* inputSystem, MovementSystem* movementSystem, TextSystem* textSystem,
 		LightSystem* lightSystem, GameStateCmp* gameState);
-	void generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text);
+	void generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text, Effect effect);
 
 private:
 	DrawCmp drawCmp;

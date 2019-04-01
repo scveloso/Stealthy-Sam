@@ -94,6 +94,8 @@ Texture::~Texture()
 {
 	if (id != 0) glDeleteTextures(1, &id);
 	if (depth_render_buffer_id != 0) glDeleteRenderbuffers(1, &depth_render_buffer_id);
+
+	//printf("DELETED TEXTURE %d\n", id);
 }
 
 bool Texture::load_from_file(const char* path)

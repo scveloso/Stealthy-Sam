@@ -9,7 +9,7 @@ public:
 	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp);
 	void update(const mat3 projection);
 	void updateUI(const mat3 projection);
-	bool setup();
+	bool setup(Effect effect);
 	vec2 s_position;
 	vec2 EBox;
 	vec2 rRestart;

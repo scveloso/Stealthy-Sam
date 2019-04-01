@@ -19,8 +19,9 @@ void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, Movement
 	curStep = true;
 }
 
-bool DrawSystem::setup()
+bool DrawSystem::setup(Effect effect)
 {
+	
 	for (auto& it : drawComponent->getmap())
 	{
 		Entity *entity = it.first;
@@ -64,9 +65,7 @@ bool DrawSystem::setup()
 		if (gl_has_errors())
 			return false;
 
-		// Loading shaders
-		if (!draw->effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
-			return false;
+		draw->effect = effect;
 	}
 
 	return true;

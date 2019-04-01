@@ -30,7 +30,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 
 // Parse .json file to generate entities
 // void EntityGenerator::generateEntities(std::string room_path, Water* water)
-void EntityGenerator::generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text)
+void EntityGenerator::generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text, Effect effect)
 {
 	// Components
 
@@ -1196,5 +1196,5 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
 	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
 
-	drawSystem->setup();
+	drawSystem->setup(effect);
 }
