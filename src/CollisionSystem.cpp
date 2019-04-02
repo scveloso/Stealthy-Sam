@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "UpdateAction.hpp"
 #include "TileConstants.hpp"
+#include "MissileSystem.hpp"
 
 // System to handle Sam colliding with other entities. Responsible for:
 // - Updating when keys/torches/other items are picked up
