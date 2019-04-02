@@ -1171,7 +1171,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(pause_screen, {600,400}, {1,1}, 0.0);
     pause_screen->active = false;
 
-	// Key counter
+    Entity*Victory_Screen=objectManager->makeEntity(VICTORYSCREEN);
+    drawCmp.add(Victory_Screen,textures_path("text/Victory.png"));
+    transformCmp.add(Victory_Screen,{600,400},{1.2,1.2},0.0);
+    Victory_Screen->active=false;
+
+    // Key counter
 	Entity* key_UI = objectManager->makeEntity("key_UI");
 	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
 	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
