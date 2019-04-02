@@ -196,7 +196,6 @@ void CollisionSystem::increaseKeyCount() {
 		key22->active = true;
 		key22->ui = true;
 	}
-
 }
 
 bool CollisionSystem::handleClosets(Entity* entity)

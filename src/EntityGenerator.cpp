@@ -1158,6 +1158,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(tutorial_keyboard, {600,400}, {1.2,1.2}, 0.0);
 	tutorial_keyboard->active = false; // Invisible until H_KEY pressed
 
+	Entity* pause_screen = objectManager->makeEntity("Pause_Screen");
+	drawCmp.add(pause_screen, textures_path("text/pause.png"));
+	transformCmp.add(pause_screen, {600,400}, {1,1}, 0.0);
+    pause_screen->active = false;
+
 	// Key counter
 	Entity* key_UI = objectManager->makeEntity("key_UI");
 	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
@@ -1188,7 +1193,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
         key_2_2->ui = true;
         key_2_2->active = true;
     }
-    else if (gameState->level_two_key || gameState ->level_three_key)
+    else if (gameState->level_two_key || gameState->level_three_key)
     {
         key_0_2->ui = false;
         key_0_2->active = false;
