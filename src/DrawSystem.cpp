@@ -21,54 +21,62 @@ void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, Movement
 
 bool DrawSystem::setup(Effect effect)
 {
-	
 	for (auto& it : drawComponent->getmap())
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
 
-		transformComponent->setHeight(entity, draw->texture.height);
-		transformComponent->setWidth(entity, draw->texture.width);
-
-		// The position corresponds to the center of the texture
-		float wr = draw->texture.width * 0.5f;
-		float hr = draw->texture.height * 0.5f;
-
-		TexturedVertex vertices[4];
-		vertices[0].position = { -wr, +hr, -0.02f };
-		vertices[0].texcoord = { 0.f, 1.f };
-		vertices[1].position = { +wr, +hr, -0.02f };
-		vertices[1].texcoord = { 1.f, 1.f };
-		vertices[2].position = { +wr, -hr, -0.02f };
-		vertices[2].texcoord = { 1.f, 0.f };
-		vertices[3].position = { -wr, -hr, -0.02f };
-		vertices[3].texcoord = { 0.f, 0.f };
-
-		// counterclockwise as it's the default opengl front winding direction
-		uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-
-		// Clearing errors
-		gl_flush_errors();
-
-		// Vertex Buffer creation
-		glGenBuffers(1, &draw->mesh.vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, draw->mesh.vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
-
-		// Index Buffer creation
-		glGenBuffers(1, &draw->mesh.ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, draw->mesh.ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
-
-		// Vertex Array (Container for Vertex + Index buffer)
-		glGenVertexArrays(1, &draw->mesh.vao);
-		if (gl_has_errors())
-			return false;
-
-		draw->effect = effect;
+		bool success = initializeItem(entity, draw, effect);
+		if (!success) {
+		    return false;
+		}
 	}
 
 	return true;
+}
+
+bool DrawSystem::initializeItem(Entity* entity, Draw* draw, Effect effect) {
+    transformComponent->setHeight(entity, draw->texture.height);
+    transformComponent->setWidth(entity, draw->texture.width);
+
+    // The position corresponds to the center of the texture
+    float wr = draw->texture.width * 0.5f;
+    float hr = draw->texture.height * 0.5f;
+
+    TexturedVertex vertices[4];
+    vertices[0].position = { -wr, +hr, -0.02f };
+    vertices[0].texcoord = { 0.f, 1.f };
+    vertices[1].position = { +wr, +hr, -0.02f };
+    vertices[1].texcoord = { 1.f, 1.f };
+    vertices[2].position = { +wr, -hr, -0.02f };
+    vertices[2].texcoord = { 1.f, 0.f };
+    vertices[3].position = { -wr, -hr, -0.02f };
+    vertices[3].texcoord = { 0.f, 0.f };
+
+    // counterclockwise as it's the default opengl front winding direction
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+
+    // Clearing errors
+    gl_flush_errors();
+
+    // Vertex Buffer creation
+    glGenBuffers(1, &draw->mesh.vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, draw->mesh.vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+
+    // Index Buffer creation
+    glGenBuffers(1, &draw->mesh.ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, draw->mesh.ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+
+    // Vertex Array (Container for Vertex + Index buffer)
+    glGenVertexArrays(1, &draw->mesh.vao);
+    if (gl_has_errors())
+        return false;
+
+    draw->effect = effect;
+
+    return true;
 }
 
 void DrawSystem::update(const mat3 projection)
@@ -191,7 +199,14 @@ void DrawSystem::update(const mat3 projection)
                         glBindTexture(GL_TEXTURE_2D, draw->texture.id);
                     }
                 }
+            } else if (entity->label == BOSS_GUID) {
+                Transform* bossTransform = transformComponent->getTransform(entity);
 
+                if (bossTransform->facingDirection == NO_DIRECTION) {
+                    glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+                } else {
+                    glBindTexture(GL_TEXTURE_2D, draw->down.id);
+                }
             } else {
                 glBindTexture(GL_TEXTURE_2D, draw->texture.id);
             }

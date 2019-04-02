@@ -9,6 +9,7 @@ public:
 	    , const char* file4, const char* file5, const char* file6, const char* file7
 	    , const char* file8, const char* file9);
 	std::vector<std::pair<Entity*, Draw *>> getmap();
+    Draw* getDrawByLabel(std::string label);
 
 	~DrawCmp();
 

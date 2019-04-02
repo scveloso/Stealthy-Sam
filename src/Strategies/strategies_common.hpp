@@ -11,6 +11,11 @@ enum EnemyAction {
     MOVE_TO_BOTTOM_LEFT_QUAD = 6,
     MOVE_TO_BOTTOM_RIGHT_QUAD = 7,
     FADE_AWAY = 8,
+    BOSS_SHOOT_MISSILE = 9,
 };
 
-enum x { a, b};
+const vec2 BOSS_POSITION_TOP_RIGHT =  { 750.f, 335.f };
+const vec2 BOSS_POSITION_BOTTOM_LEFT =  { 250.f, 650.f };
+const vec2 BOSS_POSITION_BOTTOM_RIGHT = { 750.f, 650.f };
+
+const int TIME_BETWEEN_MISSILES = 2000;

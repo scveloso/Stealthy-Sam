@@ -15,7 +15,9 @@ using json = nlohmann::json;
 // After, handleHeldItem() is called to generate Sam's held item on room changes
 // Lastly, initializeSystems() is called to add all the components to their relevant systems
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
-								 EnemySystem* es, InputSystem* is, MovementSystem* ms, TextSystem* ts, LightSystem* ls, GameStateCmp* gs)
+								 EnemySystem* es, InputSystem* is, MovementSystem* ms,
+                                 TextSystem* ts, LightSystem* ls, GameStateCmp* gs,
+                                 MissileSystem* missileSys)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -26,6 +28,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	textSystem = ts;
 	lightSystem = ls;
 	gameState = gs;
+	missileSystem = missileSys;
 }
 
 // Parse .json file to generate entities
@@ -36,7 +39,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 	// Generate main player
 	// Main player MUST be registered first to match the SAM_GUID constant declared in Component.hpp
-	Entity* playerEntity = objectManager->makeEntity("Player");
+	Entity* playerEntity = objectManager->makeEntity(SAM_GUID);
 
 
 	// Read JSON map file
@@ -1131,7 +1134,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 		movementCmp.add(entity, 50.f, 0);
 		transformCmp.add(entity, {400.f, 400.f}, {3.125f, 3.125f}, 0.0);
-		drawCmp.add(entity, textures_path("Dungeon/boss.png"));
+		// TODO: we should really change this to make it more specific for the boss, but this will do
+        drawCmp.addFull(entity, textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss_attack.png"),
+                        textures_path("Dungeon/boss_running.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"), textures_path("Dungeon/boss.png"),
+                        textures_path("Dungeon/boss.png"));
 		collisionCmp.add(entity);
 		enemyCmp.add(entity, 100, 0);
 		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;
@@ -1232,6 +1240,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	movementSystem->	init(		objectManager, &transformCmp, &collisionCmp	, &movementCmp	, gameState);
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
 	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
+    missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp);
 
 	drawSystem->setup(effect);
 }

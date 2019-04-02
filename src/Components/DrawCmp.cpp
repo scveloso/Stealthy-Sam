@@ -111,3 +111,16 @@ std::vector<std::pair<Entity*, Draw *>> DrawCmp::getmap()
 {
 	return draw_vec;
 }
+
+Draw* DrawCmp::getDrawByLabel(std::string label)
+{
+    for (auto& it : draw_vec)
+    {
+        Entity* entity = it.first;
+        if (entity->label == label) {
+            return it.second;
+        }
+    }
+
+    return nullptr;
+}

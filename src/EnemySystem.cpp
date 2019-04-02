@@ -1,5 +1,6 @@
 #include <Components/GameStateCmp.hpp>
 #include "EnemySystem.hpp"
+#include "UpdateAction.hpp"
 
 // System to update enemies based on decision tree AI.
 //
@@ -61,21 +62,25 @@ void EnemySystem::initDecisionTree() {
 	decision_tree.emplace_back(decisionNode);
 }
 
-void EnemySystem::update(float elapsed_ms) {
+int EnemySystem::update(float elapsed_ms) {
 	Entity *sam = objectManager->getEntity(SAMS_GUID);
 	Transform* samTransform = transformComponent->getTransform(sam);
+
+	int returnAction = NO_CHANGE;
+	timeSinceLastMissile += (int) elapsed_ms;
+//	printf("time to missile %d\n",timeSinceLastMissile);
 
 	for (auto& it : enemyComponent.getmap()) {
 
 		Enemy *enemy = it.second;
+        Entity* enemyEntity = objectManager->getEntity(it.first);
+        Transform *et =  transformComponent->getTransform(enemyEntity);
 		// Set enemy to either chase or patrol depending on decision tree
 		if (enemy->type == BOSS_ENEMY_TYPE) {
-			handleBossDecisionTree(enemy, samTransform);
+			handleBossDecisionTree(enemy, et);
 		} else {
 			handleEnemyDecisionTree(enemy, samTransform);
 		}
-		Entity* enemyEntity = objectManager->getEntity(it.first);
-		Transform *et =  transformComponent->getTransform(enemyEntity);
 
 		switch (enemy->action)
 		{
@@ -92,23 +97,31 @@ void EnemySystem::update(float elapsed_ms) {
 				tryChaseThrownTorch(enemy, et, enemyEntity);
 				break;
 			case MOVE_TO_TOP_RIGHT_QUAD:
-				goToTarget(et->m_position, { 860.f, 335.f }, enemyEntity);
+				goToTarget(et->m_position, BOSS_POSITION_TOP_RIGHT, enemyEntity);
 				break;
 			case MOVE_TO_BOTTOM_LEFT_QUAD:
-				goToTarget(et->m_position, { 250.f, 650.f }, enemyEntity);
+				goToTarget(et->m_position, BOSS_POSITION_BOTTOM_LEFT, enemyEntity);
 				break;
 			case MOVE_TO_BOTTOM_RIGHT_QUAD:
-				goToTarget(et->m_position, { 860.f, 650.f }, enemyEntity);
+				goToTarget(et->m_position, BOSS_POSITION_BOTTOM_RIGHT, enemyEntity);
 				break;
 			case FADE_AWAY:
-				// TODO: initiate a fade over time
+				returnAction = GAME_WIN;
 				break;
+            case BOSS_SHOOT_MISSILE:
+                if (timeSinceLastMissile > TIME_BETWEEN_MISSILES) {
+                    timeSinceLastMissile = 0;
+                    returnAction = SHOOT_MISSILE;
+                }
+                break;
 		    case MAINTAIN_ACTION:
 		        break;
 			default:
 				printf("enemy action not recognized: %d\n", enemy->action);
 		}
 	}
+
+	return returnAction;
 }
 
 // Check if the thrown entity exists, if it does - chase it
@@ -318,8 +331,8 @@ void EnemySystem::goToTarget(vec2 startPosition, vec2 targetPosition, Entity* en
 	}
 }
 
-void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* samTransform) {
+void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* bossTransform) {
 	// TODO(sam): shoot missile, go to other locations, etc
-	enemy->action = BossStrategy::handleAction(gameStateComponent);
+	enemy->action = BossStrategy::handleAction(gameStateComponent, bossTransform->m_position);
 }
 
