@@ -17,6 +17,7 @@ public:
 	bool setup(GLFWwindow* m_window);
 	void handleThrowable(Entity* entity);
 	void saveGame();
+	void pauseScreen();
 	bool loadGame();
 	bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void torch_cauldron_collision(int entityId, Transform *entityTransform);

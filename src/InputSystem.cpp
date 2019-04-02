@@ -127,6 +127,11 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             gameState->has_pressed_H = !gameState->has_pressed_H;
             break;
           }
+          case GLFW_KEY_SPACE:
+          {
+            pauseScreen();
+            break;
+          }
         }
       }
       if (action == GLFW_RELEASE)
@@ -180,6 +185,11 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 
 void InputSystem::saveGame() {
   gameState->saveGame();
+}
+void InputSystem::pauseScreen() {
+  Entity* pause_screen = objectManager->getEntityByLabel(PAUSE_SCREEN);
+  pause_screen->active = !pause_screen->active;
+  pause_screen->ui = !pause_screen->ui;
 }
 
 bool InputSystem::loadGame() {
