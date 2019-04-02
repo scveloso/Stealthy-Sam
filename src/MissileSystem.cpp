@@ -14,7 +14,7 @@ void MissileSystem::init(ObjectManager *om, CollisionCmp *cc, MovementCmp *mc, G
     transformCmp = tc;
 }
 
-void MissileSystem::spawnMissile() {
+std::pair<std::string, Draw*> MissileSystem::spawnMissile() {
     Entity* sam = objectManager->getEntityByLabel(SAM_GUID);
     // TODO: make go towards sam??
     Entity* boss = objectManager->getEntityByLabel(BOSS_GUID);
@@ -26,7 +26,8 @@ void MissileSystem::spawnMissile() {
     // TODO: figure out why it's not being rendered
     movementComponent->add(missile, 50.f, 0.f);
     missile->ui = true;
-    missile->active = true;
     transformCmp->add(missile, transformCmp->getTransform(boss)->m_position, {3.125f, 3.125f}, 0.0);
-    drawComponent->add(missile, textures_path("Dungeon/boss.png"));
+    drawComponent->add(missile, textures_path("Dungeon/boss_bolt.png"));
+
+    return std::make_pair(out.str(), drawComponent->getDrawByLabel(out.str()));
 }

@@ -7,6 +7,7 @@ class DrawSystem
 {
 public:
 	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp);
+    bool initializeItem(Entity* entity, Draw* draw, Effect effect);
 	void update(const mat3 projection);
 	void updateUI(const mat3 projection);
 	bool setup(Effect effect);

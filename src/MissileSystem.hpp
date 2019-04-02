@@ -11,7 +11,7 @@
 class MissileSystem {
 public:
     void init(ObjectManager* om, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp, DrawCmp* drawCmp, TransformCmp* transformCmp);
-    void spawnMissile();
+    std::pair<std::string, Draw*> spawnMissile();
 private:
     CollisionCmp* collisionComponent;
     MovementCmp* movementComponent;
