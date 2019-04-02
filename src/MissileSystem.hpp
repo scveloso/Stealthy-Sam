@@ -21,3 +21,4 @@ private:
     TransformCmp *transformCmp;
     int num_missiles;
 };
+const std::string MISSILE_LABEL_PREFIX = "Missile_";
