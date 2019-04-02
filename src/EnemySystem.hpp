@@ -15,9 +15,9 @@ class EnemySystem
 public:
 	void init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc);
 	void initDecisionTree();
-	void update(float elapsed_ms);
+	int update(float elapsed_ms);
 	void handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform);
-	void handleBossDecisionTree(Enemy* enemy, Transform* samTransform);
+	void handleBossDecisionTree(Enemy* enemy, Transform* enemyTransform);
 	void patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, float elapsed_ms);
 	void tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity);
 	void chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity);
@@ -33,4 +33,5 @@ private:
 	GameStateCmp* gameStateComponent;
 
 	std::vector<DecisionNode*> decision_tree;
+	int timeSinceLastMissile = 0;
 };

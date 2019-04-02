@@ -191,7 +191,14 @@ void DrawSystem::update(const mat3 projection)
                         glBindTexture(GL_TEXTURE_2D, draw->texture.id);
                     }
                 }
+            } else if (entity->label == BOSS_GUID) {
+                Transform* bossTransform = transformComponent->getTransform(entity);
 
+                if (bossTransform->facingDirection == NO_DIRECTION) {
+                    glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+                } else {
+                    glBindTexture(GL_TEXTURE_2D, draw->down.id);
+                }
             } else {
                 glBindTexture(GL_TEXTURE_2D, draw->texture.id);
             }

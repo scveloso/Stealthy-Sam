@@ -22,6 +22,7 @@ EnemySystem* es;
 MovementSystem* ms;
 TextSystem* ts;
 LightSystem* ls;
+MissileSystem* missileSystem;
 
 // Game State component
 GameStateCmp* gameState;
@@ -161,16 +162,12 @@ bool World::init(vec2 screen)
 	if (!standardEffect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
+    //Uncomment if you want to start on level 4
+//    gameState->current_room = ROOM_FOUR_GUID;
+//    gameState->held_item = TORCH;
+
 	generateEntities();
 
-	/* Uncomment if you want to start on level 4
-    clearMap();
-    gameState->previous_room = ROOM_ONE_GUID;
-    gameState->current_room = ROOM_FOUR_GUID;
-    generateEntities(map_path("level_four.json"));
-    m_cone->clear_enemy_position();
-    soundSystem->playBossMusic();
-    */
 
 	return true;
 }
@@ -213,8 +210,9 @@ void World::makeSystems()
 	ms = new MovementSystem();
 	ts = new TextSystem();
 	ls = new LightSystem();
+	missileSystem = new MissileSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem);
 }
 
 
@@ -243,6 +241,7 @@ void World::clearMap()
 	delete ms;
 	delete ts;
 	delete ls;
+	delete missileSystem;
 }
 
 // Releases all the associated resources
@@ -270,8 +269,10 @@ bool World::update(float elapsed_ms)
 	}
 
 	// Update Systems
-	es->update(elapsed_ms);
-	int updateAction = cs->update(elapsed_ms);
+	int updateAction = es->update(elapsed_ms);
+    handleUpdateAction(updateAction);
+
+	updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
 	ts->update();
 	ls->update();
@@ -375,6 +376,17 @@ void World::handleUpdateAction(int updateAction)
 				soundSystem->playKeyPickup();
 				break;
 			}
+            case GAME_WIN:
+            {
+                // TODO(Nic): ui stuff for victory
+                break;
+            }
+            case SHOOT_MISSILE:
+            {
+                printf("firing a missile\n");
+                missileSystem->spawnMissile();
+                break;
+            }
 			default:
 			{
 			    printf("Update Action %d was not recognized", updateAction);
