@@ -22,7 +22,7 @@ public:
     vec2 cursor_pos;
 
     bool has_moved;
-    bool has_pressed_E;
+    bool has_pressed_H;
 
     bool is_game_paused;
 
@@ -35,4 +35,5 @@ public:
 
 
     int num_lit_cauldrons;
+
 };

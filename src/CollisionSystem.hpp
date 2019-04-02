@@ -26,4 +26,5 @@ private:
   	ObjectManager* objectManager;
   	GameStateCmp* gameStateComponent;
 
+	void increaseKeyCount();
 };

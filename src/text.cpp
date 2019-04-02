@@ -4,10 +4,6 @@
 
 bool Text::init() {
 	death = 0;
-	showWASDText = 1;
-	showEText = 0;
-	textWASD_position = TEXT_POSITION;
-	textE_position = TEXT_POSITION;
 	textR_position = TEXT_POSITION;
 
 	// Since we are not going to apply transformation to this screen geometry
@@ -73,10 +69,6 @@ void Text::draw(const mat3& projection) {
 
 	glUniform1i(death_cond, death);
   glUniform1i(re_cond, remove_r);
-	glUniform1i(text_cond, showWASDText);
-	glUniform1i(key_cond, showEText);
-	glUniform2f(t_position, textWASD_position.x, textWASD_position.y);
-	glUniform2f(e_position, textE_position.x, textE_position.y );
 	glUniform2f(r_position, textR_position.x, textR_position.y);
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
@@ -97,7 +89,5 @@ void Text::draw(const mat3& projection) {
 
 // Game is restarted, change to default values
 void Text::restart() {
-	showWASDText = 1;
-	showEText = 0;
 	death = 0;
 }

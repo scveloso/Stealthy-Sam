@@ -1118,8 +1118,8 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	drawCmp.addFull(playerEntity, textures_path("Dungeon/sam.png"), textures_path("Dungeon/sam_back.png"),
 	textures_path("Dungeon/sam_front.png"), textures_path("Dungeon/sam_backstep1.png"),
 	textures_path("Dungeon/sam_backstep2.png"), textures_path("Dungeon/sam_frontstep1.png"),
-	textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png")
-	, textures_path("Dungeon/sam_step2.png"));
+	textures_path("Dungeon/sam_frontstep2.png"), textures_path("Dungeon/sam_step1.png"),
+	textures_path("Dungeon/sam_step2.png"));
 	inputCmp.add(playerEntity);
 	movementCmp.add(playerEntity, 200.f, 0);
 	collisionCmp.add(playerEntity);
@@ -1140,22 +1140,8 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	//generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, light, enemy, text);
 
 
-	// Create text boxes if we're in room one:
-	if (map_path("level_one.json") == room_path)
-	{
-		// Text boxes
-		Entity* useWASD = objectManager->makeEntity(USE_WASD_TEXT_LABEL);
-		drawCmp.add(useWASD, textures_path("text/usewasd.png"));
-		transformCmp.add(useWASD, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-
-		Entity* useEText = objectManager->makeEntity(USE_E_INTERACT_LABEL);
-		drawCmp.add(useEText, textures_path("text/etointeract.png"));
-		transformCmp.add(useEText, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-		useEText->active = false; // E text initially invisible
-	}
-
 	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_R_RESTART);
+	Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
 	drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
 	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
 	rToRestart->active = false; // Died text initially invisible
@@ -1166,7 +1152,58 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	//tc.add(example, { 500,500 }, { 10,10 }, 0.0);
 	//Set ui to true to overlay over everything
 
-	// Proceed to handle held item, if applicable
+	//Tutorial help screen for player
+	Entity* tutorial_keyboard = objectManager->makeEntity("Tutorial_Screen");
+	drawCmp.add(tutorial_keyboard, textures_path("text/keyboard.png"));
+	transformCmp.add(tutorial_keyboard, {600,400}, {1.2,1.2}, 0.0);
+	tutorial_keyboard->active = false; // Invisible until H_KEY pressed
+
+	// Key counter
+	Entity* key_UI = objectManager->makeEntity("key_UI");
+	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
+	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
+	key_UI->ui = true;
+
+    // Key counter
+    Entity* key_0_2 = objectManager->makeEntity("key0_UI");
+    drawCmp.add(key_0_2, textures_path("text/0_2.png"));
+    transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
+
+	// Key counter
+	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
+	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
+	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
+	key_1_2->active = false;
+
+	// Key counter
+	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
+	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
+	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
+	key_2_2->active = false;
+
+    if (gameState->level_two_key && gameState ->level_three_key)
+    {
+        key_1_2->ui = false;
+        key_1_2->active = false;
+        key_2_2->ui = true;
+        key_2_2->active = true;
+    }
+    else if (gameState->level_two_key || gameState ->level_three_key)
+    {
+        key_0_2->ui = false;
+        key_0_2->active = false;
+        key_1_2->ui = true;
+        key_1_2->active = true;
+    }
+    else
+    {
+        key_0_2->ui = true;
+        key_0_2->active = true;
+    }
+
+
+
+    // Proceed to handle held item, if applicable
 	//handleHeldItem(dc, tc, ic, cc, ec, mc, itc, light, enemy, text);
 
 

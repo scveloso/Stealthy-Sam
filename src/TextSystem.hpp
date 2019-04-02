@@ -13,9 +13,8 @@ class TextSystem
 public:
 	void init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy);
 	void update();
-	void enableEText();
-	void disableEText();
-	void disableWASDText();
+	void enableTutorialScreen();
+	void disableTutorialScreen();
 
 private:
 	ObjectManager* objectManager;

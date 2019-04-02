@@ -103,7 +103,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
                 gameState->hidden = true;
               }
             }
-            gameState->has_pressed_E = true;
             break;
           case GLFW_KEY_C:
           {
@@ -121,6 +120,11 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           {
             handleThrowable(entity);
 
+            break;
+          }
+          case GLFW_KEY_H:
+          {
+            gameState->has_pressed_H = !gameState->has_pressed_H;
             break;
           }
         }
