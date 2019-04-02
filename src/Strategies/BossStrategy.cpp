@@ -3,6 +3,8 @@
 
 EnemyAction BossStrategy::handleAction(GameStateCmp* gameStateCmp, vec2 currentPosition) {
     switch (gameStateCmp->num_lit_cauldrons) {
+        case 0:
+            return BOSS_SHOOT_MISSILE;
         case 1:
             if (pos_within_range(currentPosition, BOSS_POSITION_TOP_RIGHT, 10)) {
                 return BOSS_SHOOT_MISSILE;

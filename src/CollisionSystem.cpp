@@ -145,7 +145,7 @@ int CollisionSystem::handleDoors(Entity* entity)
 // Returns an UpdateAction to trigger death if an enemy is collided with
 int CollisionSystem::handleEnemies(Entity* entity)
 {
-	if (entity->label == ENEMY_LABEL || entity->label == BOSS_GUID)
+    if (entity->label == ENEMY_LABEL || entity->label == BOSS_GUID || entity->label.rfind(MISSILE_LABEL_PREFIX, 0) == 0)
 	{
 	    if (gameStateComponent->sam_is_alive) {
 			gameStateComponent->sam_is_alive = false;
