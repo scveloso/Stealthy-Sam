@@ -385,8 +385,9 @@ void World::handleUpdateAction(int updateAction)
             }
             case SHOOT_MISSILE:
             {
-                printf("firing a missile\n");
-                missileSystem->spawnMissile();
+                std::pair<std::string, Draw*> missile = missileSystem->spawnMissile();
+                ds->initializeItem(objectManager->getEntityByLabel(missile.first), missile.second, standardEffect);
+
                 break;
             }
 			default:
