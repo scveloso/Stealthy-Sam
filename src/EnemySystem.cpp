@@ -67,6 +67,8 @@ int EnemySystem::update(float elapsed_ms) {
 	Transform* samTransform = transformComponent->getTransform(sam);
 
 	int returnAction = NO_CHANGE;
+	timeSinceLastMissile += (int) elapsed_ms;
+//	printf("time to missile %d\n",timeSinceLastMissile);
 
 	for (auto& it : enemyComponent.getmap()) {
 
@@ -107,7 +109,11 @@ int EnemySystem::update(float elapsed_ms) {
 				returnAction = GAME_WIN;
 				break;
             case BOSS_SHOOT_MISSILE:
-                returnAction = SHOOT_MISSILE;
+                if (timeSinceLastMissile > TIME_BETWEEN_MISSILES) {
+                    printf("TIME RESET, SHOOTING MISSILE\n");
+                    timeSinceLastMissile = 0;
+                    returnAction = SHOOT_MISSILE;
+                }
                 break;
 		    case MAINTAIN_ACTION:
 		        break;

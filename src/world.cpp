@@ -163,8 +163,8 @@ bool World::init(vec2 screen)
 		return false;
 
     //Uncomment if you want to start on level 4
-    gameState->current_room = ROOM_FOUR_GUID;
-    gameState->held_item = TORCH;
+//    gameState->current_room = ROOM_FOUR_GUID;
+//    gameState->held_item = TORCH;
 
 	generateEntities();
 

@@ -33,4 +33,5 @@ private:
 	GameStateCmp* gameStateComponent;
 
 	std::vector<DecisionNode*> decision_tree;
+	int timeSinceLastMissile = 0;
 };

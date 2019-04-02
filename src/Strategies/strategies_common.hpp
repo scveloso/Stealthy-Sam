@@ -14,6 +14,8 @@ enum EnemyAction {
     BOSS_SHOOT_MISSILE = 9,
 };
 
-const vec2 BOSS_POSITION_TOP_RIGHT =  { 860.f, 335.f };
+const vec2 BOSS_POSITION_TOP_RIGHT =  { 750.f, 335.f };
 const vec2 BOSS_POSITION_BOTTOM_LEFT =  { 250.f, 650.f };
-const vec2 BOSS_POSITION_BOTTOM_RIGHT = { 860.f, 650.f };
+const vec2 BOSS_POSITION_BOTTOM_RIGHT = { 750.f, 650.f };
+
+const int TIME_BETWEEN_MISSILES = 8000;
