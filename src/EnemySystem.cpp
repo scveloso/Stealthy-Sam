@@ -110,7 +110,6 @@ int EnemySystem::update(float elapsed_ms) {
 				break;
             case BOSS_SHOOT_MISSILE:
                 if (timeSinceLastMissile > TIME_BETWEEN_MISSILES) {
-                    printf("TIME RESET, SHOOTING MISSILE\n");
                     timeSinceLastMissile = 0;
                     returnAction = SHOOT_MISSILE;
                 }
