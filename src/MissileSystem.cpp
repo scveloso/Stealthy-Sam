@@ -29,5 +29,16 @@ std::pair<std::string, Draw*> MissileSystem::spawnMissile() {
     transformCmp->add(missile, transformCmp->getTransform(boss)->m_position, {3.125f, 3.125f}, 0.0);
     drawComponent->add(missile, textures_path("Dungeon/boss_bolt.png"));
 
+
+    // Launch in direction of sam (copied from Sam G's code)
+    vec2 sampos = gameState->sam_position;
+    vec2 bossPosition = transformCmp->getTransform(boss)->m_position;
+    double xval = sampos.x - bossPosition.x;
+    double yval = sampos.y - bossPosition.y;
+    double normval = sqrt( pow(xval,2) + pow(yval,2) );
+    vec2 throwDir = { static_cast<float>(xval / normval) , static_cast<float>(yval / normval) };
+
+    movementComponent->setVecDirection(missile, throwDir);
+
     return std::make_pair(out.str(), drawComponent->getDrawByLabel(out.str()));
 }
