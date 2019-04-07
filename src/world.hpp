@@ -24,7 +24,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <Components/GameStateCmp.hpp>
-#include <SoundSystem.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods

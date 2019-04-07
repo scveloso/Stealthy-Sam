@@ -105,7 +105,10 @@ void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
 {
 	if (transform_map[entity->id]->facingDirection % facingDirection != 0) {
 		transform_map[entity->id]->facingDirection *= facingDirection;
-		transform_map[entity->id]->prevFacingDirection = facingDirection;
+
+		if (transform_map[entity->id]->facingDirection == facingDirection) {
+			transform_map[entity->id]->prevFacingDirection = facingDirection;
+		}
 	}
 }
 
