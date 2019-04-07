@@ -1,7 +1,12 @@
-#include "SoundSystem.hpp"
+#include "SoundManager.hpp"
 
-// Class to create and store entities for a given room
-SoundSystem::SoundSystem()
+SoundManager& SoundManager::getInstance() {
+  static SoundManager theInstance;
+
+  return theInstance;
+}
+
+void SoundManager::init()
 {
     // Music
     background_music = Mix_LoadMUS(audio_path("spooky_background.wav"));
@@ -55,62 +60,62 @@ SoundSystem::SoundSystem()
 }
 
 // Stops all music being played
-void SoundSystem::haltMusic() {
+void SoundManager::haltMusic() {
     Mix_HaltMusic();
 }
 
-void SoundSystem::playBackgroundMusic()
+void SoundManager::playBackgroundMusic()
 {
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
 }
 
-void SoundSystem::playKeyPickup()
+void SoundManager::playKeyPickup()
 {
     Mix_PlayChannel(-1, key_pickup_sound, 0);
 }
 
-void SoundSystem::playDeath()
+void SoundManager::playDeath()
 {
     Mix_PlayChannel(-1, death_sound, 0);
 }
 
-void SoundSystem::playBossMusic()
+void SoundManager::playBossMusic()
 {
     Mix_PlayMusic(boss_background_music, -1);
 }
 
-void SoundSystem::playItemPickup()
+void SoundManager::playItemPickup()
 {
   Mix_PlayChannel(-1, item_pickup_sound, 0);
 }
 
-void SoundSystem::playItemThrow()
+void SoundManager::playItemThrow()
 {
   Mix_PlayChannel(-1, item_throw_sound, 0);
 }
 
-void SoundSystem::playOpenCloset()
+void SoundManager::playOpenCloset()
 {
   Mix_PlayChannel(-1, open_closet_sound, 0);
 }
 
-void SoundSystem::playCloseCloset()
+void SoundManager::playCloseCloset()
 {
   Mix_PlayChannel(-1, close_closet_sound, 0);
 }
 
-void SoundSystem::playCauldronLightUp()
+void SoundManager::playCauldronLightUp()
 {
   Mix_PlayChannel(-1, cauldron_light_up_sound, 0);
 }
 
-void SoundSystem::playStep()
+void SoundManager::playStep()
 {
   Mix_PlayChannel(-1, step_sound, 0);
 }
 
-void SoundSystem::playTorchDying()
+void SoundManager::playTorchDying()
 {
   Mix_PlayChannel(-1, torch_dying_sound, 0);
 }

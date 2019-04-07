@@ -5,6 +5,7 @@
 #include "Components/MovementCmp.hpp"
 #include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 #include "common.hpp"
 
 class MovementSystem
@@ -23,6 +24,5 @@ private:
 	MovementCmp* movementComponent;
 	ObjectManager* objectManager;
 	GameStateCmp *gameState;
-
 
 };

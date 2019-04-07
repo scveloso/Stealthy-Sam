@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL_mixer.h>
 #include "common.hpp"
 
@@ -9,9 +11,32 @@ public:
     void playBossMusic();
     void playDeath();
     void playKeyPickup();
+
+    void playItemPickup();
+    void playItemThrow();
+
+    void playOpenCloset();
+    void playCloseCloset();
+
+    void playCauldronLightUp();
+    void playTorchDying();
+
+    void playStep();
+
 private:
     Mix_Music* background_music;
     Mix_Chunk* death_sound;
     Mix_Music* boss_background_music;
     Mix_Chunk* key_pickup_sound;
+
+    Mix_Chunk* item_pickup_sound;
+    Mix_Chunk* item_throw_sound;
+
+    Mix_Chunk* open_closet_sound;
+    Mix_Chunk* close_closet_sound;
+
+    Mix_Chunk* cauldron_light_up_sound;
+
+    Mix_Chunk* step_sound;
+    Mix_Chunk* torch_dying_sound;
 };

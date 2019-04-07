@@ -12,6 +12,7 @@
 #include "Components/CollisionCmp.hpp"
 #include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 #include "EntityGenerator.hpp"
 
 // stlib

@@ -36,6 +36,7 @@ set(SOURCE_FILES
 		#src/water.cpp
 		src/world.cpp
 		src/ObjectManager.cpp
+    src/SoundManager.cpp
 		src/DrawSystem.cpp
 		src/InputSystem.cpp
 		src/CollisionSystem.cpp
@@ -54,6 +55,7 @@ set(SOURCE_FILES
 		#src/water.hpp
 		src/world.hpp
 		src/ObjectManager.hpp
+    src/SoundManager.hpp
 		src/Entity.hpp
 		src/DrawSystem.hpp
 		src/InputSystem.hpp
