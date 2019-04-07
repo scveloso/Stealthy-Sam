@@ -407,6 +407,7 @@ void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransf
         {
           otherEntity->active = true;
           gameState->num_lit_cauldrons++;
+          SoundManager::getInstance().playCauldronLightUp();
         }
       }
     }

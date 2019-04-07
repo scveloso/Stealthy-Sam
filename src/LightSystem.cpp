@@ -74,12 +74,12 @@ void LightSystem::update()
     }
   }
 
-  // If Sam holding a torch, draw circle of light around Sam
+  // If Sam holding a torch and not hiding in closet, draw circle of light around Sam
   Entity* heldEntity = gameState->held_entity;
-  if (heldEntity && gameState->held_entity->label.compare("Torch") == 0) {
+  if (heldEntity && gameState->held_entity->label.compare("Torch") == 0 && !gameState->hidden) {
     vec2 s_position = gameState->sam_position;
     light->add_position(s_position);
-  } else if (!heldEntity || gameState->held_entity->label.compare("Torch") != 0) {
+  } else {
     light->clearSamLight();
   }
 }
