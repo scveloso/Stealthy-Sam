@@ -189,6 +189,7 @@ void World::generateEntities()
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
+		SoundManager::getInstance().playBossMusic();
 	}
 
 	makeSystems();
@@ -328,9 +329,6 @@ void World::handleUpdateAction(int updateAction)
 				generateEntities();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-
-				// Trigger boss music
-				SoundManager::getInstance().playBossMusic();
 				break;
 			}
 			case RESET_GAME:
@@ -363,7 +361,13 @@ void World::handleUpdateAction(int updateAction)
 			case TOGGLE_PAUSE_GAME:
 			{
 				gameState->is_game_paused = !gameState->is_game_paused;
-				std::cout << "Game is paused: " << gameState->is_game_paused << std::endl;
+
+				if (gameState->is_game_paused) {
+					SoundManager().getInstance().pauseMusic();
+				} else {
+					SoundManager().getInstance().resumeMusic();
+				}
+
 				break;
 			}
 			case SAM_DEATH:

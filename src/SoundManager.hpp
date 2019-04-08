@@ -28,6 +28,10 @@ public:
   void init();
 
   void haltMusic();
+
+  void pauseMusic();
+  void resumeMusic();
+
   void playBackgroundMusic();
   void playBossMusic();
   void playDeath();

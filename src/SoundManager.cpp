@@ -64,6 +64,14 @@ void SoundManager::haltMusic() {
     Mix_HaltMusic();
 }
 
+void SoundManager::pauseMusic() {
+    Mix_PauseMusic();
+}
+
+void SoundManager::resumeMusic() {
+    Mix_ResumeMusic();
+}
+
 void SoundManager::playBackgroundMusic()
 {
     // Playing background music indefinitely
