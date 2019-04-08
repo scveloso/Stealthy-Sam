@@ -25,6 +25,7 @@ public:
     bool has_pressed_H;
 
     bool is_game_paused;
+    bool in_main_menu;
 
     // Used in EntityGenerator to decide whether to use sam position in game state
     // to spawn Sam

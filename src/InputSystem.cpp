@@ -37,6 +37,7 @@ bool InputSystem::setup(GLFWwindow* m_window)
 	return true;
 }
 
+// TODO: Refactor this to only trigger inputs when menus/ui are closed/inactive
 int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 {
   int returnAction = NO_CHANGE;
@@ -125,12 +126,13 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           }
           case GLFW_KEY_H:
           {
-            gameState->has_pressed_H = !gameState->has_pressed_H;
+            //gameState->has_pressed_H = !gameState->has_pressed_H;
+            toggleTutorial();
             break;
           }
           case GLFW_KEY_SPACE:
           {
-            pauseScreen();
+            togglePause();
             break;
           }
         }
@@ -164,20 +166,21 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   if (action == GLFW_RELEASE)
   {
     switch (key) {
-      case GLFW_KEY_SPACE:
-        returnAction = TOGGLE_PAUSE_GAME;
-        break;
       case GLFW_KEY_P:
         returnAction = RESET_GAME;
         break;
       case GLFW_KEY_B:
         saveGame();
         break;
-      case GLFW_KEY_N: {
+      case GLFW_KEY_L: {
         bool loadResult = loadGame();
         if (loadResult) {
           returnAction = LOAD_GAME;
         }
+        break;
+      }
+      case GLFW_KEY_N: {
+        startGame();
         break;
       }
       default:
@@ -188,17 +191,56 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 	return returnAction;
 }
 
-void InputSystem::saveGame() {
-  gameState->saveGame();
+void InputSystem::togglePause() {
+  Entity* tutorial_screen = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
+  Entity* main_menu = objectManager->getEntityByLabel(MAIN_MENU);
+
+  // Can only pause/unpause if showing no other screens
+  if (!tutorial_screen->active && !main_menu->active) {
+    Entity* pause_screen = objectManager->getEntityByLabel(PAUSE_SCREEN);
+    pause_screen->active = !pause_screen->active;
+
+    gameState->is_game_paused = !gameState->is_game_paused;
+
+    if (gameState->is_game_paused) {
+      SoundManager().getInstance().pauseMusic();
+    } else {
+      SoundManager().getInstance().resumeMusic();
+    }
+  }
 }
-void InputSystem::pauseScreen() {
-  Entity* pause_screen = objectManager->getEntityByLabel(PAUSE_SCREEN);
-  pause_screen->active = !pause_screen->active;
-  pause_screen->ui = !pause_screen->ui;
+
+void InputSystem::toggleTutorial() {
+  // Can only access tutorial screen when game is paused
+  if (gameState->is_game_paused) {
+    Entity* tutorial_screen = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
+    tutorial_screen->active = !tutorial_screen->active;
+  }
+}
+
+void InputSystem::startGame() {
+  if (gameState->in_main_menu) {
+    gameState->in_main_menu = false;
+
+    Entity* main_menu = objectManager->getEntityByLabel(MAIN_MENU);
+    main_menu->active = false;
+
+    SoundManager::getInstance().playBackgroundMusic();
+  }
+}
+
+void InputSystem::saveGame() {
+  if (gameState->is_game_paused) {
+    gameState->saveGame();
+  }
 }
 
 bool InputSystem::loadGame() {
-  return gameState->loadGame();
+  if (gameState->is_game_paused || gameState->in_main_menu) {
+    return gameState->loadGame();
+  } else {
+    return false;
+  }
 }
 
 int InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {

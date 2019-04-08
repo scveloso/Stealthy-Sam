@@ -23,13 +23,13 @@ void TextSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text,
 void TextSystem::update()
 {
   // If player has pressed H, enable or disable tutorial screen
-  if (gameState->has_pressed_H)
-  {
-    enableTutorialScreen();
-  } else
-  {
-    disableTutorialScreen();
-  }
+  // if (gameState->has_pressed_H)
+  // {
+  //   enableTutorialScreen();
+  // } else
+  // {
+  //   disableTutorialScreen();
+  // }
   // If Sam died, disable tutorial text, enable death text
   if (!gameState->sam_is_alive)
   {
@@ -43,7 +43,7 @@ void TextSystem::update()
 }
 
 void TextSystem::enableTutorialScreen() {
-  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN_LABEL);
+  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
   if (tutEntity) {
     tutEntity->active = true;
     tutEntity->ui = true;
@@ -51,7 +51,7 @@ void TextSystem::enableTutorialScreen() {
 }
 
 void TextSystem::disableTutorialScreen() {
-  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN_LABEL);
+  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
   if (tutEntity) {
     tutEntity->active = false;
     tutEntity->ui = false;

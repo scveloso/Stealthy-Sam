@@ -251,7 +251,7 @@ void DrawSystem::updateUI(const mat3 projection)
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities
-		if (entity->ui) {
+		if (entity->ui && entity->active) {
 
 
 			draw->transform_begin();

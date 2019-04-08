@@ -117,7 +117,6 @@ bool World::init(vec2 screen)
 	m_current_speed = 1.f;
 
 	SoundManager::getInstance().init();
-	SoundManager::getInstance().playBackgroundMusic();
 
 	// Create initial game state
 	gameState = new GameStateCmp();
@@ -264,13 +263,13 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	if (gameState->is_game_paused) {
+	if (gameState->is_game_paused || gameState->in_main_menu) {
 		return true;
 	}
 
 	// Update Systems
 	int updateAction = es->update(elapsed_ms);
-    handleUpdateAction(updateAction);
+  handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
@@ -350,24 +349,13 @@ void World::handleUpdateAction(int updateAction)
 			case LOAD_GAME:
 			{
 				clearMap();
+				std::cout << "In world, game state is loading: " << gameState->is_game_loading << std::endl;
 				generateEntities();
 				m_light->restart();
 				m_text->restart();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				std::cout << "Loaded game." << std::endl;
-				break;
-			}
-			case TOGGLE_PAUSE_GAME:
-			{
-				gameState->is_game_paused = !gameState->is_game_paused;
-
-				if (gameState->is_game_paused) {
-					SoundManager().getInstance().pauseMusic();
-				} else {
-					SoundManager().getInstance().resumeMusic();
-				}
-
 				break;
 			}
 			case SAM_DEATH:
@@ -401,9 +389,9 @@ void World::handleUpdateAction(int updateAction)
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void World::draw()
 {
-	if (gameState->is_game_paused) {
-		return;
-	}
+	// if (gameState->is_game_paused) {
+	// 	return;
+	// }
 
 	// Clearing error buffer
 	gl_flush_errors();
