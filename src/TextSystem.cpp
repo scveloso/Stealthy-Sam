@@ -4,13 +4,11 @@
 #include <iostream>
 #include <Components/GameStateCmp.hpp>
 
-// System to update text box entities in the game.
+// System to update alert entities in the game.
 //
-// Has access to GameStateCmp to know about whether Sam
-// has done tutorial actions, changed rooms, or has died, etc.
+// Has access to GameStateCmp to know about whether Sam has died, etc.
 //
-// Has access to text to allow enable/disable the shaders
-// from showing text box entities.
+// Has access to alert entities to set them to active/inactive and handle their timeout.
 void TextSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text, Light* light, EnemyCone* enemy)
 {
   objectManager = om;
@@ -33,6 +31,7 @@ void TextSystem::update(float elapsed_ms)
 void TextSystem::handleGameLoadedAlert(float elapsed_ms) {
   Entity* game_loaded = objectManager->getEntityByLabel(GAME_LOADED_ALERT);
   if (game_loaded->active) {
+    objectManager->getEntityByLabel(GAME_SAVED_ALERT)->active = false;
     if (gameLoadedMs <= 0) {
       gameLoadedMs = 2000;
     }
@@ -62,10 +61,11 @@ void TextSystem::handleGameSavedAlert(float elapsed_ms) {
 }
 
 void TextSystem::handleGameDeathAlert() {
-  // If Sam died, disable tutorial text, enable death text
+  // If Sam died, enable death text
   if (!gameState->sam_is_alive)
   {
-    text->death = 1;
+    objectManager->getEntityByLabel(GAME_SAVED_ALERT)->active = false;
+    objectManager->getEntityByLabel(GAME_LOADED_ALERT)->active = false;
     light->death=1;
     enemy->death=1;
     objectManager->getEntityByLabel(GAME_DEATH_ALERT)->active = true;

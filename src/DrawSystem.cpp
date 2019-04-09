@@ -155,7 +155,7 @@ void DrawSystem::update(const mat3 projection)
 
 								if (gameState->sam_is_alive) {
 									if (movDir != NO_DIRECTION) {
-										if (stepTimer == 10) {
+										if (stepTimer == 20) {
 											SoundManager::getInstance().playStep();
 										}
 									}
