@@ -10,8 +10,7 @@ const int ROOM_TWO = 2;
 const int ROOM_THREE = 3;
 const int ROOM_FOUR = 4;
 
-// Resetting game
-const int RESET_GAME = 5;
+const int START_NEW_GAME = 5;
 
 // Toggle pause game
 const int TOGGLE_PAUSE_GAME = 6;

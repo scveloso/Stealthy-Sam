@@ -289,7 +289,6 @@ void World::handleUpdateAction(int updateAction)
 	{
 		switch (updateAction)
 		{
-
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
 				// m_water->clear_enemy_position();
@@ -330,9 +329,10 @@ void World::handleUpdateAction(int updateAction)
 				m_cone->clear_enemy_position();
 				break;
 			}
-			case RESET_GAME:
+			case START_NEW_GAME:
 			{
 				gameState->init();
+				gameState->in_main_menu = false;
 				clearMap();
 				generateEntities();
 				// m_water->restart();
@@ -349,22 +349,23 @@ void World::handleUpdateAction(int updateAction)
 			case LOAD_GAME:
 			{
 				clearMap();
-				std::cout << "In world, game state is loading: " << gameState->is_game_loading << std::endl;
 				generateEntities();
 				m_light->restart();
 				m_text->restart();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-				std::cout << "Loaded game." << std::endl;
+				SoundManager::getInstance().playBackgroundMusic();
 				break;
 			}
 			case SAM_DEATH:
 			{
 				SoundManager::getInstance().playDeath();
+				SoundManager::getInstance().haltMusic();
 				break;
 			}
             case GAME_WIN:
             {
+							// TODO: Game victory screen and sound effect
                 Entity*VictoryScreen=objectManager->getEntityByLabel(VICTORYSCREEN);
                 VictoryScreen->ui=true;
                 VictoryScreen->active=true;

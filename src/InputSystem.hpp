@@ -21,6 +21,7 @@ public:
 	void startGame();
 	void togglePause();
 	void toggleTutorial();
+	void goToMainMenu();
 	bool loadGame();
 	bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void torch_cauldron_collision(int entityId, Transform *entityTransform);

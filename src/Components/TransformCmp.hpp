@@ -30,6 +30,7 @@ public:
 	void removeFacingDirection(Entity *entity, int facingDirection);
 	int getFacingDirection(Entity *entity);
 	int getPreviousFacingDirection(Entity *entity);
+	void resetFacingDirection(Entity *entity);
 
 	~TransformCmp();
 

@@ -1182,8 +1182,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	} else {
 		drawCmp.add(main_menu, textures_path("text/game_main_menu_with_save.png"));
 	}
-	std::cout << "Is game loading: " << gameState->is_game_loading << std::endl;
-	main_menu->active = !gameState->is_game_loading;
+	main_menu->active = gameState->in_main_menu;
 	main_menu->ui = true;
 
 	Entity*Victory_Screen=objectManager->makeEntity(VICTORYSCREEN);

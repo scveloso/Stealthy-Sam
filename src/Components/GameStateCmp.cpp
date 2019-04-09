@@ -55,7 +55,7 @@ void GameStateCmp::saveGame() {
 
 // Returns true if game successfully loaded from save, false otherwise
 bool GameStateCmp::loadGame() {
-  if (is_game_paused) {
+  if (is_game_paused || in_main_menu) {
     // Read JSON save file
   	std::ifstream data(saves_path("save_file.json"));
     if (data.fail()) {
@@ -87,7 +87,10 @@ bool GameStateCmp::loadGame() {
 
     // Start game when reloaded
     is_game_paused = false;
+    in_main_menu = false;
     is_game_loading = true;
+
+    std::cout << "Loaded game." << std::endl;
 
     return true;
   }
