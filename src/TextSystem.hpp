@@ -16,6 +16,7 @@ public:
 	void handleGameSavedAlert(float elapsed_ms);
 	void handleGameLoadedAlert(float elapsed_ms);
 	void handleGameDeathAlert();
+	void handleVictoryScreen();
 
 private:
 	ObjectManager* objectManager;

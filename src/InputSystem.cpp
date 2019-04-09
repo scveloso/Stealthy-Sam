@@ -37,7 +37,6 @@ bool InputSystem::setup(GLFWwindow* m_window)
 	return true;
 }
 
-// TODO: Refactor this to only trigger inputs when menus/ui are closed/inactive
 int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
 {
   int returnAction = NO_CHANGE;
@@ -47,6 +46,14 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
   {
     if (action == GLFW_PRESS && key == GLFW_KEY_H) {
       toggleTutorial();
+    }
+  }
+  // Inputs available in victory screen
+  else if (gameState->in_victory_screen) {
+    if (action == GLFW_PRESS && key == GLFW_KEY_M) {
+      objectManager->getEntityByLabel(VICTORY_SCREEN)->active = false;
+      gameState->in_victory_screen = false;
+      goToMainMenu();
     }
   }
   // Inputs available when dead

@@ -362,21 +362,18 @@ void World::handleUpdateAction(int updateAction)
 				SoundManager::getInstance().haltMusic();
 				break;
 			}
-            case GAME_WIN:
-            {
-							// TODO: Game victory screen and sound effect
-                Entity*VictoryScreen=objectManager->getEntityByLabel(VICTORYSCREEN);
-                VictoryScreen->ui=true;
-                VictoryScreen->active=true;
-                break;
-            }
-            case SHOOT_MISSILE:
-            {
-                std::pair<std::string, Draw*> missile = missileSystem->spawnMissile();
-                ds->initializeItem(objectManager->getEntityByLabel(missile.first), missile.second, standardEffect);
+			case GAME_WIN:
+			{
+				gameState->in_victory_screen = true;
+				break;
+			}
+			case SHOOT_MISSILE:
+			{
+					std::pair<std::string, Draw*> missile = missileSystem->spawnMissile();
+					ds->initializeItem(objectManager->getEntityByLabel(missile.first), missile.second, standardEffect);
 
-                break;
-            }
+					break;
+			}
 			default:
 			{
 			    printf("Update Action %d was not recognized", updateAction);

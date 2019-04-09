@@ -28,6 +28,7 @@ void GameStateCmp::init() {
 
     num_lit_cauldrons = 0;
     in_main_menu = true;
+    in_victory_screen = false;
 }
 
 // Save game to file, provided Sam is alive and the game is paused
@@ -89,6 +90,7 @@ bool GameStateCmp::loadGame() {
     is_game_paused = false;
     in_main_menu = false;
     is_game_loading = true;
+    in_victory_screen = false;
 
     std::cout << "Loaded game." << std::endl;
 

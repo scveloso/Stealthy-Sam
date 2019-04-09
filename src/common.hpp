@@ -127,7 +127,7 @@ const vec2 TEXT_POSITION = { 300, 150 };
 const std::string USE_P_RESTART = "Textbox.RtoRestart";
 const std::string TUTORIAL_SCREEN = "Tutorial_Screen";
 const std::string PAUSE_SCREEN = "Pause_Screen";
-const std::string VICTORYSCREEN = "Victory_Screen";
+const std::string VICTORY_SCREEN = "Victory_Screen";
 const std::string MAIN_MENU = "Main_Menu";
 
 const std::string GAME_SAVED_ALERT = "Game_Saved";

@@ -1199,10 +1199,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	game_loaded->active = gameState->is_game_loading;
 	game_loaded->ui = true;
 
-	Entity*Victory_Screen=objectManager->makeEntity(VICTORYSCREEN);
-	drawCmp.add(Victory_Screen,textures_path("text/Victory.png"));
-	transformCmp.add(Victory_Screen,{600,400},{1.2,1.2},0.0);
-	Victory_Screen->active=false;
+	Entity* game_victory = objectManager->makeEntity(VICTORY_SCREEN);
+	drawCmp.add(game_victory,textures_path("text/game_victory.png"));
+	transformCmp.add(game_victory,{600,400},{1,1},0.0);
+	game_victory->active = false;
+	game_victory->ui = true;
 
 	// Game death alert
 	Entity* game_death = objectManager->makeEntity(GAME_DEATH_ALERT);
@@ -1211,7 +1212,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
   game_death->active = false;
 	game_death->ui = true;
 
-    // Key counter
+  // Key counter
 	Entity* key_UI = objectManager->makeEntity("key_UI");
 	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
 	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);

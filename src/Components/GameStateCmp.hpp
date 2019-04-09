@@ -26,6 +26,7 @@ public:
 
     bool is_game_paused;
     bool in_main_menu;
+    bool in_victory_screen;
 
     // Used in EntityGenerator to decide whether to use sam position in game state
     // to spawn Sam

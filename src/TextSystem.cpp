@@ -26,6 +26,7 @@ void TextSystem::update(float elapsed_ms)
   handleGameLoadedAlert(elapsed_ms);
   handleGameSavedAlert(elapsed_ms);
   handleGameDeathAlert();
+  handleVictoryScreen();
 }
 
 void TextSystem::handleGameLoadedAlert(float elapsed_ms) {
@@ -69,5 +70,13 @@ void TextSystem::handleGameDeathAlert() {
     light->death=1;
     enemy->death=1;
     objectManager->getEntityByLabel(GAME_DEATH_ALERT)->active = true;
+  }
+}
+
+void TextSystem::handleVictoryScreen() {
+  // If Sam died, enable death text
+  if (gameState->in_victory_screen)
+  {
+    objectManager->getEntityByLabel(VICTORY_SCREEN)->active = true;
   }
 }
