@@ -263,7 +263,9 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	if (gameState->is_game_paused || gameState->in_main_menu) {
+	ts->update(elapsed_ms);
+
+	if (gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive) {
 		return true;
 	}
 
@@ -272,12 +274,9 @@ bool World::update(float elapsed_ms)
   handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
-	ms->update(elapsed_ms);
-	ts->update(elapsed_ms);
-	ls->update();
-
-	// Handle UpdateAction from Systems
 	handleUpdateAction(updateAction);
+	ms->update(elapsed_ms);
+	ls->update();
 
 	return true;
 }

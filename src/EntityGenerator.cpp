@@ -1148,10 +1148,10 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 
 	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
-	drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
-	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-	rToRestart->active = false; // Died text initially invisible
+	// Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
+	// drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
+	// transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
+	// rToRestart->active = false; // Died text initially invisible
 
 	//Entity* example = objectManager->makeEntity("UI");
 	//example->ui = true;
@@ -1204,16 +1204,23 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(Victory_Screen,{600,400},{1.2,1.2},0.0);
 	Victory_Screen->active=false;
 
+	// Game death alert
+	Entity* game_death = objectManager->makeEntity(GAME_DEATH_ALERT);
+	drawCmp.add(game_death, textures_path("text/game_death.png"));
+	transformCmp.add(game_death, {790,25}, {1,1}, 0.0);
+  game_death->active = false;
+	game_death->ui = true;
+
     // Key counter
 	Entity* key_UI = objectManager->makeEntity("key_UI");
 	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
 	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
 	key_UI->ui = true;
 
-    // Key counter
-    Entity* key_0_2 = objectManager->makeEntity("key0_UI");
-    drawCmp.add(key_0_2, textures_path("text/0_2.png"));
-    transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
+	// Key counter
+	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
+	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
+	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
 
 	// Key counter
 	Entity* key_1_2 = objectManager->makeEntity("key1_UI");

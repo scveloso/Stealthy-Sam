@@ -68,6 +68,6 @@ void TextSystem::handleGameDeathAlert() {
     text->death = 1;
     light->death=1;
     enemy->death=1;
-    objectManager->getEntityByLabel(USE_P_RESTART)->active = true;
+    objectManager->getEntityByLabel(GAME_DEATH_ALERT)->active = true;
   }
 }
