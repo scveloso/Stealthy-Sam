@@ -29,6 +29,9 @@ void SoundManager::init()
     cauldron_light_up_sound = Mix_LoadWAV(audio_path("cauldron_light_up.wav"));
     torch_dying_sound = Mix_LoadWAV(audio_path("lights_out.wav"));
 
+    // Menu
+    menu_sound = Mix_LoadWAV(audio_path("play_menu.wav"));
+
     if (background_music == nullptr || death_sound == nullptr || boss_background_music == nullptr)
     {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n %s\nmake sure the data directory is present",
@@ -53,9 +56,9 @@ void SoundManager::init()
               audio_path("cauldron_light_up.wav"), audio_path("lights_out.wav"));
     }
 
-    if (step_sound == nullptr) {
-      fprintf(stderr, "Failed to load sounds\n %s\nmake sure the data directory is present",
-              audio_path("step.wav"));
+    if (step_sound == nullptr || menu_sound == nullptr) {
+      fprintf(stderr, "Failed to load sounds\n %s, %s\nmake sure the data directory is present",
+              audio_path("play_menu.wav"), audio_path("step.wav"));
     }
 }
 
@@ -126,4 +129,9 @@ void SoundManager::playStep()
 void SoundManager::playTorchDying()
 {
   Mix_PlayChannel(-1, torch_dying_sound, 0);
+}
+
+void SoundManager::playMenuSound()
+{
+  Mix_PlayChannel(-1, menu_sound, 0);
 }

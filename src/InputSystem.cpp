@@ -55,6 +55,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
     switch (key) {
       case GLFW_KEY_N: {
         returnAction = START_NEW_GAME;
+        SoundManager::getInstance().playMenuSound();
         break;
       }
       case GLFW_KEY_L: {
@@ -62,6 +63,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         if (loadResult) {
           returnAction = LOAD_GAME;
         }
+        SoundManager::getInstance().playMenuSound();
         break;
       }
       default:
@@ -84,16 +86,19 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         }
         case GLFW_KEY_B:
           saveGame();
+          SoundManager::getInstance().playMenuSound();
           break;
         case GLFW_KEY_L: {
           bool loadResult = loadGame();
           if (loadResult) {
             returnAction = LOAD_GAME;
           }
+          SoundManager::getInstance().playMenuSound();
           break;
         }
         case GLFW_KEY_N: {
           returnAction = START_NEW_GAME;
+          SoundManager::getInstance().playMenuSound();
           break;
         }
         case GLFW_KEY_M: {
@@ -238,6 +243,8 @@ void InputSystem::goToMainMenu() {
 
   gameState->in_main_menu = true;
   gameState->is_game_paused = false;
+
+  SoundManager::getInstance().playMenuSound();
 }
 
 void InputSystem::togglePause() {
@@ -257,6 +264,8 @@ void InputSystem::togglePause() {
       SoundManager().getInstance().resumeMusic();
     }
   }
+
+  SoundManager::getInstance().playMenuSound();
 }
 
 void InputSystem::toggleTutorial() {
@@ -265,6 +274,8 @@ void InputSystem::toggleTutorial() {
     Entity* tutorial_screen = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
     tutorial_screen->active = !tutorial_screen->active;
   }
+
+  SoundManager::getInstance().playMenuSound();
 }
 
 void InputSystem::startGame() {
