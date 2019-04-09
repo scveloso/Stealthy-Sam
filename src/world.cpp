@@ -273,7 +273,7 @@ bool World::update(float elapsed_ms)
 
 	updateAction = cs->update(elapsed_ms);
 	ms->update(elapsed_ms);
-	ts->update();
+	ts->update(elapsed_ms);
 	ls->update();
 
 	// Handle UpdateAction from Systems

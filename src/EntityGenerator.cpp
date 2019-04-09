@@ -1185,6 +1185,20 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	main_menu->active = gameState->in_main_menu;
 	main_menu->ui = true;
 
+	// "Game Saved" alert
+	Entity* game_saved = objectManager->makeEntity(GAME_SAVED_ALERT);
+	drawCmp.add(game_saved, textures_path("text/game_saved.png"));
+	transformCmp.add(game_saved, {1080,25}, {1,1}, 0.0);
+  game_saved->active = false;
+	game_saved->ui = true;
+
+	// "Game Loaded" alert
+	Entity* game_loaded = objectManager->makeEntity(GAME_LOADED_ALERT);
+	drawCmp.add(game_loaded, textures_path("text/game_loaded.png"));
+	transformCmp.add(game_loaded, {1080,25}, {1,1}, 0.0);
+	game_loaded->active = gameState->is_game_loading;
+	game_loaded->ui = true;
+
 	Entity*Victory_Screen=objectManager->makeEntity(VICTORYSCREEN);
 	drawCmp.add(Victory_Screen,textures_path("text/Victory.png"));
 	transformCmp.add(Victory_Screen,{600,400},{1.2,1.2},0.0);

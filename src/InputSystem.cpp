@@ -86,7 +86,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         }
         case GLFW_KEY_B:
           saveGame();
-          SoundManager::getInstance().playMenuSound();
           break;
         case GLFW_KEY_L: {
           bool loadResult = loadGame();
@@ -292,6 +291,11 @@ void InputSystem::startGame() {
 void InputSystem::saveGame() {
   if (gameState->is_game_paused) {
     gameState->saveGame();
+
+    Entity* game_saved = objectManager->getEntityByLabel(GAME_SAVED_ALERT);
+    game_saved->active = true;
+
+    SoundManager::getInstance().playMenuSound();
   }
 }
 

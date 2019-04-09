@@ -18,42 +18,56 @@ void TextSystem::init(ObjectManager* om, GameStateCmp* gameStateCmp, Text* text,
   this->text = text;
   this->light = light;
   this->enemy= enemy;
+
+  gameLoadedMs = 0.0;
+  gameSavedMs = 0.0;
 }
 
-void TextSystem::update()
+void TextSystem::update(float elapsed_ms)
 {
-  // If player has pressed H, enable or disable tutorial screen
-  // if (gameState->has_pressed_H)
-  // {
-  //   enableTutorialScreen();
-  // } else
-  // {
-  //   disableTutorialScreen();
-  // }
+  handleGameLoadedAlert(elapsed_ms);
+  handleGameSavedAlert(elapsed_ms);
+  handleGameDeathAlert();
+}
+
+void TextSystem::handleGameLoadedAlert(float elapsed_ms) {
+  Entity* game_loaded = objectManager->getEntityByLabel(GAME_LOADED_ALERT);
+  if (game_loaded->active) {
+    if (gameLoadedMs <= 0) {
+      gameLoadedMs = 2000;
+    }
+
+    gameLoadedMs -= elapsed_ms;
+
+    if (gameLoadedMs <= 0) {
+      game_loaded->active = false;
+    }
+  }
+}
+
+void TextSystem::handleGameSavedAlert(float elapsed_ms) {
+  // Handle timing out the "game saved" alert.
+  Entity* game_saved = objectManager->getEntityByLabel(GAME_SAVED_ALERT);
+  if (game_saved->active) {
+    if (gameSavedMs <= 0) {
+      gameSavedMs = 2000;
+    }
+
+    gameSavedMs -= elapsed_ms;
+
+    if (gameSavedMs <= 0) {
+      game_saved->active = false;
+    }
+  }
+}
+
+void TextSystem::handleGameDeathAlert() {
   // If Sam died, disable tutorial text, enable death text
   if (!gameState->sam_is_alive)
   {
-    // disableEText();
-    disableTutorialScreen();
     text->death = 1;
     light->death=1;
     enemy->death=1;
     objectManager->getEntityByLabel(USE_P_RESTART)->active = true;
-  }
-}
-
-void TextSystem::enableTutorialScreen() {
-  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
-  if (tutEntity) {
-    tutEntity->active = true;
-    tutEntity->ui = true;
-  }
-}
-
-void TextSystem::disableTutorialScreen() {
-  Entity* tutEntity = objectManager->getEntityByLabel(TUTORIAL_SCREEN);
-  if (tutEntity) {
-    tutEntity->active = false;
-    tutEntity->ui = false;
   }
 }

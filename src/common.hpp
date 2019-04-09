@@ -129,6 +129,9 @@ const std::string TUTORIAL_SCREEN = "Tutorial_Screen";
 const std::string PAUSE_SCREEN = "Pause_Screen";
 const std::string VICTORYSCREEN = "Victory_Screen";
 const std::string MAIN_MENU = "Main_Menu";
+const std::string GAME_SAVED_ALERT = "Game_Saved";
+const std::string GAME_LOADED_ALERT = "Game_Loaded";
+
 
 const std::string ROOM_ONE_GUID = "ROOM_ONE";
 const std::string ROOM_TWO_GUID = "ROOM_TWO";
