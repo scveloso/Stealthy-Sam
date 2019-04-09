@@ -247,11 +247,11 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, 
 
 			vec2 ans = crSpline(enemy->t += 0.005, spline, enemy->dir);
 			transformComponent->getTransform(enemyEntity)->m_position = ans;
-			
+
 		}
 		else {
 			enemy->t = 0.0f;
-			
+
 			if (enemy->dir == 1) {
 				enemy->dir = 0;
 				et->facingDirection = LEFT;
@@ -335,4 +335,3 @@ void EnemySystem::handleBossDecisionTree(Enemy* enemy, Transform* bossTransform)
 	// TODO(sam): shoot missile, go to other locations, etc
 	enemy->action = BossStrategy::handleAction(gameStateComponent, bossTransform->m_position);
 }
-

@@ -33,6 +33,7 @@ struct Transform
 	float height;
 	bool visible;
 	int facingDirection;
+	int prevFacingDirection;
 };
 
 struct Collision
@@ -79,4 +80,3 @@ const int RIGHT = 7;
 const int NO_DIRECTION = 1;
 
 const int SAMS_GUID = 0;
-

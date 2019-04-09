@@ -21,7 +21,3 @@ const int LOAD_GAME = 7;
 const int SAM_DEATH = 8;
 const int GAME_WIN = 10;
 const int SHOOT_MISSILE = 11;
-
-// Used to trigger sound effects
-const int KEY_PICKUP_EVENT = 9;
-

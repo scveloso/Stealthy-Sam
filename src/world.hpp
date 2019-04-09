@@ -12,6 +12,7 @@
 #include "Components/CollisionCmp.hpp"
 #include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 #include "EntityGenerator.hpp"
 
 // stlib
@@ -23,7 +24,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <Components/GameStateCmp.hpp>
-#include <SoundSystem.hpp>
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods

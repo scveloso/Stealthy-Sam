@@ -26,7 +26,6 @@ MissileSystem* missileSystem;
 
 // Game State component
 GameStateCmp* gameState;
-SoundSystem* soundSystem;
 
 // Same as static in c, local to compilation unit
 namespace
@@ -117,8 +116,8 @@ bool World::init(vec2 screen)
 
 	m_current_speed = 1.f;
 
-	soundSystem = new SoundSystem();
-	soundSystem->playBackgroundMusic();
+	SoundManager::getInstance().init();
+	SoundManager::getInstance().playBackgroundMusic();
 
 	// Create initial game state
 	gameState = new GameStateCmp();
@@ -190,6 +189,7 @@ void World::generateEntities()
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
+		SoundManager::getInstance().playBossMusic();
 	}
 
 	makeSystems();
@@ -329,9 +329,6 @@ void World::handleUpdateAction(int updateAction)
 				generateEntities();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-
-				// Trigger boss music
-				soundSystem->playBossMusic();
 				break;
 			}
 			case RESET_GAME:
@@ -345,8 +342,9 @@ void World::handleUpdateAction(int updateAction)
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 
-				soundSystem->haltMusic();
-				soundSystem->playBackgroundMusic();
+				SoundManager soundManager = SoundManager::getInstance();
+				soundManager.haltMusic();
+				soundManager.playBackgroundMusic();
 				break;
 			}
 			case LOAD_GAME:
@@ -363,17 +361,18 @@ void World::handleUpdateAction(int updateAction)
 			case TOGGLE_PAUSE_GAME:
 			{
 				gameState->is_game_paused = !gameState->is_game_paused;
-				std::cout << "Game is paused: " << gameState->is_game_paused << std::endl;
+
+				if (gameState->is_game_paused) {
+					SoundManager().getInstance().pauseMusic();
+				} else {
+					SoundManager().getInstance().resumeMusic();
+				}
+
 				break;
 			}
 			case SAM_DEATH:
 			{
-				soundSystem->playDeath();
-				break;
-			}
-			case KEY_PICKUP_EVENT:
-			{
-				soundSystem->playKeyPickup();
+				SoundManager::getInstance().playDeath();
 				break;
 			}
             case GAME_WIN:
@@ -492,7 +491,8 @@ void World::on_key(GLFWwindow*, int key, int _, int action, int mod)
 
 void World::on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 {
-    inputSys->on_click(m_window, button, action, mods);
+    int resultingAction = inputSys->on_click(m_window, button, action, mods);
+		handleUpdateAction(resultingAction);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

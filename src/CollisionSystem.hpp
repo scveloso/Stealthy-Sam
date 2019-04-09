@@ -4,6 +4,7 @@
 #include "Components/ItemCmp.hpp"
 #include "Components/DrawCmp.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 #include <string>
 #include <iostream>
 
@@ -17,7 +18,7 @@ public:
 	int handleEnemies(Entity* entity);
 	int handleKeys(Entity* entity);
 	bool handleClosets(Entity* entity);
-	void handleTorches(Entity* entity);
+	int handleTorches(Entity* entity);
 
 private:
 	CollisionCmp* collisionComponent;

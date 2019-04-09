@@ -1,13 +1,13 @@
 #include "EnemyCmp.hpp"
 #include "Strategies/strategies_common.hpp"
 
-void EnemyCmp::add(Entity* entity, int patrolX, int patrolY) {
+void EnemyCmp::add(Entity* entity, int patrolX, int patrolY, float startX, float startY) {
 	Enemy *enemy = new Enemy();
 	enemy->type = NORMAL;
 	enemy->action = PATROL;
 	enemy->patrolX = patrolX;
 	enemy->patrolY = patrolY;
-	enemy->start = { 0,0 };
+	enemy->start = { startX, startY };
 	enemy->t = 0.0f;
 	enemy->dir = 1;
 	enemy_map[entity->id] = enemy;

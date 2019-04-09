@@ -15,7 +15,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 TransformCmp::~TransformCmp() {
 	//printf("TRANSFORM DESTRUCTOR\n"); //called 6 times intially
 	//printf("%d \n", transform_map.size());
-	
+
 	for (int i = 0; i < transform_map.size(); i++) {
 		delete transform_map[i];
 	}
@@ -103,10 +103,28 @@ void TransformCmp::setRotation(Entity* entity, float rotation)
 
 void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
 {
-	transform_map[entity->id]->facingDirection = facingDirection;
+	if (transform_map[entity->id]->facingDirection % facingDirection != 0) {
+		transform_map[entity->id]->facingDirection *= facingDirection;
+
+		if (transform_map[entity->id]->facingDirection == facingDirection) {
+			transform_map[entity->id]->prevFacingDirection = facingDirection;
+		}
+	}
+}
+
+void TransformCmp::removeFacingDirection(Entity *entity, int facingDirection)
+{
+	if (transform_map[entity->id]->facingDirection % facingDirection == 0) {
+		transform_map[entity->id]->facingDirection /= facingDirection;
+	}
 }
 
 int TransformCmp::getFacingDirection(Entity *entity)
 {
 	return transform_map[entity->id]->facingDirection;
+}
+
+int TransformCmp::getPreviousFacingDirection(Entity *entity)
+{
+	return transform_map[entity->id]->prevFacingDirection;
 }

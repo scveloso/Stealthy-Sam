@@ -96,11 +96,13 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
               {
                 transformComponent->getTransform(entity)->visible = true;
                 gameState->hidden = false;
+                SoundManager::getInstance().playCloseCloset();
               }
               else
               {
                 transformComponent->getTransform(entity)->visible = false;
                 gameState->hidden = true;
+                SoundManager::getInstance().playOpenCloset();
               }
             }
             break;
@@ -119,7 +121,6 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           case GLFW_KEY_T:
           {
             handleThrowable(entity);
-
             break;
           }
           case GLFW_KEY_H:
@@ -139,15 +140,19 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         switch (key) {
           case GLFW_KEY_A:
             movementComponent->removeMovementDirection(entity, LEFT);
+            transformComponent->removeFacingDirection(entity, LEFT);
             break;
           case GLFW_KEY_D:
             movementComponent->removeMovementDirection(entity, RIGHT);
+            transformComponent->removeFacingDirection(entity, RIGHT);
             break;
           case GLFW_KEY_S:
             movementComponent->removeMovementDirection(entity, DOWN);
+            transformComponent->removeFacingDirection(entity, DOWN);
             break;
           case GLFW_KEY_W:
             movementComponent->removeMovementDirection(entity, UP);
+            transformComponent->removeFacingDirection(entity, UP);
             break;
           default:
             break;
@@ -196,7 +201,9 @@ bool InputSystem::loadGame() {
   return gameState->loadGame();
 }
 
-void InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
+int InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
+    int returnAction = NO_CHANGE;
+
     if (button == 0 && action == GLFW_PRESS) {
         Entity* heldEntity = gameState->held_entity;
 
@@ -233,9 +240,14 @@ void InputSystem::on_click(GLFWwindow *, int button, int action, int mods) {
                 // No longer holding torch
                 gameState->held_item = -1;
                 gameState->held_entity = NULL;
+
+                // Throw sound
+                SoundManager::getInstance().playItemThrow();
             }
         }
     }
+
+    return returnAction;
 }
 
 void InputSystem::handleThrowable(Entity* entity) {
@@ -248,7 +260,7 @@ void InputSystem::handleThrowable(Entity* entity) {
     // MovementDirection is prioritized, facing direction used at rest
     int throwDirection = NO_DIRECTION;
     int movementDirection = movementComponent->getMovementDirection(entity);
-    int facingDirection = transformComponent->getFacingDirection(entity);
+    int facingDirection = transformComponent->getPreviousFacingDirection(entity);
     if (movementDirection != NO_DIRECTION) {
       throwDirection = movementDirection;
     } else {
@@ -284,6 +296,8 @@ void InputSystem::handleThrowable(Entity* entity) {
         heldEntity->active = true;
         itemComponent.throwItem(heldEntity);
 
+        SoundManager::getInstance().playItemThrow();
+
         // Set its position and get it moving
         transformComponent->setPosition(heldEntity, torch_position);
         Movement* entityMovement = movementComponent->getMovement(heldEntity);
@@ -301,7 +315,7 @@ void InputSystem::handleThrowable(Entity* entity) {
 }
 
 vec2 InputSystem::tryThrowVecDirection(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, vec2 throwDir) {
-  torch_position = { torch_position.x + (2 * TILE_WIDTH * throwDir.x), torch_position.y + (TILE_HEIGHT * throwDir.y)};
+  torch_position = { torch_position.x + (TILE_WIDTH * throwDir.x), torch_position.y + (TILE_HEIGHT * throwDir.y)};
   entityTransform->m_position = torch_position;
   bool movementInterrupted = is_movement_interrupted(heldEntity->id, entityTransform);
 
@@ -393,6 +407,7 @@ void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransf
         {
           otherEntity->active = true;
           gameState->num_lit_cauldrons++;
+          SoundManager::getInstance().playCauldronLightUp();
         }
       }
     }

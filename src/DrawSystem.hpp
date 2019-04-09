@@ -2,6 +2,7 @@
 #include "Components/TransformCmp.hpp"
 #include "Components/MovementCmp.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 
 class DrawSystem
 {

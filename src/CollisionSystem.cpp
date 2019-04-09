@@ -22,7 +22,7 @@ void CollisionSystem::init(ObjectManager* om, CollisionCmp* cc, TransformCmp* tc
 	gameStateComponent = gsc;
 }
 
-// Checks for collisions between Sam and other entities
+// Checks for collisions between entities
 // Returns an UpdateAction back to World
 int CollisionSystem::update(float elapsed_ms)
 {
@@ -65,7 +65,7 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-        		int keyUpdateAction = handleKeys(entity);
+        int keyUpdateAction = handleKeys(entity);
 				if (keyUpdateAction != NO_CHANGE)
 				{
 					return keyUpdateAction;
@@ -78,7 +78,11 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle grabbing a torch
-				handleTorches(entity);
+				int torchUpdateAction = handleTorches(entity);
+				if (torchUpdateAction != NO_CHANGE)
+				{
+						return torchUpdateAction;
+				}
 			}
 		}
 	}
@@ -88,9 +92,14 @@ int CollisionSystem::update(float elapsed_ms)
 		samCollision->closet = false;
 	}
 
+	// Check torch collisions with ghosts
 	std::vector<Entity*> torchEntities = objectManager->getEntitiesByLabel("Torch");
 	for (auto& torchEntity : torchEntities)
 	{
+		if (torchEntity->active == false) {
+			continue;
+		}
+
 		std::vector<Entity*> ghostEntities = objectManager->getEntitiesByLabel("Enemy.Ghost");
 		for (auto& ghostEntity : ghostEntities)
 		{
@@ -103,16 +112,19 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 			}
 		}
-        Collision* torchCmp = collisionComponent->getCollision(torchEntity);
+
+		Collision* torchCmp = collisionComponent->getCollision(torchEntity);
 		if (torchCmp->torch_light_countdown_ms > 0.f)
-        {
-            torchCmp->torch_light_countdown_ms -= elapsed_ms;
-            if (torchCmp->torch_light_countdown_ms <= 0.f)
-            {
-                torchEntity->active = false;
-            }
-        }
+    {
+      torchCmp->torch_light_countdown_ms -= elapsed_ms;
+      if (torchCmp->torch_light_countdown_ms <= 0.f)
+      {
+        torchEntity->active = false;
+				SoundManager::getInstance().playTorchDying();
+      }
+    }
 	}
+
 	return NO_CHANGE;
 }
 
@@ -167,13 +179,13 @@ int CollisionSystem::handleKeys(Entity* entity)
 		{
 			gameStateComponent->level_two_key = true;
 			increaseKeyCount();
-			return KEY_PICKUP_EVENT;
+			SoundManager::getInstance().playKeyPickup();
 		}
 		else if (gameStateComponent->current_room == ROOM_THREE_GUID)
 		{
 			gameStateComponent->level_three_key = true;
 			increaseKeyCount();
-			return KEY_PICKUP_EVENT;
+			SoundManager::getInstance().playKeyPickup();
 		}
 	}
 
@@ -210,11 +222,11 @@ bool CollisionSystem::handleClosets(Entity* entity)
 }
 
 // TODO?: Maybe an inventory or more general way of holding items
-void CollisionSystem::handleTorches(Entity* entity)
+int CollisionSystem::handleTorches(Entity* entity)
 {
-	// Can only pick up item if not holding anything
+	// Can only pick up item if not holding anything and if item is active (torch is not dead)
 	if (!gameStateComponent->held_entity) {
-		if (entity->label.compare("Torch") == 0)
+		if (entity->label.compare("Torch") == 0 && entity->active == true)
 		{
 			// Stop drawing the picked up item
 			entity->active = false;
@@ -222,8 +234,12 @@ void CollisionSystem::handleTorches(Entity* entity)
 			gameStateComponent->held_item = TORCH;
 			gameStateComponent->held_entity = entity;
 			itemComponent.pickUpItem(entity);
+
+			SoundManager::getInstance().playItemPickup();
 		}
 	}
+
+	return NO_CHANGE;
 }
 
 bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
@@ -303,4 +319,3 @@ bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
 
 	return false;
 }
-

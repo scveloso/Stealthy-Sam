@@ -75,6 +75,36 @@ void MovementSystem::update(float elapsed_ms)
           continue;
       }
 
+      if (movementDirection % DOWN == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
+          cauldronCheck(entity, entityTransform);
+          if (is_movement_interrupted(entity, entityTransform))
+          {
+            movementComponent->setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+
+      if (movementDirection % UP == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
+          cauldronCheck(entity, entityTransform);
+          if (is_movement_interrupted(entity, entityTransform))
+          {
+            movementComponent->setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
+
       if (movementDirection % LEFT == 0)
         {
             entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
@@ -105,36 +135,6 @@ void MovementSystem::update(float elapsed_ms)
             oldPosition = entityTransform->m_position;
           }
       }
-
-      if (movementDirection % DOWN == 0)
-      {
-          entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
-          cauldronCheck(entity, entityTransform);
-          if (is_movement_interrupted(entity, entityTransform))
-          {
-            movementComponent->setCurrSpeed(entity, 0);
-            entityTransform->m_position = oldPosition;
-          }
-          else
-          {
-            oldPosition = entityTransform->m_position;
-          }
-      }
-
-      if (movementDirection % UP == 0)
-      {
-          entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
-          cauldronCheck(entity, entityTransform);
-          if (is_movement_interrupted(entity, entityTransform))
-          {
-            movementComponent->setCurrSpeed(entity, 0);
-            entityTransform->m_position = oldPosition;
-          }
-          else
-          {
-            oldPosition = entityTransform->m_position;
-          }
-      }
     }
   }
 }
@@ -145,8 +145,6 @@ void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
               torch_cauldron_collision(entity->id, entityTransform);
           }
 }
-
-
 
 void MovementSystem::stopEntityMovement(Entity* entity)
 {
@@ -205,6 +203,7 @@ void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTra
                         // if the torch is being lit for the first time, increment torch count
                         otherEntity->active = true;
                         gameState->num_lit_cauldrons += 1;
+                        SoundManager::getInstance().playCauldronLightUp();
                     }
                 }
             }
