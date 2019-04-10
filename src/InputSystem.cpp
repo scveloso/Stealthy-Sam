@@ -61,6 +61,7 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
     if (action == GLFW_PRESS && key == GLFW_KEY_M) {
       objectManager->getEntityByLabel(GAME_DEATH_ALERT)->active = false;
       gameState->sam_is_alive = true;
+      movementComponent->resetMovementDirection(objectManager->getEntity(SAMS_GUID));
       goToMainMenu();
     }
   }

@@ -77,6 +77,7 @@ void TextSystem::handleVictoryScreen() {
   // If Sam died, enable death text
   if (gameState->in_victory_screen)
   {
+    SoundManager::getInstance().haltMusic();
     objectManager->getEntityByLabel(VICTORY_SCREEN)->active = true;
   }
 }

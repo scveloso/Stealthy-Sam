@@ -24,6 +24,8 @@ private:
 
   Mix_Chunk* menu_sound;
 
+  Mix_Chunk* game_end_sound;
+
 public:
   static SoundManager& getInstance();
 
@@ -51,4 +53,5 @@ public:
   void playStep();
 
   void playMenuSound();
+  void playGameEndSound();
 };

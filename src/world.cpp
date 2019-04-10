@@ -166,7 +166,6 @@ bool World::init(vec2 screen)
 
 	generateEntities();
 
-
 	return true;
 }
 
@@ -176,15 +175,19 @@ void World::generateEntities()
 	std::string room_path = "";
 	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
 		room_path = map_path("level_one_with_key.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
 		room_path = map_path("level_one.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_TWO_GUID) {
 		room_path = map_path("level_two.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_THREE_GUID) {
 		room_path = map_path("level_three.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
@@ -353,7 +356,6 @@ void World::handleUpdateAction(int updateAction)
 				m_text->restart();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-				SoundManager::getInstance().playBackgroundMusic();
 				break;
 			}
 			case SAM_DEATH:
@@ -365,6 +367,8 @@ void World::handleUpdateAction(int updateAction)
 			case GAME_WIN:
 			{
 				gameState->in_victory_screen = true;
+				SoundManager::getInstance().playGameEndSound();
+				SoundManager::getInstance().haltMusic();
 				break;
 			}
 			case SHOOT_MISSILE:

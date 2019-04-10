@@ -1143,21 +1143,49 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 		enemyCmp.add(entity, 100, 0, 400.f, 400.f);
 		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;
 	}
-	// Proceed to handle the text box entities
-	//generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, light, enemy, text);
 
+	// Key counter
+	Entity* key_UI = objectManager->makeEntity("key_UI");
+	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
+	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
+	key_UI->ui = true;
 
-	// Text box if you're dead
-	// Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
-	// drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
-	// transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-	// rToRestart->active = false; // Died text initially invisible
+	// Key counter
+	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
+	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
+	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
 
-	//Entity* example = objectManager->makeEntity("UI");
-	//example->ui = true;
-	//dc.add(example, textures_path("Dungeon/boss.png"));
-	//tc.add(example, { 500,500 }, { 10,10 }, 0.0);
-	//Set ui to true to overlay over everything
+	// Key counter
+	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
+	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
+	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
+	key_1_2->active = false;
+
+	// Key counter
+	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
+	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
+	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
+	key_2_2->active = false;
+
+    if (gameState->level_two_key && gameState ->level_three_key)
+    {
+        key_1_2->ui = false;
+        key_1_2->active = false;
+        key_2_2->ui = true;
+        key_2_2->active = true;
+    }
+    else if (gameState->level_two_key || gameState->level_three_key)
+    {
+        key_0_2->ui = false;
+        key_0_2->active = false;
+        key_1_2->ui = true;
+        key_1_2->active = true;
+    }
+    else
+    {
+        key_0_2->ui = true;
+        key_0_2->active = true;
+    }
 
 	// Pause Screen
 	Entity* pause_screen = objectManager->makeEntity(PAUSE_SCREEN);
@@ -1211,49 +1239,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(game_death, {790,25}, {1,1}, 0.0);
   game_death->active = false;
 	game_death->ui = true;
-
-  // Key counter
-	Entity* key_UI = objectManager->makeEntity("key_UI");
-	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
-	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
-	key_UI->ui = true;
-
-	// Key counter
-	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
-	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
-	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
-
-	// Key counter
-	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
-	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
-	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
-	key_1_2->active = false;
-
-	// Key counter
-	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
-	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
-	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
-	key_2_2->active = false;
-
-    if (gameState->level_two_key && gameState ->level_three_key)
-    {
-        key_1_2->ui = false;
-        key_1_2->active = false;
-        key_2_2->ui = true;
-        key_2_2->active = true;
-    }
-    else if (gameState->level_two_key || gameState->level_three_key)
-    {
-        key_0_2->ui = false;
-        key_0_2->active = false;
-        key_1_2->ui = true;
-        key_1_2->active = true;
-    }
-    else
-    {
-        key_0_2->ui = true;
-        key_0_2->active = true;
-    }
 
 
 
