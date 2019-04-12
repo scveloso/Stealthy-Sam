@@ -119,6 +119,12 @@ void TransformCmp::removeFacingDirection(Entity *entity, int facingDirection)
 	}
 }
 
+void TransformCmp::resetFacingDirection(Entity *entity)
+{
+	transform_map[entity->id]->prevFacingDirection = NO_DIRECTION;
+	transform_map[entity->id]->facingDirection = NO_DIRECTION;
+}
+
 int TransformCmp::getFacingDirection(Entity *entity)
 {
 	return transform_map[entity->id]->facingDirection;

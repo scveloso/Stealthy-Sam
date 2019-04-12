@@ -1076,7 +1076,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 		if (gameState->hidden) {
 			transformCmp.getTransform(playerEntity)->visible = false;
 		}
-		gameState->is_game_loading = false;
 	}
 	else if (gameState->previous_room == "")
 	{
@@ -1144,48 +1143,17 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 		enemyCmp.add(entity, 100, 0, 400.f, 400.f);
 		enemyCmp.getmap()[entity->id]->type = BOSS_ENEMY_TYPE;
 	}
-	// Proceed to handle the text box entities
-	//generateTextBoxEntities(room_path, drawCmp, transformCmp, inputCmp, collisionCmp, enemyCmp, movementCmp, itemCmp, light, enemy, text);
 
-
-	// Text box if you're dead
-	Entity* rToRestart = objectManager->makeEntity(USE_P_RESTART);
-	drawCmp.add(rToRestart, textures_path("text/ptorestart.png"));
-	transformCmp.add(rToRestart, TEXT_POSITION, { 0.2, 0.2 }, 0.0);
-	rToRestart->active = false; // Died text initially invisible
-
-	//Entity* example = objectManager->makeEntity("UI");
-	//example->ui = true;
-	//dc.add(example, textures_path("Dungeon/boss.png"));
-	//tc.add(example, { 500,500 }, { 10,10 }, 0.0);
-	//Set ui to true to overlay over everything
-
-	//Tutorial help screen for player
-	Entity* tutorial_keyboard = objectManager->makeEntity("Tutorial_Screen");
-	drawCmp.add(tutorial_keyboard, textures_path("text/keyboard.png"));
-	transformCmp.add(tutorial_keyboard, {600,400}, {1.2,1.2}, 0.0);
-	tutorial_keyboard->active = false; // Invisible until H_KEY pressed
-
-	Entity* pause_screen = objectManager->makeEntity("Pause_Screen");
-	drawCmp.add(pause_screen, textures_path("text/pause.png"));
-	transformCmp.add(pause_screen, {600,400}, {1,1}, 0.0);
-    pause_screen->active = false;
-
-    Entity*Victory_Screen=objectManager->makeEntity(VICTORYSCREEN);
-    drawCmp.add(Victory_Screen,textures_path("text/Victory.png"));
-    transformCmp.add(Victory_Screen,{600,400},{1.2,1.2},0.0);
-    Victory_Screen->active=false;
-
-    // Key counter
+	// Key counter
 	Entity* key_UI = objectManager->makeEntity("key_UI");
 	drawCmp.add(key_UI, textures_path("Dungeon/key.png"));
 	transformCmp.add(key_UI, {50,50}, {3,3}, 0.0);
 	key_UI->ui = true;
 
-    // Key counter
-    Entity* key_0_2 = objectManager->makeEntity("key0_UI");
-    drawCmp.add(key_0_2, textures_path("text/0_2.png"));
-    transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
+	// Key counter
+	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
+	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
+	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
 
 	// Key counter
 	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
@@ -1219,6 +1187,59 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
         key_0_2->active = true;
     }
 
+	// Pause Screen
+	Entity* pause_screen = objectManager->makeEntity(PAUSE_SCREEN);
+	drawCmp.add(pause_screen, textures_path("text/game_paused.png"));
+	transformCmp.add(pause_screen, {600,400}, {1,1}, 0.0);
+  pause_screen->active = false;
+	pause_screen->ui = true;
+
+	// Tutorial/Controls Screen
+	Entity* tutorial_screen = objectManager->makeEntity(TUTORIAL_SCREEN);
+	drawCmp.add(tutorial_screen, textures_path("text/game_controls.png"));
+	transformCmp.add(tutorial_screen, {600,400}, {1,1}, 0.0);
+	tutorial_screen->active = false;
+	tutorial_screen->ui = true;
+
+	// Main Menu
+	Entity* main_menu = objectManager->makeEntity(MAIN_MENU);
+	transformCmp.add(main_menu, {600,400}, {1,1}, 0.0);
+	std::ifstream save_file(saves_path("save_file.json"));
+	if (save_file.fail()) {
+		drawCmp.add(main_menu, textures_path("text/game_main_menu_no_save.png"));
+	} else {
+		drawCmp.add(main_menu, textures_path("text/game_main_menu_with_save.png"));
+	}
+	main_menu->active = gameState->in_main_menu;
+	main_menu->ui = true;
+
+	// "Game Saved" alert
+	Entity* game_saved = objectManager->makeEntity(GAME_SAVED_ALERT);
+	drawCmp.add(game_saved, textures_path("text/game_saved.png"));
+	transformCmp.add(game_saved, {1080,25}, {1,1}, 0.0);
+  game_saved->active = false;
+	game_saved->ui = true;
+
+	// "Game Loaded" alert
+	Entity* game_loaded = objectManager->makeEntity(GAME_LOADED_ALERT);
+	drawCmp.add(game_loaded, textures_path("text/game_loaded.png"));
+	transformCmp.add(game_loaded, {1080,25}, {1,1}, 0.0);
+	game_loaded->active = gameState->is_game_loading;
+	game_loaded->ui = true;
+
+	Entity* game_victory = objectManager->makeEntity(VICTORY_SCREEN);
+	drawCmp.add(game_victory,textures_path("text/game_victory.png"));
+	transformCmp.add(game_victory,{600,400},{1,1},0.0);
+	game_victory->active = false;
+	game_victory->ui = true;
+
+	// Game death alert
+	Entity* game_death = objectManager->makeEntity(GAME_DEATH_ALERT);
+	drawCmp.add(game_death, textures_path("text/game_death.png"));
+	transformCmp.add(game_death, {790,25}, {1,1}, 0.0);
+  game_death->active = false;
+	game_death->ui = true;
+
 
 
     // Proceed to handle held item, if applicable
@@ -1239,6 +1260,9 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 			gameState->held_entity = entity;
 		}
 	}
+
+	// Loading complete
+	gameState->is_game_loading = false;
 
 	// Done generating entities, proceed to initialize systems
 	//initializeSystems(drawCmp, tc, ic, cc, ec, mc, itemCmp, light, enemy, text);

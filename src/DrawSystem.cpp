@@ -153,69 +153,74 @@ void DrawSystem::update(const mat3 projection)
                 gameState->sam_position = samTransform->m_position;
                 int movDir = movementComponent->getMovement(entity)->movementDirection;
 
-								if (movDir != NO_DIRECTION) {
-									if (stepTimer == 10) {
-										SoundManager::getInstance().playStep();
+								if (gameState->sam_is_alive) {
+									if (movDir != NO_DIRECTION) {
+										if (stepTimer == 20) {
+											SoundManager::getInstance().playStep();
+										}
 									}
+
+									// Prioritize facing left or right
+									if (transformComponent->isFacingRight(entity) ||
+											transformComponent->isFacingLeft(entity)) {
+										if (movDir != NO_DIRECTION) {
+												if (curStep) {
+														glBindTexture(GL_TEXTURE_2D, draw->stepside1.id);
+												} else {
+														glBindTexture(GL_TEXTURE_2D, draw->stepside2.id);
+												}
+												stepTimer--;
+												if (stepTimer < 1) {
+														curStep = !curStep;
+														stepTimer = 20;
+												}
+										} else {
+												glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+										}
+	                } else if (transformComponent->isFacingDown(entity)) {
+	                    if (movDir != NO_DIRECTION) {
+	                        if (curStep) {
+	                            glBindTexture(GL_TEXTURE_2D, draw->stepdown1.id);
+	                        } else {
+	                            glBindTexture(GL_TEXTURE_2D, draw->stepdown2.id);
+	                        }
+	                        stepTimer--;
+	                        if (stepTimer < 1) {
+	                            curStep = !curStep;
+	                            stepTimer = 20;
+	                        }
+	                    } else {
+	                        glBindTexture(GL_TEXTURE_2D, draw->down.id);
+	                    }
+	                } else if (transformComponent->isFacingUp(entity)) { // Last case facing up
+										if (movDir != NO_DIRECTION) {
+												if (curStep) {
+														glBindTexture(GL_TEXTURE_2D, draw->stepup1.id);
+												} else {
+														glBindTexture(GL_TEXTURE_2D, draw->stepup2.id);
+												}
+												stepTimer--;
+												if (stepTimer < 1) {
+														curStep = !curStep;
+														stepTimer = 20;
+												}
+										} else {
+												glBindTexture(GL_TEXTURE_2D, draw->up.id);
+										}
+	                } else { // If no recent facing direction, face in the last facing direction
+										if (transformComponent->getPreviousFacingDirection(entity) == UP) {
+											glBindTexture(GL_TEXTURE_2D, draw->up.id);
+										} else if (transformComponent->getPreviousFacingDirection(entity) == LEFT ||
+															 transformComponent->getPreviousFacingDirection(entity) == RIGHT) {
+											glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+										} else {
+											glBindTexture(GL_TEXTURE_2D, draw->down.id);
+										}
+									}
+								} else {
+									glBindTexture(GL_TEXTURE_2D, draw->down.id);
 								}
 
-								// Prioritize facing left or right
-								if (transformComponent->isFacingRight(entity) ||
-										transformComponent->isFacingLeft(entity)) {
-									if (movDir != NO_DIRECTION) {
-											if (curStep) {
-													glBindTexture(GL_TEXTURE_2D, draw->stepside1.id);
-											} else {
-													glBindTexture(GL_TEXTURE_2D, draw->stepside2.id);
-											}
-											stepTimer--;
-											if (stepTimer < 1) {
-													curStep = !curStep;
-													stepTimer = 20;
-											}
-									} else {
-											glBindTexture(GL_TEXTURE_2D, draw->texture.id);
-									}
-                } else if (transformComponent->isFacingDown(entity)) {
-                    if (movDir != NO_DIRECTION) {
-                        if (curStep) {
-                            glBindTexture(GL_TEXTURE_2D, draw->stepdown1.id);
-                        } else {
-                            glBindTexture(GL_TEXTURE_2D, draw->stepdown2.id);
-                        }
-                        stepTimer--;
-                        if (stepTimer < 1) {
-                            curStep = !curStep;
-                            stepTimer = 20;
-                        }
-                    } else {
-                        glBindTexture(GL_TEXTURE_2D, draw->down.id);
-                    }
-                } else if (transformComponent->isFacingUp(entity)) { // Last case facing up
-									if (movDir != NO_DIRECTION) {
-											if (curStep) {
-													glBindTexture(GL_TEXTURE_2D, draw->stepup1.id);
-											} else {
-													glBindTexture(GL_TEXTURE_2D, draw->stepup2.id);
-											}
-											stepTimer--;
-											if (stepTimer < 1) {
-													curStep = !curStep;
-													stepTimer = 20;
-											}
-									} else {
-											glBindTexture(GL_TEXTURE_2D, draw->up.id);
-									}
-                } else { // If no recent facing direction, face in the last facing direction
-									if (transformComponent->getPreviousFacingDirection(entity) == UP) {
-										glBindTexture(GL_TEXTURE_2D, draw->up.id);
-									} else if (transformComponent->getPreviousFacingDirection(entity) == LEFT ||
-														 transformComponent->getPreviousFacingDirection(entity) == RIGHT) {
-										glBindTexture(GL_TEXTURE_2D, draw->texture.id);
-									} else {
-										glBindTexture(GL_TEXTURE_2D, draw->down.id);
-									}
-								}
             } else if (entity->label == BOSS_GUID) {
                 Transform* bossTransform = transformComponent->getTransform(entity);
 
@@ -251,7 +256,7 @@ void DrawSystem::updateUI(const mat3 projection)
 		Draw *draw = it.second;
 
 		// Don't draw inactive entities
-		if (entity->ui) {
+		if (entity->ui && entity->active) {
 
 
 			draw->transform_begin();

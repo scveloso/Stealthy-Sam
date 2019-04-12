@@ -22,6 +22,10 @@ private:
   Mix_Chunk* step_sound;
   Mix_Chunk* torch_dying_sound;
 
+  Mix_Chunk* menu_sound;
+
+  Mix_Chunk* game_end_sound;
+
 public:
   static SoundManager& getInstance();
 
@@ -47,4 +51,7 @@ public:
   void playTorchDying();
 
   void playStep();
+
+  void playMenuSound();
+  void playGameEndSound();
 };

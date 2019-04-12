@@ -117,7 +117,6 @@ bool World::init(vec2 screen)
 	m_current_speed = 1.f;
 
 	SoundManager::getInstance().init();
-	SoundManager::getInstance().playBackgroundMusic();
 
 	// Create initial game state
 	gameState = new GameStateCmp();
@@ -167,7 +166,6 @@ bool World::init(vec2 screen)
 
 	generateEntities();
 
-
 	return true;
 }
 
@@ -177,15 +175,19 @@ void World::generateEntities()
 	std::string room_path = "";
 	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
 		room_path = map_path("level_one_with_key.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
 		room_path = map_path("level_one.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_TWO_GUID) {
 		room_path = map_path("level_two.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_THREE_GUID) {
 		room_path = map_path("level_three.json");
+		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
@@ -264,21 +266,20 @@ void World::destroy()
 // Systems can return an update action to prompt the world to do something
 bool World::update(float elapsed_ms)
 {
-	if (gameState->is_game_paused) {
+	ts->update(elapsed_ms);
+
+	if (gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive) {
 		return true;
 	}
 
 	// Update Systems
 	int updateAction = es->update(elapsed_ms);
-    handleUpdateAction(updateAction);
+  handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
-	ms->update(elapsed_ms);
-	ts->update();
-	ls->update();
-
-	// Handle UpdateAction from Systems
 	handleUpdateAction(updateAction);
+	ms->update(elapsed_ms);
+	ls->update();
 
 	return true;
 }
@@ -290,7 +291,6 @@ void World::handleUpdateAction(int updateAction)
 	{
 		switch (updateAction)
 		{
-
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
 				// m_water->clear_enemy_position();
@@ -331,9 +331,10 @@ void World::handleUpdateAction(int updateAction)
 				m_cone->clear_enemy_position();
 				break;
 			}
-			case RESET_GAME:
+			case START_NEW_GAME:
 			{
 				gameState->init();
+				gameState->in_main_menu = false;
 				clearMap();
 				generateEntities();
 				// m_water->restart();
@@ -355,40 +356,28 @@ void World::handleUpdateAction(int updateAction)
 				m_text->restart();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
-				std::cout << "Loaded game." << std::endl;
-				break;
-			}
-			case TOGGLE_PAUSE_GAME:
-			{
-				gameState->is_game_paused = !gameState->is_game_paused;
-
-				if (gameState->is_game_paused) {
-					SoundManager().getInstance().pauseMusic();
-				} else {
-					SoundManager().getInstance().resumeMusic();
-				}
-
 				break;
 			}
 			case SAM_DEATH:
 			{
 				SoundManager::getInstance().playDeath();
+				SoundManager::getInstance().haltMusic();
 				break;
 			}
-            case GAME_WIN:
-            {
-                Entity*VictoryScreen=objectManager->getEntityByLabel(VICTORYSCREEN);
-                VictoryScreen->ui=true;
-                VictoryScreen->active=true;
-                break;
-            }
-            case SHOOT_MISSILE:
-            {
-                std::pair<std::string, Draw*> missile = missileSystem->spawnMissile();
-                ds->initializeItem(objectManager->getEntityByLabel(missile.first), missile.second, standardEffect);
+			case GAME_WIN:
+			{
+				gameState->in_victory_screen = true;
+				SoundManager::getInstance().playGameEndSound();
+				SoundManager::getInstance().haltMusic();
+				break;
+			}
+			case SHOOT_MISSILE:
+			{
+					std::pair<std::string, Draw*> missile = missileSystem->spawnMissile();
+					ds->initializeItem(objectManager->getEntityByLabel(missile.first), missile.second, standardEffect);
 
-                break;
-            }
+					break;
+			}
 			default:
 			{
 			    printf("Update Action %d was not recognized", updateAction);
@@ -401,9 +390,9 @@ void World::handleUpdateAction(int updateAction)
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void World::draw()
 {
-	if (gameState->is_game_paused) {
-		return;
-	}
+	// if (gameState->is_game_paused) {
+	// 	return;
+	// }
 
 	// Clearing error buffer
 	gl_flush_errors();

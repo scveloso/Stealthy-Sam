@@ -27,7 +27,8 @@ void GameStateCmp::init() {
     held_entity = NULL;
 
     num_lit_cauldrons = 0;
-
+    in_main_menu = true;
+    in_victory_screen = false;
 }
 
 // Save game to file, provided Sam is alive and the game is paused
@@ -55,7 +56,7 @@ void GameStateCmp::saveGame() {
 
 // Returns true if game successfully loaded from save, false otherwise
 bool GameStateCmp::loadGame() {
-  if (is_game_paused) {
+  if (is_game_paused || in_main_menu) {
     // Read JSON save file
   	std::ifstream data(saves_path("save_file.json"));
     if (data.fail()) {
@@ -87,7 +88,11 @@ bool GameStateCmp::loadGame() {
 
     // Start game when reloaded
     is_game_paused = false;
+    in_main_menu = false;
     is_game_loading = true;
+    in_victory_screen = false;
+
+    std::cout << "Loaded game." << std::endl;
 
     return true;
   }
