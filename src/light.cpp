@@ -4,6 +4,7 @@
 
 bool Light::init(){
   death = 0;
+  tutorial = 0;
 
   static const GLfloat screen_vertex_buffer_data[] = {
 		-1.05f, -1.05f, 0.0f,
@@ -59,6 +60,7 @@ void Light::addTorchPosition(int i, vec2 position) {
 
 void Light::restart() {
 	death = 0;
+	tutorial = 0;
 }
 
 void Light::clearSamLight() {
@@ -82,8 +84,10 @@ void Light::draw(const mat3& projection) {
 	GLint tor_position= glGetUniformLocation(effect.program, "torch_light");
 
 	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
+	GLint tutorial_cond= glGetUniformLocation(effect.program, "tutorial_cond");
 
 	glUniform1i(death_cond, death);
+	glUniform1i(tutorial_cond, tutorial);
 	glUniform2fv(tor_position, 5, torch_light);
 
 

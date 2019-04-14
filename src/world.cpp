@@ -193,6 +193,10 @@ void World::generateEntities()
 		room_path = map_path("level_four.json");
 		SoundManager::getInstance().playBossMusic();
 	}
+	else if (gameState->current_room == TUTORIAL_LEVEL_GUID) {
+		room_path = map_path("level_tutorial.json");
+		SoundManager::getInstance().playBackgroundMusic();
+	}
 
 	makeSystems();
 
@@ -291,6 +295,26 @@ void World::handleUpdateAction(int updateAction)
 	{
 		switch (updateAction)
 		{
+			case TUTORIAL_LEVEL:
+			{
+				gameState->init();
+				gameState->in_main_menu = false;
+				clearMap();
+				generateEntities();
+				m_light->restart();
+				m_text->restart();
+				m_cone->clear_enemy_position();
+				gameState->previous_room = gameState->current_room;
+				gameState->current_room = TUTORIAL_LEVEL_GUID;
+				gameState->in_tutorial = true;
+				generateEntities();
+				Entity* entity = objectManager->getEntityByLabel(TORCH_TEXT);
+				entity->active = true;
+				SoundManager soundManager = SoundManager::getInstance();
+				soundManager.haltMusic();
+				soundManager.playBackgroundMusic();
+				break;
+			}
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
 				// m_water->clear_enemy_position();

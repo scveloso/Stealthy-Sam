@@ -82,6 +82,12 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
         SoundManager::getInstance().playMenuSound();
         break;
       }
+      case GLFW_KEY_T: {
+        returnAction = TUTORIAL_LEVEL;
+        SoundManager::getInstance().playMenuSound();
+        break;
+      }
+
       default:
         break;
     }

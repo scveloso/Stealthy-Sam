@@ -1091,6 +1091,10 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 		{
 			transformCmp.add(playerEntity, SPAWN_ROOM_ONE_TO_FOUR, {2.5f, 2.0f}, 0.0);
 		}
+		else if (gameState->current_room == TUTORIAL_LEVEL_GUID)
+		{
+			transformCmp.add(playerEntity, SPAWN_TUTORIAL, {2.5f, 2.0f}, 0.0);
+		}
 	}
 	else if (gameState->previous_room == ROOM_TWO_GUID)
 	{
@@ -1166,6 +1170,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
 	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
 	key_2_2->active = false;
+
+	Entity* torch_text = objectManager->makeEntity(TORCH_TEXT);
+	drawCmp.add(torch_text,textures_path("text/Torch_text.png"));
+	transformCmp.add(torch_text,{600,700},{.8,.8},0.0);
+	torch_text->active = false;
+	torch_text->ui = true;
 
     if (gameState->level_two_key && gameState ->level_three_key)
     {

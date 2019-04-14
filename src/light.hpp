@@ -13,6 +13,7 @@ public:
   void clearTorchPositions();
   void clearSamLight();
   int death;
+  int tutorial;
   GLfloat torch_light[10];
 
 private:

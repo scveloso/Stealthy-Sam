@@ -29,6 +29,7 @@ void GameStateCmp::init() {
     num_lit_cauldrons = 0;
     in_main_menu = true;
     in_victory_screen = false;
+    in_tutorial = false;
 }
 
 // Save game to file, provided Sam is alive and the game is paused
