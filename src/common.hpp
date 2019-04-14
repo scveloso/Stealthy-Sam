@@ -129,7 +129,8 @@ const std::string TUTORIAL_SCREEN = "Tutorial_Screen";
 const std::string PAUSE_SCREEN = "Pause_Screen";
 const std::string VICTORY_SCREEN = "Victory_Screen";
 const std::string MAIN_MENU = "Main_Menu";
-const std::string TORCH_TEXT = "Torch_text";
+const std::string T1_WELCOME = "T1_Welcome";
+const std::string T2_MOVEMENT = "T2_Movement";
 
 const std::string GAME_SAVED_ALERT = "Game_Saved";
 const std::string GAME_LOADED_ALERT = "Game_Loaded";

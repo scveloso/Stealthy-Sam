@@ -223,6 +223,11 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
               togglePause();
               break;
             }
+            case GLFW_KEY_RIGHT:
+            {
+                break;
+                // TODO make gameState text array that cycles through text when arrow keys are pressed
+            }
           }
         }
         if (action == GLFW_RELEASE)

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+
 using json = nlohmann::json;
 
 // Class to generate entities on game start/restart, and on room changes
@@ -1171,11 +1172,35 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
 	key_2_2->active = false;
 
-	Entity* torch_text = objectManager->makeEntity(TORCH_TEXT);
-	drawCmp.add(torch_text,textures_path("text/Torch_text.png"));
-	transformCmp.add(torch_text,{600,700},{.8,.8},0.0);
-	torch_text->active = false;
-	torch_text->ui = true;
+
+	Entity* textArray[10];
+//	std::string path = textures_path("text/Tutorial/");
+//	for (const auto & entry : fs::directory_iterator(path))
+//	{
+//		Entity* entry = objectManager->makeEntity(entry);
+//		drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
+//		transformCmp.add(T1_Welcome,{600,700},{.8,.8},0.0);
+//		T1_Welcome->active = false;
+//		T1_Welcome->ui = true;
+//		textArray[0] = T1_Welcome;
+//	}
+
+	Entity* T1_Welcome = objectManager->makeEntity(T1_WELCOME);
+	drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
+	transformCmp.add(T1_Welcome,{600,700},{.8,.8},0.0);
+	T1_Welcome->active = false;
+	T1_Welcome->ui = true;
+	textArray[0] = T1_Welcome;
+
+	Entity* T2_Movement = objectManager->makeEntity(T2_MOVEMENT);
+	drawCmp.add(T2_Movement,textures_path("text/Tutorial/T2_Movement.png"));
+	transformCmp.add(T2_Movement,{600,700},{.8,.8},0.0);
+	T2_Movement->active = false;
+	T2_Movement->ui = true;
+	textArray[1] = T2_Movement;
+
+
+
 
     if (gameState->level_two_key && gameState ->level_three_key)
     {
@@ -1227,7 +1252,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	Entity* game_saved = objectManager->makeEntity(GAME_SAVED_ALERT);
 	drawCmp.add(game_saved, textures_path("text/game_saved.png"));
 	transformCmp.add(game_saved, {1080,25}, {1,1}, 0.0);
-  game_saved->active = false;
+  	game_saved->active = false;
 	game_saved->ui = true;
 
 	// "Game Loaded" alert
@@ -1247,7 +1272,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	Entity* game_death = objectManager->makeEntity(GAME_DEATH_ALERT);
 	drawCmp.add(game_death, textures_path("text/game_death.png"));
 	transformCmp.add(game_death, {790,25}, {1,1}, 0.0);
-  game_death->active = false;
+  	game_death->active = false;
 	game_death->ui = true;
 
 
