@@ -1172,35 +1172,82 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
 	key_2_2->active = false;
 
-
-	Entity* textArray[10];
-//	std::string path = textures_path("text/Tutorial/");
-//	for (const auto & entry : fs::directory_iterator(path))
-//	{
-//		Entity* entry = objectManager->makeEntity(entry);
-//		drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
-//		transformCmp.add(T1_Welcome,{600,700},{.8,.8},0.0);
-//		T1_Welcome->active = false;
-//		T1_Welcome->ui = true;
-//		textArray[0] = T1_Welcome;
-//	}
-
 	Entity* T1_Welcome = objectManager->makeEntity(T1_WELCOME);
 	drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
 	transformCmp.add(T1_Welcome,{600,700},{.8,.8},0.0);
 	T1_Welcome->active = false;
 	T1_Welcome->ui = true;
-	textArray[0] = T1_Welcome;
+	gameState->textArray[0] = T1_Welcome;
 
-	Entity* T2_Movement = objectManager->makeEntity(T2_MOVEMENT);
+	Entity* T2_Movement = objectManager->makeEntity("T2_Movement");
 	drawCmp.add(T2_Movement,textures_path("text/Tutorial/T2_Movement.png"));
 	transformCmp.add(T2_Movement,{600,700},{.8,.8},0.0);
 	T2_Movement->active = false;
 	T2_Movement->ui = true;
-	textArray[1] = T2_Movement;
+	gameState->textArray[1] = T2_Movement;
 
+    Entity* T3_Torch = objectManager->makeEntity("T3_Torch");
+    drawCmp.add(T3_Torch,textures_path("text/Tutorial/T3_Torch.png"));
+    transformCmp.add(T3_Torch,{600,700},{.8,.8},0.0);
+    T3_Torch->active = false;
+    T3_Torch->ui = true;
+    gameState->textArray[2] = T3_Torch;
 
+    Entity* T4_Throw = objectManager->makeEntity("T4_Throw");
+    drawCmp.add(T4_Throw,textures_path("text/Tutorial/T4_Throw.png"));
+    transformCmp.add(T4_Throw,{600,700},{.8,.8},0.0);
+    T4_Throw->active = false;
+    T4_Throw->ui = true;
+    gameState->textArray[3] = T4_Throw;
 
+    Entity* T5_Menu = objectManager->makeEntity("T5_Menu");
+    drawCmp.add(T5_Menu,textures_path("text/Tutorial/T5_Menu.png"));
+    transformCmp.add(T5_Menu,{600,700},{.8,.8},0.0);
+    T5_Menu->active = false;
+    T5_Menu->ui = true;
+    gameState->textArray[4] = T5_Menu;
+
+    Entity* T5_Death = objectManager->makeEntity("T6_Death");
+    drawCmp.add(T5_Death,textures_path("text/Tutorial/T6_Death.png"));
+    transformCmp.add(T5_Death,{600,700},{.8,.8},0.0);
+    T5_Death->active = false;
+    T5_Death->ui = true;
+    gameState->textArray[5] = T5_Death;
+
+    Entity* T7_Chest = objectManager->makeEntity("T7_Chest");
+    drawCmp.add(T7_Chest,textures_path("text/Tutorial/T7_Chest.png"));
+    transformCmp.add(T7_Chest,{600,700},{.8,.8},0.0);
+    T7_Chest->active = false;
+    T7_Chest->ui = true;
+    gameState->textArray[5] = T7_Chest;
+
+    Entity* T8_torchTip = objectManager->makeEntity("T8_torchTip");
+    drawCmp.add(T8_torchTip,textures_path("text/Tutorial/T8_torchTip.png"));
+    transformCmp.add(T8_torchTip,{600,700},{.8,.8},0.0);
+    T8_torchTip->active = false;
+    T8_torchTip->ui = true;
+    gameState->textArray[6] = T8_torchTip;
+
+    Entity* T9_Save = objectManager->makeEntity("T9_Save");
+    drawCmp.add(T9_Save,textures_path("text/Tutorial/T9_Save.png"));
+    transformCmp.add(T9_Save,{600,700},{.8,.8},0.0);
+    T9_Save->active = false;
+    T9_Save->ui = true;
+    gameState->textArray[7] = T9_Save;
+
+    Entity* T10_Help = objectManager->makeEntity("T10_Help");
+    drawCmp.add(T10_Help,textures_path("text/Tutorial/T10_Help.png"));
+    transformCmp.add(T10_Help,{600,700},{.8,.8},0.0);
+    T10_Help->active = false;
+    T10_Help->ui = true;
+    gameState->textArray[8] = T10_Help;
+
+    Entity* T11_Startgame = objectManager->makeEntity("T11_Startgame");
+    drawCmp.add(T11_Startgame,textures_path("text/Tutorial/T11_Startgame.png"));
+    transformCmp.add(T11_Startgame,{600,700},{.8,.8},0.0);
+    T11_Startgame->active = false;
+    T11_Startgame->ui = true;
+    gameState->textArray[9] = T11_Startgame;
 
     if (gameState->level_two_key && gameState ->level_three_key)
     {

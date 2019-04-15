@@ -308,7 +308,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->current_room = TUTORIAL_LEVEL_GUID;
 				gameState->in_tutorial = true;
 				generateEntities();
-				Entity* entity = objectManager->getEntityByLabel(TORCH_TEXT);
+				Entity* entity = objectManager->getEntityByLabel(T1_WELCOME);
+				gameState->tutorial_text = entity;
 				entity->active = true;
 				SoundManager soundManager = SoundManager::getInstance();
 				soundManager.haltMusic();

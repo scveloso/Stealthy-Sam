@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <algorithm>
+using namespace std;
 
 // System to update game based on user input.
 //
@@ -225,8 +227,26 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
             }
             case GLFW_KEY_RIGHT:
             {
-                break;
-                // TODO make gameState text array that cycles through text when arrow keys are pressed
+
+              int index = getIndex(gameState->tutorial_text) + 1;
+              if (index <= 9)
+              {
+                  gameState->tutorial_text->active = false;
+                  gameState->tutorial_text = gameState->textArray[index];
+                  gameState->tutorial_text->active = true;
+              }
+              break;
+            }
+            case GLFW_KEY_LEFT:
+            {
+              int index = getIndex(gameState->tutorial_text) - 1;
+              if (index >= 0)
+              {
+                  gameState->tutorial_text->active = false;
+                  gameState->tutorial_text = gameState->textArray[index];
+                  gameState->tutorial_text->active = true;
+              }
+              break;
             }
           }
         }
@@ -525,6 +545,23 @@ bool InputSystem::is_movement_interrupted(int entityId, Transform* entityTransfo
 
     return false;
 }
+
+int InputSystem::getIndex(Entity *findEntity) {
+  int n = sizeof(gameState->textArray) / sizeof(gameState->textArray[0]);
+  int index = 0;
+
+  auto itr = find(gameState->textArray, gameState->textArray + n, findEntity);
+
+  if (itr != end(gameState->textArray)) {
+    index = distance(gameState->textArray, itr);
+  }
+  else {
+    cout << "Element is not present in the given array";
+  }
+
+  return index;
+}
+
 void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransform)
 {
   for (auto& it2 : collisionComponent->getmap())

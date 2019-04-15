@@ -36,6 +36,11 @@ public:
     int held_item; // Used to regenerate held entities when switching rooms
     Entity* held_entity;
 
+    //text entity
+    Entity* textArray[10];
+    Entity* tutorial_text;
+
+
 
     int num_lit_cauldrons;
 

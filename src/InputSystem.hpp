@@ -25,6 +25,7 @@ public:
 	bool loadGame();
 	bool is_movement_interrupted(int entityId, Transform* entityTransform);
 	void torch_cauldron_collision(int entityId, Transform *entityTransform);
+	int getIndex(Entity* entity);
 	vec2 tryThrowHorizontal(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
 	vec2 tryThrowVecDirection(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, vec2 throwDir);
 	vec2 tryThrowVertical(Entity* heldEntity, Transform* entityTransform, vec2 torch_position, int direction, int offset);
