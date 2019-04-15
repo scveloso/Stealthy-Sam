@@ -1159,6 +1159,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
 	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
 	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
+    key_0_2->active = false;
 
 	// Key counter
 	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
@@ -1249,24 +1250,26 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
     T11_Startgame->ui = true;
     gameState->textArray[9] = T11_Startgame;
 
-    if (gameState->level_two_key && gameState ->level_three_key)
-    {
-        key_1_2->ui = false;
-        key_1_2->active = false;
-        key_2_2->ui = true;
-        key_2_2->active = true;
-    }
-    else if (gameState->level_two_key || gameState->level_three_key)
-    {
-        key_0_2->ui = false;
-        key_0_2->active = false;
-        key_1_2->ui = true;
-        key_1_2->active = true;
-    }
+    if (!gameState->in_tutorial) {
+		if (gameState->level_two_key && gameState->level_three_key) {
+			key_1_2->ui = false;
+			key_1_2->active = false;
+			key_2_2->ui = true;
+			key_2_2->active = true;
+		} else if (gameState->level_two_key || gameState->level_three_key) {
+			key_0_2->ui = false;
+			key_0_2->active = false;
+			key_1_2->ui = true;
+			key_1_2->active = true;
+		} else {
+			key_0_2->ui = true;
+			key_0_2->active = true;
+		}
+	}
     else
     {
-        key_0_2->ui = true;
-        key_0_2->active = true;
+        key_UI->ui = false;
+        key_UI->active = false;
     }
 
 	// Pause Screen
