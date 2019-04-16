@@ -1,13 +1,14 @@
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"
 #include "Components/MovementCmp.hpp"
+#include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
 #include "SoundManager.hpp"
 
 class DrawSystem
 {
 public:
-	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp);
+	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, EnemyCmp ec, GameStateCmp* gameStateCmp);
     bool initializeItem(Entity* entity, Draw* draw, Effect effect);
 	void update(const mat3 projection);
 	void updateUI(const mat3 projection);
@@ -19,6 +20,7 @@ public:
 	// int en_direction;
 private:
 	DrawCmp* drawComponent;
+	EnemyCmp enemyComponent;
 	TransformCmp* transformComponent;
 	MovementCmp* movementComponent;
 	ObjectManager* objectManager;

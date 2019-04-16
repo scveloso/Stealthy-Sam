@@ -26,6 +26,30 @@ DrawCmp::~DrawCmp() {
 	// 281 MB to 261MB
 }
 
+void DrawCmp::addGhost(Entity *entity, const char* default_file, const char* chase_file)
+{
+	Draw *draw = new Draw();
+
+	if (!draw->texture.is_valid())
+	{
+		if (!draw->texture.load_from_file(default_file))
+		{
+			fprintf(stderr, "Failed to load texture!\n");
+		}
+	}
+
+    if (!draw->chase.is_valid())
+    {
+        if (!draw->chase.load_from_file(chase_file))
+        {
+            fprintf(stderr, "Failed to load texture!\n");
+        }
+    }
+
+	draw_vec.emplace_back(std::make_pair(entity, draw));
+}
+
+
 void DrawCmp::addFull(Entity *entity, const char* file1, const char* file2, const char* file3
               	    , const char* file4, const char* file5, const char* file6, const char* file7
               	    , const char* file8, const char* file9)

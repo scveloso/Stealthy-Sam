@@ -2,17 +2,19 @@
 #include "DrawSystem.hpp"
 #include "Components/Cmp.hpp"
 #include "common.hpp"
+#include "Strategies/strategies_common.hpp"
 
 // System to handle drawing ALL relevant entities
 //
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, EnemyCmp ec, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
 	transformComponent = tc;
+	enemyComponent = ec;
 	movementComponent = mc;
 	gameState = gameStateCmp;
 	stepTimer = 20;
@@ -229,7 +231,14 @@ void DrawSystem::update(const mat3 projection)
                 } else {
                     glBindTexture(GL_TEXTURE_2D, draw->down.id);
                 }
-            } else {
+            } else if (entity->label == ENEMY_LABEL) {
+							int enemyAction = enemyComponent.getEnemyAction(entity->id);
+							if (enemyAction == CHASE_SAM) {
+								glBindTexture(GL_TEXTURE_2D, draw->chase.id);
+							} else {
+								glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+							}
+						} else {
                 glBindTexture(GL_TEXTURE_2D, draw->texture.id);
             }
 

@@ -1052,7 +1052,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 					movementCmp.add(entity, 50.f, 0);
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
-					drawCmp.add(entity, textures_path("Dungeon/ghost.png"));
+					drawCmp.addGhost(entity, textures_path("Dungeon/ghost.png"), textures_path("Dungeon/angry_ghost.png"));
 					collisionCmp.add(entity);
 					enemyCmp.add(entity, 100, 0, x, y);
 					break;
@@ -1267,7 +1267,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	// Done generating entities, proceed to initialize systems
 	//initializeSystems(drawCmp, tc, ic, cc, ec, mc, itemCmp, light, enemy, text);
 
-	drawSystem->		init(		objectManager, &drawCmp		, &transformCmp	, &movementCmp	, gameState);
+	drawSystem->		init(		objectManager, &drawCmp		, &transformCmp	, &movementCmp	, enemyCmp, gameState);
 	inputSystem->		init(		objectManager, inputCmp		, &transformCmp	, &collisionCmp	, &movementCmp, enemyCmp, itemCmp, gameState);
 	collisionSystem->	init(		objectManager, &collisionCmp	, &transformCmp	, itemCmp,		enemyCmp, gameState);
 	enemySystem->		init(		objectManager, &transformCmp, enemyCmp		, &movementCmp	, itemCmp, gameState);
