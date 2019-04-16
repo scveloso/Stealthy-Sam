@@ -8,6 +8,9 @@
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
 
+
+#include "btBulletDynamicsCommon.h"
+
 // JSON
 #include <../ext/json/json.hpp>
 

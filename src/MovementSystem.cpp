@@ -47,6 +47,16 @@ void MovementSystem::update(float elapsed_ms)
     }
 
     Transform* entityTransform = transformComponent->getTransform(entity);
+
+    if (entityTransform->body != NULL) {
+        // Handled by bullet physics, ignore other stuff
+        btTransform transform;
+        entityTransform->body->getMotionState()->getWorldTransform(transform);
+        btVector3 pos = transform.getOrigin();
+
+        entityTransform->m_position = { pos.getX(), pos.getY() };
+        continue;
+    }
     int movementDirection = movementComponent->getMovementDirection(entity);
     vec2 vecDirection = movementComponent->getVecDirection(entity);
     vec2 oldPosition = entityTransform->m_position;

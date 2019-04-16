@@ -95,6 +95,8 @@ void DrawSystem::update(const mat3 projection)
 				continue;
 			}
 
+
+
 			draw->transform_begin();
 			draw->transform_translate(transformComponent->getTransform(entity)->m_position);
 			draw->transform_rotate(transformComponent->getTransform(entity)->m_rotation);
