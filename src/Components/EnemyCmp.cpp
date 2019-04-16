@@ -28,6 +28,10 @@ void EnemyCmp::updateEnemyAction(int currEnemyAction, int newEnemyAction) {
 	}
 }
 
+void EnemyCmp::updateSpecificEnemyAction(int entityId, int newEnemyAction) {
+	enemy_map[entityId]->action = newEnemyAction;
+}
+
 void EnemyCmp::mapdel() {
 
 	for (auto& it : enemy_map) {

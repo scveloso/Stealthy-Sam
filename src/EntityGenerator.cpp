@@ -1269,7 +1269,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 	drawSystem->		init(		objectManager, &drawCmp		, &transformCmp	, &movementCmp	, gameState);
 	inputSystem->		init(		objectManager, inputCmp		, &transformCmp	, &collisionCmp	, &movementCmp, enemyCmp, itemCmp, gameState);
-	collisionSystem->	init(		objectManager, &collisionCmp	, &transformCmp	, itemCmp		, gameState);
+	collisionSystem->	init(		objectManager, &collisionCmp	, &transformCmp	, itemCmp,		enemyCmp, gameState);
 	enemySystem->		init(		objectManager, &transformCmp, enemyCmp		, &movementCmp	, itemCmp, gameState);
 	movementSystem->	init(		objectManager, &transformCmp, &collisionCmp	, &movementCmp	, gameState);
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
