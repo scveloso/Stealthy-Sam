@@ -158,7 +158,7 @@ void DrawSystem::update(const mat3 projection)
 								if (gameState->sam_is_alive) {
 									if (movDir != NO_DIRECTION) {
 										if (stepTimer == 20) {
-											SoundManager::getInstance().playStep();
+											playStep();
 										}
 									}
 
@@ -318,4 +318,12 @@ void DrawSystem::updateUI(const mat3 projection)
 			//printf("DRAWING\n");
 		}
 	}
+}
+
+void DrawSystem::playStep() {
+	if (gameState->in_main_menu || gameState->in_victory_screen || gameState->is_game_paused) {
+		return;
+	}
+
+	SoundManager::getInstance().playStep();
 }

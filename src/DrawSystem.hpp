@@ -13,6 +13,8 @@ public:
 	void update(const mat3 projection);
 	void updateUI(const mat3 projection);
 	bool setup(Effect effect);
+	void playStep();
+
 	vec2 s_position;
 	vec2 EBox;
 	vec2 rRestart;
