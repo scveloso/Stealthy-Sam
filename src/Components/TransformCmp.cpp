@@ -101,6 +101,11 @@ void TransformCmp::setRotation(Entity* entity, float rotation)
 	transform_map[entity->id]->m_rotation = rotation;
 }
 
+void TransformCmp::hardSetFacingDirection(Entity *entity, int facingDirection)
+{
+	transform_map[entity->id]->facingDirection = facingDirection;
+}
+
 void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)
 {
 	if (transform_map[entity->id]->facingDirection % facingDirection != 0) {

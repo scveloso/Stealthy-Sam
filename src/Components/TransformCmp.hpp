@@ -26,6 +26,7 @@ public:
 
 	void setRotation(Entity* entity, float rotation);
 
+	void hardSetFacingDirection(Entity *entity, int facingDirection);
 	void setFacingDirection(Entity *entity, int facingDirection);
 	void removeFacingDirection(Entity *entity, int facingDirection);
 	int getFacingDirection(Entity *entity);
