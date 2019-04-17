@@ -361,8 +361,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->init();
 				gameState->in_main_menu = false;
 				clearMap();
-				generateEntities();
-				// m_water->restart();
+                generateEntities();
+                // m_water->restart();
 				m_light->restart();
 				m_text->restart();
 				// m_water->clear_enemy_position();
@@ -376,6 +376,10 @@ void World::handleUpdateAction(int updateAction)
 			case LOAD_GAME:
 			{
 				clearMap();
+                if (gameState->in_tutorial)
+                {
+                    gameState->in_tutorial = false;
+                }
 				generateEntities();
 				m_light->restart();
 				m_text->restart();
