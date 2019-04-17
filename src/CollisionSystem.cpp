@@ -176,7 +176,7 @@ int CollisionSystem::handleEnemies(Entity* entity)
 }
 
 void CollisionSystem::handleEnemyVisionCone(Transform* samTransform, Entity* entity) {
-	if (entity->label == ENEMY_LABEL) {
+	if (entity->label == ENEMY_LABEL && gameStateComponent->hidden == false) {
 		Transform* enemyTransform = transformComponent->getTransform(entity);
 
 		bool collideWithCone = false;
