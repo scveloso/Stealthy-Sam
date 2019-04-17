@@ -4,6 +4,7 @@
 #include "UpdateAction.hpp"
 #include "TileConstants.hpp"
 #include "MissileSystem.hpp"
+#include "Strategies/strategies_common.hpp"
 
 // System to handle Sam colliding with other entities. Responsible for:
 // - Updating when keys/torches/other items are picked up
@@ -13,9 +14,11 @@
 // Has access to CollisionCmp and GameStateCmp to update.
 // Has access to TransformCmp to know where everything is.
 // Has access to ItemCmp to toggle items as held.
-void CollisionSystem::init(ObjectManager* om, CollisionCmp* cc, TransformCmp* tc, ItemCmp itc, GameStateCmp* gsc)
+// Has access to EnemyCmp to set enemies to chase Sam on collide with vision cone.
+void CollisionSystem::init(ObjectManager* om, CollisionCmp* cc, TransformCmp* tc, ItemCmp itc, EnemyCmp ec, GameStateCmp* gsc)
 {
 	objectManager = om;
+	enemyComponent = ec;
 	collisionComponent = cc;
 	transformComponent = tc;
 	itemComponent = itc;
@@ -42,13 +45,16 @@ int CollisionSystem::update(float elapsed_ms)
 		int entityId = it2.first;
 		if (entityId != SAMS_GUID)
 		{
-			entityTransform = transformComponent->getTransform(objectManager->getEntity(entityId));
+			Entity* entity = objectManager->getEntity(entityId);
+			entityTransform = transformComponent->getTransform(entity);
+
+			// Check if enemy vision cone collides with Sam
+			handleEnemyVisionCone(samTransform, entity);
 
 			// Check for Sam collisions with other entities
 			if (AABB(samTransform, entityTransform))
 			{
 				collisionEvent = true;
-				Entity* entity = objectManager->getEntity(entityId);
 
 				// Handle door collisions
 				int doorUpdateAction = handleDoors(entity);
@@ -169,6 +175,43 @@ int CollisionSystem::handleEnemies(Entity* entity)
 	return NO_CHANGE;
 }
 
+void CollisionSystem::handleEnemyVisionCone(Transform* samTransform, Entity* entity) {
+	if (entity->label == ENEMY_LABEL && gameStateComponent->hidden == false) {
+		Transform* enemyTransform = transformComponent->getTransform(entity);
+
+		bool collideWithCone = false;
+		if (enemyTransform->facingDirection == UP) {
+			collideWithCone = AABBCone(samTransform,
+																{ enemyTransform->m_position.x, enemyTransform->m_position.y - TILE_HEIGHT },
+																TILE_WIDTH,
+																(1.5 * TILE_HEIGHT));
+		} else if (enemyTransform->facingDirection == DOWN) {
+			collideWithCone = AABBCone(samTransform,
+																{ enemyTransform->m_position.x, enemyTransform->m_position.y + TILE_HEIGHT },
+																TILE_WIDTH,
+																(1.5 * TILE_HEIGHT));
+		} else if (enemyTransform->facingDirection == LEFT) {
+			collideWithCone = AABBCone(samTransform,
+																{ enemyTransform->m_position.x - TILE_WIDTH, enemyTransform->m_position.y },
+																(1.5 * TILE_WIDTH),
+																TILE_HEIGHT);
+		} else if (enemyTransform->facingDirection == RIGHT) {
+			collideWithCone = AABBCone(samTransform,
+																{ enemyTransform->m_position.x + TILE_WIDTH, enemyTransform->m_position.y },
+																(1.5 * TILE_WIDTH),
+																TILE_HEIGHT);
+		}
+
+		// Spotted Sam, chase him
+		if (collideWithCone) {
+			if (enemyComponent.getEnemyAction(entity->id) != CHASE_SAM) {
+				enemyComponent.updateSpecificEnemyAction(entity->id, CHASE_SAM);
+				SoundManager::getInstance().playGhostSpotSamSound();
+			}
+		}
+	}
+}
+
 // Updates key count or returns NO_CHANGE if not a key
 int CollisionSystem::handleKeys(Entity* entity)
 {
@@ -260,6 +303,80 @@ bool CollisionSystem::AABB(Transform *tr1, Transform *tr2) {
 	float obj2_x2 = tr2->m_position.x + half_width_obj2;
 	float obj2_y1 = tr2->m_position.y - half_height_obj2;
 	float obj2_y2 = tr2->m_position.y + half_height_obj2;
+
+	// Collision case 1: top right corner will be inside the wall
+	if (obj1_x2 >= obj2_x1 && obj1_x2 <= obj2_x2 &&
+		obj1_y1 >= obj2_y1 && obj1_y1 <= obj2_y2)
+	{
+		return true;
+	}
+
+	// Collision case 2: top left corner will be inside the wall
+	if (obj1_x1 >= obj2_x1 && obj1_x1 <= obj2_x2 &&
+		obj1_y1 >= obj2_y1 && obj1_y1 <= obj2_y2)
+	{
+		return true;
+	}
+
+	// Collision case 3: bottom right corner will be inside the wall
+	if (obj1_x2 >= obj2_x1 && obj1_x2 <= obj2_x2 &&
+		obj1_y2 >= obj2_y1 && obj1_y2 <= obj2_y2)
+	{
+		return true;
+	}
+
+	// Collision case 4: bottom left corner will be inside the wall
+	if (obj1_x1 >= obj2_x1 && obj1_x1 <= obj2_x2 &&
+		obj1_y2 >= obj2_y1 && obj1_y2 <= obj2_y2)
+	{
+		return true;
+	}
+
+	// Collision case 5: prevent fat obj1 from going through thin wall from the bottom
+	if (obj1_x1 <= obj2_x1 && obj1_x2 >= obj2_x2 &&
+		obj1_y1 <= obj2_y2 && obj1_y2 >= obj2_y2)
+	{
+		return true;
+	}
+
+	// Collision case 6: prevent fat obj1 from going through thin wall from the top
+	if (obj1_x1 <= obj2_x1 && obj1_x2 >= obj2_x2 &&
+		obj1_y2 >= obj2_y1 && obj1_y1 <= obj2_y1)
+	{
+		return true;
+	}
+
+	// Collision case 7: prevent tall obj1 from going through short wall from the left
+	if (obj1_y1 <= obj2_y1 && obj1_y2 >= obj2_y2 &&
+		obj1_x2 >= obj2_x1 && obj1_x1 <= obj2_x1)
+	{
+		return true;
+	}
+
+	// Collision case 8: prevent tall obj1 from going through short wall from the right
+	if (obj1_y1 <= obj2_y1 && obj1_y2 >= obj2_y2 &&
+		obj1_x1 <= obj2_x2 && obj1_x2 >= obj2_x2)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool CollisionSystem::AABBCone(Transform *tr1, vec2 cone_pos, float cone_width, float cone_height) {
+	float half_width_obj1 = (tr1->m_scale.x) * (tr1->width / 2);
+	float half_height_obj1 = (tr1->m_scale.y) * (tr1->height / 2);
+
+	// Grab object's edges
+	float obj1_x1 = tr1->m_position.x - half_width_obj1;
+	float obj1_x2 = tr1->m_position.x + half_width_obj1;
+	float obj1_y1 = tr1->m_position.y - half_height_obj1;
+	float obj1_y2 = tr1->m_position.y + half_height_obj1;
+
+	float obj2_x1 = cone_pos.x - (cone_width / 2);
+	float obj2_x2 = cone_pos.x + (cone_width / 2);
+	float obj2_y1 = cone_pos.y - (cone_height / 2);
+	float obj2_y2 = cone_pos.y + (cone_height / 2);
 
 	// Collision case 1: top right corner will be inside the wall
 	if (obj1_x2 >= obj2_x1 && obj1_x2 <= obj2_x2 &&

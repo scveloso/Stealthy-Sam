@@ -175,19 +175,15 @@ void World::generateEntities()
 	std::string room_path = "";
 	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
 		room_path = map_path("level_one_with_key.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
 		room_path = map_path("level_one.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_TWO_GUID) {
 		room_path = map_path("level_two.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_THREE_GUID) {
 		room_path = map_path("level_three.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
@@ -268,7 +264,10 @@ bool World::update(float elapsed_ms)
 {
 	ts->update(elapsed_ms);
 
-	if (gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive) {
+	if (gameState->is_game_paused ||
+			gameState->in_main_menu ||
+			!gameState->sam_is_alive ||
+			gameState->in_victory_screen) {
 		return true;
 	}
 

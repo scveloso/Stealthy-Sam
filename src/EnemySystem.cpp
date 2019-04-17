@@ -1,6 +1,7 @@
 #include <Components/GameStateCmp.hpp>
 #include "EnemySystem.hpp"
 #include "UpdateAction.hpp"
+#include "TileConstants.hpp"
 
 // System to update enemies based on decision tree AI.
 //
@@ -13,13 +14,11 @@
 +-------------+--------------------------------+-----------------------------+---------------------------------+
 | Node Number |            Decision            |           Action            |             Action              |
 +-------------+--------------------------------+-----------------------------+---------------------------------+
-|           0 | Is Sam hidden?                 | Hidden? Go to node 1        | Not hidden? Go to node 2        |
-|           1 | Is enemy chasing Sam?          | Chasing? Go to node 3       | Not chasing? Go to node 5       |
-|           2 | Is Sam on left side of screen? | Left side? Go to node 4     | Not left side? Go to node 5     |
-|           3 | End                            | Return to patrol            | Return to patrol                |
-|           4 | Is enemy chasing torch?        | Chasing torch? Go to node 5 | Not chasing torch? Go to node 6 |
-|           5 | End                            | Maintain Action             | Maintain Action                 |
-|           6 | End                            | Chase Sam                   | Chase Sam                       |
+|           0 | Is Sam hidden?                 | Hidden? Go to node 1        | Not hidden? Go to node 4        |
+|           1 | Is enemy chasing Sam?          | Chasing? Go to node 2       | Not chasing? Go to node 4       |
+|           2 | End                            | Return to patrol            | Return to patrol                |
+|           3 | Is enemy chasing torch?        | Chasing torch? Go to node 4 | Not chasing torch? Go to node 5 |
+|           4 | End                            | Maintain Action             | Maintain Action                 |
 +-------------+--------------------------------+-----------------------------+---------------------------------+ */
 void EnemySystem::init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, MovementCmp* mc, ItemCmp itc, GameStateCmp* gsc) {
 	objectManager = om;
@@ -34,31 +33,23 @@ void EnemySystem::init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, Movemen
 
 void EnemySystem::initDecisionTree() {
 	// Node 0
-	DecisionNode* decisionNode = new DecisionNode(1, 2);
+	DecisionNode* decisionNode = new DecisionNode(1, 4);
 	decision_tree.emplace_back(decisionNode);
 
 	// Node 1
-	decisionNode = new DecisionNode(3, 5);
+	decisionNode = new DecisionNode(2, 4);
 	decision_tree.emplace_back(decisionNode);
 
 	// Node 2
-	decisionNode = new DecisionNode(4, 5);
-	decision_tree.emplace_back(decisionNode);
-
-	// Node 3
 	decisionNode = new DecisionNode(RETURN_TO_PATROL);
 	decision_tree.emplace_back(decisionNode);
 
+	// Node 3
+	decisionNode = new DecisionNode(4, 5);
+	decision_tree.emplace_back(decisionNode);
+
 	// Node 4
-	decisionNode = new DecisionNode(5, 6);
-	decision_tree.emplace_back(decisionNode);
-
-	// Node 5
 	decisionNode = new DecisionNode(MAINTAIN_ACTION);
-	decision_tree.emplace_back(decisionNode);
-
-	// Node 6
-	decisionNode = new DecisionNode(CHASE_SAM);
 	decision_tree.emplace_back(decisionNode);
 }
 
@@ -153,28 +144,28 @@ void EnemySystem::chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity
 		movementComponent->removeMovementDirection(enemyEntity, DOWN);
 		movementComponent->setMovementDirection(enemyEntity, UP);
 		if (diff_y > diff_x){
-			transformComponent->setFacingDirection(enemyEntity, UP);
+			transformComponent->hardSetFacingDirection(enemyEntity, UP);
 		}
 	}
 	if(enemyPosition.y < targetPosition.y) {
 		movementComponent->removeMovementDirection(enemyEntity, UP);
 		movementComponent->setMovementDirection(enemyEntity, DOWN);
 		if (diff_y > diff_x ){
-			transformComponent->setFacingDirection(enemyEntity, DOWN);
+			transformComponent->hardSetFacingDirection(enemyEntity, DOWN);
 		}
 	}
 	if (enemyPosition.x > targetPosition.x) {
 		movementComponent->removeMovementDirection(enemyEntity, RIGHT);
 		movementComponent->setMovementDirection(enemyEntity, LEFT);
 		if (diff_y <= diff_x){
-			transformComponent->setFacingDirection(enemyEntity, LEFT);
+			transformComponent->hardSetFacingDirection(enemyEntity, LEFT);
 		}
 	}
 	if (enemyPosition.x < targetPosition.x) {
 		movementComponent->removeMovementDirection(enemyEntity, LEFT);
 		movementComponent->setMovementDirection(enemyEntity, RIGHT);
 		if (diff_y <= diff_x){
-			transformComponent->setFacingDirection(enemyEntity, RIGHT);
+			transformComponent->hardSetFacingDirection(enemyEntity, RIGHT);
 		}
 	}
 }
@@ -188,40 +179,52 @@ void EnemySystem::returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* en
 	// Have to simulate movement in this method so that we can check if the enemy
 	// is back to their starting position, but leave it to MovementSystem to actually
 	// move the entity
-	if (enemyPosition.x > startPosition.x) {
-		enemyPosition = { enemyPosition.x - step, enemyPosition.y };
-		movementComponent->removeMovementDirection(enemyEntity, RIGHT);
-		movementComponent->setMovementDirection(enemyEntity, LEFT);
-		transformComponent->setFacingDirection(enemyEntity, LEFT);
-	}
-
-	if (enemyPosition.x < startPosition.x) {
-		enemyPosition = { enemyPosition.x + step, enemyPosition.y };
-		movementComponent->removeMovementDirection(enemyEntity, LEFT);
-		movementComponent->setMovementDirection(enemyEntity, RIGHT);
-		transformComponent->setFacingDirection(enemyEntity, RIGHT);
-	}
-
 	if (enemyPosition.y > startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y - step };
 		movementComponent->removeMovementDirection(enemyEntity, DOWN);
 		movementComponent->setMovementDirection(enemyEntity, UP);
-		transformComponent->setFacingDirection(enemyEntity, UP);
+		transformComponent->hardSetFacingDirection(enemyEntity, UP);
 	}
 
 	if (enemyPosition.y < startPosition.y) {
 		enemyPosition = { enemyPosition.x, enemyPosition.y + step };
 		movementComponent->removeMovementDirection(enemyEntity, UP);
 		movementComponent->setMovementDirection(enemyEntity, DOWN);
-		transformComponent->setFacingDirection(enemyEntity, DOWN);
+		transformComponent->hardSetFacingDirection(enemyEntity, DOWN);
+	}
+
+	if (enemyPosition.x > startPosition.x) {
+		enemyPosition = { enemyPosition.x - step, enemyPosition.y };
+		movementComponent->removeMovementDirection(enemyEntity, RIGHT);
+		movementComponent->setMovementDirection(enemyEntity, LEFT);
+		transformComponent->hardSetFacingDirection(enemyEntity, LEFT);
+	}
+
+	if (enemyPosition.x < startPosition.x) {
+		enemyPosition = { enemyPosition.x + step, enemyPosition.y };
+		movementComponent->removeMovementDirection(enemyEntity, LEFT);
+		movementComponent->setMovementDirection(enemyEntity, RIGHT);
+		transformComponent->hardSetFacingDirection(enemyEntity, RIGHT);
+	}
+
+	// If position within half a tile radius away from starting position, start patrolling again
+	if (enemyPosition.x <= (startPosition.x + (TILE_WIDTH / 2)) &&
+			enemyPosition.x >= (startPosition.x - (TILE_WIDTH / 2)) &&
+			enemyPosition.y >= (startPosition.y - (TILE_HEIGHT / 2)) &&
+			enemyPosition.y <= (startPosition.y + (TILE_HEIGHT / 2)))
+	{
+		enemy->action = PATROL;
+		movementComponent->resetMovementDirection(enemyEntity);
+		enemy->t = 0.0f;
+		enemy->dir = 1;
 	}
 
 	// If position will no longer change (as close to starting position as possible),
 	// Set back to patrol
-	if (enemyPosition.x == et->m_position.x && enemyPosition.y == et->m_position.y) {
-		enemy->action = PATROL;
-		movementComponent->resetMovementDirection(enemyEntity);
-	}
+	// if (enemyPosition.x == et->m_position.x && enemyPosition.y == et->m_position.y) {
+	// 	enemy->action = PATROL;
+	// 	movementComponent->resetMovementDirection(enemyEntity);
+	// }
 }
 
 // Set the enemy on patrol
@@ -229,8 +232,9 @@ void EnemySystem::patrolEnemy(Enemy* enemy, Entity* enemyEntity, Transform* et, 
 
 	if (movementComponent->getMovementDirection(enemyEntity) == NO_DIRECTION) {
 		enemy->start = et->m_position;
+		et->facingDirection = RIGHT;
 		movementComponent->setMovementDirection(enemyEntity, 99);
-		}
+	}
 	else {
 
 		vec2 b = enemy->start;
@@ -278,21 +282,10 @@ void EnemySystem::handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform)
 		currNode = decision_tree.at(nextNodePos);
 		action = currNode->getAction();
 	}
-	// One of node 2's children nodes are a decision node and the other is an end node
-	else if (nextNodePos == 2) {
-		nextNodePos = currNode->getNextNode(samTransform->m_position.x <= 600);
-		currNode = decision_tree.at(nextNodePos);
 
-		if (nextNodePos == 4) {
-			nextNodePos = currNode->getNextNode(enemy->action == CHASE_TORCH);
-			currNode = decision_tree.at(nextNodePos);
-			action = currNode->getAction();
-		} else if (nextNodePos == 5) {
-			action = currNode->getAction();
-		}
-	}
+	action = currNode->getAction();
 
-	if (action != MAINTAIN_ACTION) {
+	if (action != MAINTAIN_ACTION && action != enemy->action) {
 		enemy->action = action;
 	}
 }
@@ -305,28 +298,28 @@ void EnemySystem::goToTarget(vec2 startPosition, vec2 targetPosition, Entity* en
 		movementComponent->removeMovementDirection(entity, DOWN);
 		movementComponent->setMovementDirection(entity, UP);
 		if (diff_y > diff_x){
-			transformComponent->setFacingDirection(entity, UP);
+			transformComponent->hardSetFacingDirection(entity, UP);
 		}
 	}
 	if(startPosition.y < targetPosition.y) {
 		movementComponent->removeMovementDirection(entity, UP);
 		movementComponent->setMovementDirection(entity, DOWN);
 		if (diff_y > diff_x ){
-			transformComponent->setFacingDirection(entity, DOWN);
+			transformComponent->hardSetFacingDirection(entity, DOWN);
 		}
 	}
 	if (startPosition.x > targetPosition.x) {
 		movementComponent->removeMovementDirection(entity, RIGHT);
 		movementComponent->setMovementDirection(entity, LEFT);
 		if (diff_y <= diff_x){
-			transformComponent->setFacingDirection(entity, LEFT);
+			transformComponent->hardSetFacingDirection(entity, LEFT);
 		}
 	}
 	if (startPosition.x < targetPosition.x) {
 		movementComponent->removeMovementDirection(entity, LEFT);
 		movementComponent->setMovementDirection(entity, RIGHT);
 		if (diff_y <= diff_x){
-			transformComponent->setFacingDirection(entity, RIGHT);
+			transformComponent->hardSetFacingDirection(entity, RIGHT);
 		}
 	}
 }

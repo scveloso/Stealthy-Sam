@@ -87,6 +87,7 @@ bool GameStateCmp::loadGame() {
     held_item = savefile["held_item"];
 
     // Start game when reloaded
+    num_lit_cauldrons = 0;
     is_game_paused = false;
     in_main_menu = false;
     is_game_loading = true;
