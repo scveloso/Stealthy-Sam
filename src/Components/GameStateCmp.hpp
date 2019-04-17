@@ -27,6 +27,7 @@ public:
     bool is_game_paused;
     bool in_main_menu;
     bool in_victory_screen;
+    bool in_tutorial;
 
     // Used in EntityGenerator to decide whether to use sam position in game state
     // to spawn Sam
@@ -34,6 +35,11 @@ public:
 
     int held_item; // Used to regenerate held entities when switching rooms
     Entity* held_entity;
+
+    //text entity
+    Entity* textArray[10];
+    Entity* tutorial_text;
+
 
 
     int num_lit_cauldrons;

@@ -129,6 +129,7 @@ const std::string TUTORIAL_SCREEN = "Tutorial_Screen";
 const std::string PAUSE_SCREEN = "Pause_Screen";
 const std::string VICTORY_SCREEN = "Victory_Screen";
 const std::string MAIN_MENU = "Main_Menu";
+const std::string T1_WELCOME = "T1_Welcome";
 
 const std::string GAME_SAVED_ALERT = "Game_Saved";
 const std::string GAME_LOADED_ALERT = "Game_Loaded";
@@ -138,6 +139,7 @@ const std::string ROOM_ONE_GUID = "ROOM_ONE";
 const std::string ROOM_TWO_GUID = "ROOM_TWO";
 const std::string ROOM_THREE_GUID = "ROOM_THREE";
 const std::string ROOM_FOUR_GUID = "ROOM_FOUR";
+const std::string TUTORIAL_LEVEL_GUID = "TUTORIAL_LEVEL";
 
 const std::string ENEMY_LABEL = "Enemy.Ghost";
 const std::string BOSS_GUID = "Enemy.Boss";

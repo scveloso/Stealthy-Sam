@@ -27,4 +27,6 @@ private:
 	EnemyCone* enemy;
 	float gameLoadedMs;
 	float gameSavedMs;
+
+    void handleTutorialLighting() const;
 };

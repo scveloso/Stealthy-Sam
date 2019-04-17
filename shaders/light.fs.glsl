@@ -3,6 +3,7 @@ uniform sampler2D screen_texture;
 uniform float time;
 uniform float dead_timer;
 uniform int death_cond;
+uniform int tutorial_cond;
 
 in vec2 uv;
 in vec2 s_position;
@@ -78,6 +79,10 @@ void main()
         color= i;
       }
 
+    }
+    if (tutorial_cond == 1)
+    {
+        color = in_color;
     }
 //    color= in_color;
 

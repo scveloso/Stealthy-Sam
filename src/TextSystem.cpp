@@ -27,6 +27,7 @@ void TextSystem::update(float elapsed_ms)
   handleGameSavedAlert(elapsed_ms);
   handleGameDeathAlert();
   handleVictoryScreen();
+  handleTutorialLighting();
 }
 
 void TextSystem::handleGameLoadedAlert(float elapsed_ms) {
@@ -72,6 +73,14 @@ void TextSystem::handleGameDeathAlert() {
     objectManager->getEntityByLabel(GAME_DEATH_ALERT)->active = true;
   }
 }
+
+void TextSystem::handleTutorialLighting() const {
+  if (gameState->in_tutorial)
+  {
+    light->tutorial=1;
+  }
+}
+
 
 void TextSystem::handleVictoryScreen() {
   // If Sam died, enable death text
