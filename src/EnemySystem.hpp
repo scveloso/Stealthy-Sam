@@ -6,6 +6,7 @@
 #include "Components/MovementCmp.hpp"
 #include "DecisionNode.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
 #include <Strategies/BossStrategy.hpp>
 #include <string>
 #include <iostream>

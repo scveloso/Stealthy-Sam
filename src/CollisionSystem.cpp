@@ -204,7 +204,10 @@ void CollisionSystem::handleEnemyVisionCone(Transform* samTransform, Entity* ent
 
 		// Spotted Sam, chase him
 		if (collideWithCone) {
-			enemyComponent.updateSpecificEnemyAction(entity->id, CHASE_SAM);
+			if (enemyComponent.getEnemyAction(entity->id) != CHASE_SAM) {
+				enemyComponent.updateSpecificEnemyAction(entity->id, CHASE_SAM);
+				SoundManager::getInstance().playGhostSpotSamSound();
+			}
 		}
 	}
 }

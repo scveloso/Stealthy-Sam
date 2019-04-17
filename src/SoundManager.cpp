@@ -29,6 +29,9 @@ void SoundManager::init()
     cauldron_light_up_sound = Mix_LoadWAV(audio_path("cauldron_light_up.wav"));
     torch_dying_sound = Mix_LoadWAV(audio_path("lights_out.wav"));
 
+    // Enemies
+    ghost_spot_sam_sound = Mix_LoadWAV(audio_path("ghost_spot_sam_sound.wav"));
+
     // Menu
     menu_sound = Mix_LoadWAV(audio_path("play_menu.wav"));
     game_end_sound = Mix_LoadWAV(audio_path("game_end_sound.wav"));
@@ -55,6 +58,11 @@ void SoundManager::init()
     if (cauldron_light_up_sound == nullptr || torch_dying_sound == nullptr) {
       fprintf(stderr, "Failed to load sounds\n %s, %s\nmake sure the data directory is present",
               audio_path("cauldron_light_up.wav"), audio_path("lights_out.wav"));
+    }
+
+    if (ghost_spot_sam_sound == nullptr) {
+      fprintf(stderr, "Failed to load sounds\n %s \nmake sure the data directory is present",
+              audio_path("ghost_spot_sam_sound.wav"));
     }
 
     if (step_sound == nullptr || menu_sound == nullptr || game_end_sound == nullptr) {
@@ -140,4 +148,9 @@ void SoundManager::playMenuSound()
 void SoundManager::playGameEndSound()
 {
   Mix_PlayChannel(-1, game_end_sound, 0);
+}
+
+void SoundManager::playGhostSpotSamSound()
+{
+  Mix_PlayChannel(-1, ghost_spot_sam_sound, 0);
 }

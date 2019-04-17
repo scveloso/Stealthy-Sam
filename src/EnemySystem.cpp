@@ -292,8 +292,12 @@ void EnemySystem::handleEnemyDecisionTree(Enemy* enemy, Transform* samTransform)
 		}
 	}
 
-	if (action != MAINTAIN_ACTION) {
+	if (action != MAINTAIN_ACTION && action != enemy->action) {
 		enemy->action = action;
+
+		if (enemy->action == CHASE_SAM) {
+			SoundManager::getInstance().playGhostSpotSamSound();
+		}
 	}
 }
 
