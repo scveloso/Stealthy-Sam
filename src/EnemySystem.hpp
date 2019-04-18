@@ -25,7 +25,6 @@ public:
 	void chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity);
 	void returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* enemyEntity, float elapsed_ms);
   void goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity);
-	int in_chase;
 
 private:
 	TransformCmp* transformComponent;

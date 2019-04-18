@@ -3,7 +3,8 @@ uniform sampler2D screen_texture;
 uniform float time;
 uniform vec2 enemy_direction[5];
 uniform int death_cond;
-uniform int color_cond;
+//uniform int color_cond;
+uniform vec2 color_cond[5];
 
 in vec2 en_position[5];
 in vec2 uv;
@@ -81,17 +82,21 @@ void main()
   if (death_cond ==0){
     if (st1 || st2 || st3 || st4 || st0){
       // color= in_color;
-      if (color_cond == 0){
+        if (st1 && color_cond[1].x == 1){color= vec4(1.5,1.5,0,1) *in_color;}
+        else if (st2 && color_cond[2].x == 1){color= vec4(1.5,1.5,0,1) *in_color;}
+        else if (st3 && color_cond[3].x == 1){color= vec4(1.5,1.5,0,1) *in_color;}
+        else if (st4 && color_cond[4].x == 1){color= vec4(1.5,1.5,0,1) *in_color;}
+        else if (st0 && color_cond[0].x == 1){color= vec4(1.5,1.5,0,1) *in_color;}
+      else{
         color= in_color;
-      } else{
-        color= vec4(1.5,1.5,0,1) *in_color;
       }
 
     }
     else{
       color= vec4(0,0,0,0.1)*in_color;
     }
-  }else{
+  }
+  else{
     color= vec4(0,0,0,0.1)*in_color;
   }
 }

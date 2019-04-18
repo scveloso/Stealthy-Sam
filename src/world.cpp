@@ -284,7 +284,6 @@ bool World::update(float elapsed_ms)
 	handleUpdateAction(updateAction);
 	ms->update(elapsed_ms);
 	ls->update();
-  m_cone->update_color(es->in_chase);
 	return true;
 }
 

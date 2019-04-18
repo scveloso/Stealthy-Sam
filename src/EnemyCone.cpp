@@ -3,7 +3,7 @@
 #include <iostream>
 bool EnemyCone::init() {
 	death = 0;
-	cone_color= 0;
+	//cone_color= 0;
 
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
@@ -59,13 +59,15 @@ void EnemyCone::clear_enemy_position(){
 	for (int i=0; i < 10; i++){
 		enemy_position[i]=-1000.f;
 		enemy_direction[i]=0;
+		cone_color[i]= 0;
 		death=0;
 		// torch_light[i]= -1000.f;
 	}
 }
 
-void EnemyCone::update_color(int n){
-   cone_color = n;
+void EnemyCone::update_color(int i, float color){
+   cone_color[i]= color;
+	 cone_color[i+1]= 0;
 
 }
 
@@ -88,10 +90,11 @@ void EnemyCone::draw(const mat3& projection) {
 	GLint color_cond= glGetUniformLocation(effect.program, "color_cond");
 
 	glUniform1i(death_cond, death);
-	glUniform1i(color_cond, cone_color);
+	//glUniform1i(color_cond, cone_color);
 
 	glUniform2fv(en_position, 5, enemy_position);
 	glUniform2fv(en_direction, 5, enemy_direction);
+	glUniform2fv(color_cond, 5, cone_color);
 
 	glUniform1i(screen_text_uloc, 0);
 	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
