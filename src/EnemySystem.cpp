@@ -27,6 +27,7 @@ void EnemySystem::init(ObjectManager* om, TransformCmp* tc, EnemyCmp ec, Movemen
 	movementComponent = mc;
 	itemComponent = itc;
 	gameStateComponent = gsc;
+	in_chase=0;
 
 	initDecisionTree();
 }
@@ -77,15 +78,19 @@ int EnemySystem::update(float elapsed_ms) {
 		{
 			case PATROL:
 				patrolEnemy(enemy, enemyEntity, et, elapsed_ms);
+				in_chase=0;
 				break;
 			case CHASE_SAM:
 				chaseTarget(enemy, et, samTransform, enemyEntity);
+				in_chase=1;
 				break;
 			case RETURN_TO_PATROL:
 				returnToPatrolPosition(enemy, et, enemyEntity, elapsed_ms);
+				in_chase=0;
 				break;
 			case CHASE_TORCH:
 				tryChaseThrownTorch(enemy, et, enemyEntity);
+				in_chase=1;
 				break;
 			case MOVE_TO_TOP_RIGHT_QUAD:
 				goToTarget(et->m_position, BOSS_POSITION_TOP_RIGHT, enemyEntity);

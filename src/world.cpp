@@ -213,6 +213,7 @@ void World::makeSystems()
 	ts = new TextSystem();
 	ls = new LightSystem();
 	missileSystem = new MissileSystem();
+	//es->in_chase=0;
 
 	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem);
 }
@@ -283,7 +284,7 @@ bool World::update(float elapsed_ms)
 	handleUpdateAction(updateAction);
 	ms->update(elapsed_ms);
 	ls->update();
-
+  m_cone->update_color(es->in_chase);
 	return true;
 }
 

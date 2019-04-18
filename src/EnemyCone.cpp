@@ -3,6 +3,7 @@
 #include <iostream>
 bool EnemyCone::init() {
 	death = 0;
+	cone_color= 0;
 
 	// Since we are not going to apply transformation to this screen geometry
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
@@ -63,6 +64,11 @@ void EnemyCone::clear_enemy_position(){
 	}
 }
 
+void EnemyCone::update_color(int n){
+   cone_color = n;
+
+}
+
 void EnemyCone::draw(const mat3& projection) {
 	// Enabling alpha channel for textures
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -79,8 +85,11 @@ void EnemyCone::draw(const mat3& projection) {
   GLint en_position= glGetUniformLocation(effect.program, "enemy_position");
 	GLint en_direction= glGetUniformLocation(effect.program, "enemy_direction");
 	GLint death_cond= glGetUniformLocation(effect.program, "death_cond");
+	GLint color_cond= glGetUniformLocation(effect.program, "color_cond");
 
 	glUniform1i(death_cond, death);
+	glUniform1i(color_cond, cone_color);
+
 	glUniform2fv(en_position, 5, enemy_position);
 	glUniform2fv(en_direction, 5, enemy_direction);
 
