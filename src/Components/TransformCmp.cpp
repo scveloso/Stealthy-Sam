@@ -9,6 +9,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->height = 0.0f;
 	tb->visible = true;
 	tb->facingDirection = NO_DIRECTION;
+	tb->body = NULL;
 	transform_map[entity->id] = tb;
 }
 
@@ -99,6 +100,11 @@ bool TransformCmp::isFacingDown(Entity* entity)
 void TransformCmp::setRotation(Entity* entity, float rotation)
 {
 	transform_map[entity->id]->m_rotation = rotation;
+}
+
+void TransformCmp::hardSetFacingDirection(Entity *entity, int facingDirection)
+{
+	transform_map[entity->id]->facingDirection = facingDirection;
 }
 
 void TransformCmp::setFacingDirection(Entity *entity, int facingDirection)

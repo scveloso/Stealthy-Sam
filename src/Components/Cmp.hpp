@@ -13,15 +13,21 @@ public:
 
 struct Draw : public Renderable
 {
+	// All entities have this texture
 	Texture texture;
+
+	// Sam textures
 	Texture up;
 	Texture down;
 	Texture stepup1;
 	Texture stepup2;
 	Texture stepdown1;
-    Texture stepdown2;
-    Texture stepside1;
-    Texture stepside2;
+  Texture stepdown2;
+  Texture stepside1;
+  Texture stepside2;
+
+	// Basic enemy - chase texture
+	Texture chase;
 };
 
 struct Transform
@@ -34,6 +40,7 @@ struct Transform
 	bool visible;
 	int facingDirection;
 	int prevFacingDirection;
+	btRigidBody* body;
 };
 
 struct Collision
@@ -41,6 +48,9 @@ struct Collision
 	bool closet;
 	bool wall;
 	float torch_light_countdown_ms;
+	btRigidBody* body;
+	btCollisionShape* shape;
+	int tag;
 };
 
 struct Enemy

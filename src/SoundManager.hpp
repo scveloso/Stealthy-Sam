@@ -22,6 +22,8 @@ private:
   Mix_Chunk* step_sound;
   Mix_Chunk* torch_dying_sound;
 
+  Mix_Chunk* ghost_spot_sam_sound;
+
   Mix_Chunk* menu_sound;
 
   Mix_Chunk* game_end_sound;
@@ -54,4 +56,6 @@ public:
 
   void playMenuSound();
   void playGameEndSound();
+
+  void playGhostSpotSamSound();
 };

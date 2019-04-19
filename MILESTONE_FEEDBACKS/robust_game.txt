@@ -1,0 +1,27 @@
+
+# Team 5
+Grades: 81/100
+
+The game has all basic mechanics implemented and a new boss scene is added. The game mechanic of the torch is interesting. There is one part that I found confusing when playing. I found it hard to tell whether the ghosts have noticed me (as pointed out by Ed from the last milestone “the ghosts should be chasing the player if seen in the cone of vision, but it didn't seem to really happen”). I strongly suggest to add some visual/sound indications when the ghosts spot the player (e.g. changing color).
+
+If time allows, consider to add 1-2 new scenes and maybe a new type of enemy.
+
+## Milestone requirements (56)
+
++10/10 Gameplay (6 min): The game has enough contents. 
++15/15 Performance & Robust Playing: The game runs without lag or crash and terminates gracefully.
++5/5 Correct Time Step.
++10/20 Memory: The game leaks memory:
+Visual Leak Detector detected 4283 memory leaks (376334 bytes).
+Two major locations: EntityGenerator::generateEntities(), World::makeSystems().
++8/10 Reloadable: Current save function doesn’t save the ghost locations.
++8/15 Bugs & Glitches:
+- -3 The current pause stops all the game functions including the help screen, which is counter-intuitive to the player.
+- -2 When the player is hiding in the closet, the halo should center at the closet
+- -2 The cauldron light should have the same brightness when overlapping with the torch light (in the current version, the cauldron looks darker).
+
+## Milestone creative (25)
+
++15 New lighting logics: a new light source (cauldron); interactions between different light sources; ghosts can extinguish the torch.
++10 Boss: a new boss scene.
+

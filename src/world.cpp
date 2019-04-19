@@ -27,6 +27,12 @@ MissileSystem* missileSystem;
 // Game State component
 GameStateCmp* gameState;
 
+btDefaultCollisionConfiguration* collisionConfiguration;
+btCollisionDispatcher* dispatcher;
+btBroadphaseInterface* overlappingPairCache;
+btSequentialImpulseConstraintSolver * solver;
+btDiscreteDynamicsWorld* dynamicsWorld;
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -160,10 +166,6 @@ bool World::init(vec2 screen)
 	if (!standardEffect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-    //Uncomment if you want to start on level 4
-    // gameState->current_room = ROOM_FOUR_GUID;
-    // gameState->held_item = TORCH;
-
 	generateEntities();
 
 	return true;
@@ -175,19 +177,15 @@ void World::generateEntities()
 	std::string room_path = "";
 	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
 		room_path = map_path("level_one_with_key.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
 		room_path = map_path("level_one.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_TWO_GUID) {
 		room_path = map_path("level_two.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_THREE_GUID) {
 		room_path = map_path("level_three.json");
-		SoundManager::getInstance().playBackgroundMusic();
 	}
 	else if (gameState->current_room == ROOM_FOUR_GUID) {
 		room_path = map_path("level_four.json");
@@ -208,6 +206,16 @@ void World::generateEntities()
 
 void World::makeSystems()
 {
+    // Make the Bullet physics world
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    overlappingPairCache = new btDbvtBroadphase();
+    solver = new btSequentialImpulseConstraintSolver();
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    dynamicsWorld->setGravity(btVector3(0, 0, 0));
+
+
+
 	objectManager = new ObjectManager();
 	ds = new DrawSystem();
 	inputSys = new InputSystem();
@@ -218,7 +226,7 @@ void World::makeSystems()
 	ls = new LightSystem();
 	missileSystem = new MissileSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, dynamicsWorld);
 }
 
 
@@ -272,18 +280,23 @@ bool World::update(float elapsed_ms)
 {
 	ts->update(elapsed_ms);
 
-	if (gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive) {
+	if (gameState->is_game_paused ||
+			gameState->in_main_menu ||
+			!gameState->sam_is_alive ||
+			gameState->in_victory_screen) {
 		return true;
 	}
 
 	// Update Systems
 	int updateAction = es->update(elapsed_ms);
-  handleUpdateAction(updateAction);
+    handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
 	ms->update(elapsed_ms);
 	ls->update();
+
+	dynamicsWorld->stepSimulation(elapsed_ms);
 
 	return true;
 }

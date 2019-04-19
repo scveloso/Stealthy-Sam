@@ -23,97 +23,128 @@ void MovementSystem::init(ObjectManager* om, TransformCmp* tc, CollisionCmp* cc,
 // If movement to a new position will be interrupted, cancel movement
 void MovementSystem::update(float elapsed_ms)
 {
-	for (auto& it : movementComponent->getmap()) {
-        Entity *entity = objectManager->getEntity(it.first);
+	for (auto& it : movementComponent->getmap())
+  {
+    Entity* entity = objectManager->getEntity(it.first);
 
-        // Calculate step
-        float step = movementComponent->getStep(entity, elapsed_ms);
+    // Calculate step
+    float step = movementComponent->getStep(entity, elapsed_ms);
 
-        // For non-linear entities, check if it came to a halt
-        // and rotate it sideways for comedic effect
-        vec2 zeroVec = {0, 0};
+    // For non-linear entities, check if it came to a halt
+    // and rotate it sideways for comedic effect
+    vec2 zeroVec = {0, 0};
 
-        if (step < 0) {
+    if (step < 0) {
+      movementComponent->setCurrSpeed(entity, 0);
+      movementComponent->resetMovementDirection(entity);
+      movementComponent->setVecDirection(entity, zeroVec);
+    }
+
+    // If Sam is dead, continue
+    if (entity->id == SAMS_GUID && !gameState->sam_is_alive)
+    {
+        continue;
+    }
+
+    Transform* entityTransform = transformComponent->getTransform(entity);
+
+    if (entityTransform->body != NULL) {
+        // Handled by bullet physics, ignore other stuff
+        btTransform transform;
+        entityTransform->body->getMotionState()->getWorldTransform(transform);
+        btVector3 pos = transform.getOrigin();
+
+        entityTransform->m_position = { pos.getX(), pos.getY() };
+        continue;
+    }
+    int movementDirection = movementComponent->getMovementDirection(entity);
+    vec2 vecDirection = movementComponent->getVecDirection(entity);
+    vec2 oldPosition = entityTransform->m_position;
+
+    if (transformComponent->getTransform(entity)->visible)
+    {
+
+		if (movementDirection % 99 == 0) {
+			//do nothing
+		}
+      if (vecDirection.x != 0 || vecDirection.y != 0)
+      {
+          entityTransform->m_position = { oldPosition.x + (step * vecDirection.x), oldPosition.y + (step * vecDirection.y)};
+          cauldronCheck(entity, entityTransform);
+
+          if (is_movement_interrupted(entity, entityTransform))
+          {
             movementComponent->setCurrSpeed(entity, 0);
-            movementComponent->resetMovementDirection(entity);
-            movementComponent->setVecDirection(entity, zeroVec);
-        }
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
 
-        // If Sam is dead, continue
-        if (entity->id == SAMS_GUID && !gameState->sam_is_alive) {
-            continue;
-        }
+          continue;
+      }
 
-        Transform *entityTransform = transformComponent->getTransform(entity);
-        int movementDirection = movementComponent->getMovementDirection(entity);
-        vec2 vecDirection = movementComponent->getVecDirection(entity);
-        vec2 oldPosition = entityTransform->m_position;
+      if (movementDirection % DOWN == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y + step };
+          cauldronCheck(entity, entityTransform);
+          if (is_movement_interrupted(entity, entityTransform))
+          {
+            movementComponent->setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
 
-        if (transformComponent->getTransform(entity)->visible) {
+      if (movementDirection % UP == 0)
+      {
+          entityTransform->m_position = { oldPosition.x, oldPosition.y - step };
+          cauldronCheck(entity, entityTransform);
+          if (is_movement_interrupted(entity, entityTransform))
+          {
+            movementComponent->setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
 
-            if (movementDirection % 99 == 0) {
-                //do nothing
+      if (movementDirection % LEFT == 0)
+        {
+            entityTransform->m_position = { oldPosition.x - step, oldPosition.y };
+            cauldronCheck(entity, entityTransform);
+
+            if (is_movement_interrupted(entity, entityTransform))
+            {
+              movementComponent->setCurrSpeed(entity, 0);
+              entityTransform->m_position = oldPosition;
             }
-            if (vecDirection.x != 0 || vecDirection.y != 0) {
-                entityTransform->m_position = {oldPosition.x + (step * vecDirection.x),
-                                               oldPosition.y + (step * vecDirection.y)};
-                cauldronCheck(entity, entityTransform);
-
-                if (is_movement_interrupted(entity, entityTransform)) {
-                    movementComponent->setCurrSpeed(entity, 0);
-                    entityTransform->m_position = oldPosition;
-                } else {
-                    oldPosition = entityTransform->m_position;
-                }
-
-                continue;
-            }
-
-            if (movementDirection % DOWN == 0) {
-                entityTransform->m_position = {oldPosition.x, oldPosition.y + step};
-                cauldronCheck(entity, entityTransform);
-                if (is_movement_interrupted(entity, entityTransform)) {
-                    movementComponent->setCurrSpeed(entity, 0);
-                    entityTransform->m_position = oldPosition;
-                } else {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % UP == 0) {
-                entityTransform->m_position = {oldPosition.x, oldPosition.y - step};
-                cauldronCheck(entity, entityTransform);
-                if (is_movement_interrupted(entity, entityTransform)) {
-                    movementComponent->setCurrSpeed(entity, 0);
-                    entityTransform->m_position = oldPosition;
-                } else {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % LEFT == 0) {
-                entityTransform->m_position = {oldPosition.x - step, oldPosition.y};
-                cauldronCheck(entity, entityTransform);
-
-                if (is_movement_interrupted(entity, entityTransform)) {
-                    movementComponent->setCurrSpeed(entity, 0);
-                    entityTransform->m_position = oldPosition;
-                } else {
-                    oldPosition = entityTransform->m_position;
-                }
-            }
-
-            if (movementDirection % RIGHT == 0) {
-                entityTransform->m_position = {oldPosition.x + step, oldPosition.y};
-                cauldronCheck(entity, entityTransform);
-                if (is_movement_interrupted(entity, entityTransform)) {
-                    movementComponent->setCurrSpeed(entity, 0);
-                    entityTransform->m_position = oldPosition;
-                } else {
-                    oldPosition = entityTransform->m_position;
-                }
+            else
+            {
+              oldPosition = entityTransform->m_position;
             }
         }
+
+      if (movementDirection % RIGHT == 0)
+      {
+          entityTransform->m_position = { oldPosition.x + step, oldPosition.y };
+          cauldronCheck(entity, entityTransform);
+          if (is_movement_interrupted(entity, entityTransform))
+          {
+            movementComponent->setCurrSpeed(entity, 0);
+            entityTransform->m_position = oldPosition;
+          }
+          else
+          {
+            oldPosition = entityTransform->m_position;
+          }
+      }
     }
     handleBossDoorTimer(elapsed_ms);
 }

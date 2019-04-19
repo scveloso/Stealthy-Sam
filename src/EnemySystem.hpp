@@ -6,6 +6,8 @@
 #include "Components/MovementCmp.hpp"
 #include "DecisionNode.hpp"
 #include "ObjectManager.hpp"
+#include "SoundManager.hpp"
+#include "EnemyCone.hpp"
 #include <Strategies/BossStrategy.hpp>
 #include <string>
 #include <iostream>
@@ -22,7 +24,7 @@ public:
 	void tryChaseThrownTorch(Enemy* enemy, Transform* et, Entity* enemyEntity);
 	void chaseTarget(Enemy* enemy, Transform* et, Transform* gt, Entity* enemyEntity);
 	void returnToPatrolPosition(Enemy* enemy, Transform* et, Entity* enemyEntity, float elapsed_ms);
-    void goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity);
+  void goToTarget(vec2 startPosition, vec2 targetPosition, Entity* entity);
 
 private:
 	TransformCmp* transformComponent;

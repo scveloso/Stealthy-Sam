@@ -2,17 +2,20 @@
 #include "DrawSystem.hpp"
 #include "Components/Cmp.hpp"
 #include "common.hpp"
+#include "Strategies/strategies_common.hpp"
+#include "MissileSystem.hpp"
 
 // System to handle drawing ALL relevant entities
 //
 // Has access to DrawCmp to know which texture to draw for an entity.
 // Has access to GameStateCmp to allow other systems to know where Sam is.
 // Has access to TransformCmp to know where everything is.
-void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp)
+void DrawSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, EnemyCmp ec, GameStateCmp* gameStateCmp)
 {
 	objectManager = om;
 	drawComponent = dc;
 	transformComponent = tc;
+	enemyComponent = ec;
 	movementComponent = mc;
 	gameState = gameStateCmp;
 	stepTimer = 20;
@@ -93,6 +96,8 @@ void DrawSystem::update(const mat3 projection)
 				continue;
 			}
 
+
+
 			draw->transform_begin();
 			draw->transform_translate(transformComponent->getTransform(entity)->m_position);
 			draw->transform_rotate(transformComponent->getTransform(entity)->m_rotation);
@@ -156,7 +161,7 @@ void DrawSystem::update(const mat3 projection)
 								if (gameState->sam_is_alive) {
 									if (movDir != NO_DIRECTION) {
 										if (stepTimer == 20) {
-											SoundManager::getInstance().playStep();
+											playStep();
 										}
 									}
 
@@ -229,7 +234,14 @@ void DrawSystem::update(const mat3 projection)
                 } else {
                     glBindTexture(GL_TEXTURE_2D, draw->down.id);
                 }
-            } else {
+            } else if (entity->label == ENEMY_LABEL) {
+							int enemyAction = enemyComponent.getEnemyAction(entity->id);
+							if (enemyAction == CHASE_SAM) {
+								glBindTexture(GL_TEXTURE_2D, draw->chase.id);
+							} else {
+								glBindTexture(GL_TEXTURE_2D, draw->texture.id);
+							}
+						} else {
                 glBindTexture(GL_TEXTURE_2D, draw->texture.id);
             }
 
@@ -254,6 +266,13 @@ void DrawSystem::updateUI(const mat3 projection)
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
+
+		// Skip missiles when not in game
+		if ((gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive || gameState->in_victory_screen)
+            && entity->label.rfind(MISSILE_LABEL_PREFIX, 0) == 0)
+        {
+		    continue;
+        }
 
 		// Don't draw inactive entities
 		if (entity->ui && entity->active) {
@@ -309,4 +328,12 @@ void DrawSystem::updateUI(const mat3 projection)
 			//printf("DRAWING\n");
 		}
 	}
+}
+
+void DrawSystem::playStep() {
+	if (gameState->in_main_menu || gameState->in_victory_screen || gameState->is_game_paused) {
+		return;
+	}
+
+	SoundManager::getInstance().playStep();
 }

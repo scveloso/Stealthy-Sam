@@ -74,14 +74,21 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
       case GLFW_KEY_N: {
         returnAction = START_NEW_GAME;
         SoundManager::getInstance().playMenuSound();
+        SoundManager::getInstance().playBackgroundMusic();
         break;
       }
       case GLFW_KEY_L: {
         bool loadResult = loadGame();
         if (loadResult) {
           returnAction = LOAD_GAME;
+          SoundManager::getInstance().playMenuSound();
+
+          if (gameState->current_room == ROOM_FOUR_GUID) {
+            SoundManager::getInstance().playBossMusic();
+          } else {
+            SoundManager::getInstance().playBackgroundMusic();
+          }
         }
-        SoundManager::getInstance().playMenuSound();
         break;
       }
       case GLFW_KEY_T: {
@@ -115,13 +122,20 @@ int InputSystem::on_key(GLFWwindow *, int key, int _, int action, int mod)
           bool loadResult = loadGame();
           if (loadResult) {
             returnAction = LOAD_GAME;
+            SoundManager::getInstance().playMenuSound();
+
+            if (gameState->current_room == ROOM_FOUR_GUID) {
+              SoundManager::getInstance().playBossMusic();
+            } else {
+              SoundManager::getInstance().playBackgroundMusic();
+            }
           }
-          SoundManager::getInstance().playMenuSound();
           break;
         }
         case GLFW_KEY_N: {
           returnAction = START_NEW_GAME;
           SoundManager::getInstance().playMenuSound();
+          SoundManager::getInstance().playBackgroundMusic();
           break;
         }
         case GLFW_KEY_M: {

@@ -10,7 +10,7 @@
 
 class MissileSystem {
 public:
-    void init(ObjectManager* om, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp, DrawCmp* drawCmp, TransformCmp* transformCmp);
+    void init(ObjectManager* om, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp, DrawCmp* drawCmp, TransformCmp* transformCmp, btDiscreteDynamicsWorld* dw);
     std::pair<std::string, Draw*> spawnMissile();
 private:
     CollisionCmp* collisionComponent;
@@ -20,5 +20,7 @@ private:
     DrawCmp *drawComponent;
     TransformCmp *transformCmp;
     int num_missiles;
+    btDiscreteDynamicsWorld* dynamicWorld;
 };
 const std::string MISSILE_LABEL_PREFIX = "Missile_";
+void createMissile(Entity* self, Collision* collision, vec2 pos);
