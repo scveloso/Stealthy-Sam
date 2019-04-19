@@ -3,6 +3,7 @@
 #include "Components/Cmp.hpp"
 #include "common.hpp"
 #include "Strategies/strategies_common.hpp"
+#include "MissileSystem.hpp"
 
 // System to handle drawing ALL relevant entities
 //
@@ -265,6 +266,13 @@ void DrawSystem::updateUI(const mat3 projection)
 	{
 		Entity *entity = it.first;
 		Draw *draw = it.second;
+
+		// Skip missiles when not in game
+		if ((gameState->is_game_paused || gameState->in_main_menu || !gameState->sam_is_alive || gameState->in_victory_screen)
+            && entity->label.rfind(MISSILE_LABEL_PREFIX, 0) == 0)
+        {
+		    continue;
+        }
 
 		// Don't draw inactive entities
 		if (entity->ui && entity->active) {

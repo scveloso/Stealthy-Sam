@@ -92,8 +92,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
 
 					Collision* collision = collisionCmp.getCollision(entity);
-					collision->shape = new btBoxShape(btVector3(16, 16, 0));
-					collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -125,8 +123,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -141,8 +137,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -157,8 +151,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -218,8 +210,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -234,8 +224,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -250,8 +238,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -266,8 +252,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -282,8 +266,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -297,8 +279,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -313,8 +293,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -329,8 +307,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -354,8 +330,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -398,8 +372,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     Collision* collision = collisionCmp.getCollision(entity);
-                    collision->shape = new btBoxShape(btVector3(16, 16, 0));
-                    collision->shape->setLocalScaling({3.125f, 3.125f, 0});
                     createWallPhysicsObject(entity, collision, {x, y});
 
                     dynamicWorld->addRigidBody(collision->body);
@@ -1465,6 +1437,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos)
 {
+    collision->shape = new btBoxShape(btVector3(40, 40, 1));
     // Set default rotation and pos from param
     btQuaternion rotation;
     rotation.setEulerZYX(0,0,0);
@@ -1473,16 +1446,19 @@ void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos)
 
     btScalar bodyMass = 0;
     btVector3 bodyInertia = btVector3(0, 0, 0);
-    collision->shape->calculateLocalInertia(bodyMass, bodyInertia);
 
     btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(bodyMass, motionState, collision->shape, bodyInertia);
 
     // Restitution is how much energy is retained on bouncing
-    bodyCI.m_restitution = 0.9f;
-    bodyCI.m_friction = 0.5f;
+    bodyCI.m_restitution = 1.f;
+    bodyCI.m_friction = 0.1f;
 
     collision->body = new btRigidBody(bodyCI);
     collision->body->setUserPointer(self);
+
+    collision->body->setCollisionFlags(collision->body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT );
+    collision->body->setActivationState( DISABLE_DEACTIVATION );
+    collision->body->activate(true);
 
     // Limit it to the xy plane and not have any z movement
     collision->body->setLinearFactor(btVector3(1,1,0));
