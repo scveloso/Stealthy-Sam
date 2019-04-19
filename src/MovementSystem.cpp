@@ -147,9 +147,11 @@ void MovementSystem::update(float elapsed_ms)
       }
     }
     handleBossDoorTimer(elapsed_ms);
+    }
 }
 
-void MovementSystem::handleBossDoorTimer(float elapsed_ms) const {
+void MovementSystem::handleBossDoorTimer(float elapsed_ms) const
+{
     if (gameState->special_door_countdown_ms > 0.f) {
         gameState->special_door_countdown_ms -= elapsed_ms;
         if (gameState->special_door_countdown_ms <= 0.f) {
