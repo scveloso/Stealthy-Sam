@@ -1457,7 +1457,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	enemySystem->		init(		objectManager, &transformCmp, enemyCmp		, &movementCmp	, itemCmp, gameState);
 	movementSystem->	init(		objectManager, &transformCmp, &collisionCmp	, &movementCmp	, gameState);
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
-	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
+	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy, &enemyCmp);
     missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp, dynamicWorld);
 
 	drawSystem->setup(effect);

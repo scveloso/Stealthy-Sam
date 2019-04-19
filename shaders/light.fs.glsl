@@ -44,6 +44,11 @@ void main()
     bool dt3 = d_torch[3] <= r*r;
     bool dt4 = d_torch[4] <= r*r;
     bool dt0 = d_torch[0] <= r*r;
+		// bool dt1 = d_torch[1] > 0;
+    // bool dt2 = d_torch[2] > 0;
+    // bool dt3 = d_torch[3] > 0;
+    // bool dt4 = d_torch[4] > 0;
+    // bool dt0 = d_torch[0] > 0;
     float p = dimmer(d);
 
     if (death_cond ==0){
@@ -65,9 +70,9 @@ void main()
       else if (time < 5*10){
         color = in_color*p*(time/50);
       }
-      else{
-        color= (in_color*p);
-      }
+			else{
+				color= (in_color*p);
+			}
     }
 
     else if (death_cond == 1) {
@@ -84,6 +89,6 @@ void main()
     {
         color = in_color;
     }
-//    color= in_color;
+
 
 }
