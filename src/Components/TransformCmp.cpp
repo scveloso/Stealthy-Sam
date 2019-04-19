@@ -9,6 +9,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	tb->height = 0.0f;
 	tb->visible = true;
 	tb->facingDirection = NO_DIRECTION;
+	tb->body = NULL;
 	transform_map[entity->id] = tb;
 }
 

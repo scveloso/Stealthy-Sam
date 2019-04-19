@@ -27,6 +27,12 @@ MissileSystem* missileSystem;
 // Game State component
 GameStateCmp* gameState;
 
+btDefaultCollisionConfiguration* collisionConfiguration;
+btCollisionDispatcher* dispatcher;
+btBroadphaseInterface* overlappingPairCache;
+btSequentialImpulseConstraintSolver * solver;
+btDiscreteDynamicsWorld* dynamicsWorld;
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -204,6 +210,16 @@ void World::generateEntities()
 
 void World::makeSystems()
 {
+    // Make the Bullet physics world
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    overlappingPairCache = new btDbvtBroadphase();
+    solver = new btSequentialImpulseConstraintSolver();
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    dynamicsWorld->setGravity(btVector3(0, 0, 0));
+
+
+
 	objectManager = new ObjectManager();
 	ds = new DrawSystem();
 	inputSys = new InputSystem();
@@ -213,9 +229,8 @@ void World::makeSystems()
 	ts = new TextSystem();
 	ls = new LightSystem();
 	missileSystem = new MissileSystem();
-	//es->in_chase=0;
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, dynamicsWorld);
 }
 
 
@@ -284,6 +299,9 @@ bool World::update(float elapsed_ms)
 	handleUpdateAction(updateAction);
 	ms->update(elapsed_ms);
 	ls->update();
+
+	dynamicsWorld->stepSimulation(elapsed_ms);
+
 	return true;
 }
 

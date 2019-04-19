@@ -40,6 +40,7 @@ struct Transform
 	bool visible;
 	int facingDirection;
 	int prevFacingDirection;
+	btRigidBody* body;
 };
 
 struct Collision
@@ -47,6 +48,9 @@ struct Collision
 	bool closet;
 	bool wall;
 	float torch_light_countdown_ms;
+	btRigidBody* body;
+	btCollisionShape* shape;
+	int tag;
 };
 
 struct Enemy
