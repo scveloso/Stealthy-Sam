@@ -79,7 +79,7 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	// separate window size for Mac OS
-	// m_window = glfwCreateWindow((int)screen.x / 2, (int)screen.y / 2, "Stealthy Sam", nullptr, nullptr);
+	//m_window = glfwCreateWindow((int)screen.x / 2, (int)screen.y / 2, "Stealthy Sam", nullptr, nullptr);
 
 	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Stealthy Sam", nullptr, nullptr);
 
@@ -175,7 +175,8 @@ bool World::init(vec2 screen)
 void World::generateEntities()
 {
 	std::string room_path = "";
-	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
+	if (gameState->current_room == ROOM_ONE_GUID && gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)
+	{
 		room_path = map_path("level_one_with_key.json");
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {

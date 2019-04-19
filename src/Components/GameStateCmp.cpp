@@ -8,6 +8,7 @@ using json = nlohmann::json;
 // Start a new game
 void GameStateCmp::init() {
     sam_is_alive = true;
+    level_one_key = false;
     level_two_key = false;
     level_three_key = false;
     previous_room = "";
@@ -40,7 +41,7 @@ void GameStateCmp::init() {
 void GameStateCmp::saveGame() {
   if (sam_is_alive && is_game_paused) {
     json savefile;
-
+    savefile["level_one_key"] = level_one_key;
     savefile["level_two_key"] = level_two_key;
     savefile["level_three_key"] = level_three_key;
     savefile["previous_room"] = previous_room;
@@ -73,6 +74,7 @@ bool GameStateCmp::loadGame() {
     // Populate game state based on save file
 
     // Load Sam progress
+    level_one_key = savefile["level_one_key"];
   	level_two_key = savefile["level_two_key"];
     level_three_key = savefile["level_three_key"];
     previous_room = savefile["previous_room"];

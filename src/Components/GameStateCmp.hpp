@@ -10,6 +10,7 @@ public:
     bool loadGame();
 
     bool sam_is_alive;
+    bool level_one_key;
     bool level_two_key;
     bool level_three_key;
 
