@@ -166,10 +166,6 @@ bool World::init(vec2 screen)
 	if (!standardEffect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-    //Uncomment if you want to start on level 4
-    // gameState->current_room = ROOM_FOUR_GUID;
-    // gameState->held_item = TORCH;
-
 	generateEntities();
 
 	return true;
@@ -293,7 +289,7 @@ bool World::update(float elapsed_ms)
 
 	// Update Systems
 	int updateAction = es->update(elapsed_ms);
-  handleUpdateAction(updateAction);
+    handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);

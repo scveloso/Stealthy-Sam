@@ -69,8 +69,8 @@ void createMissile(Entity* self, Collision* collision, vec2 pos)
     btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(bodyMass, motionState, collision->shape, bodyInertia);
 
     // Restitution is how much energy is lost on bouncing
-    bodyCI.m_restitution = 0.9f;
-    bodyCI.m_friction = 0.5f;
+    bodyCI.m_restitution = 1.0f;
+    bodyCI.m_friction = 0.1f;
 
     collision->body = new btRigidBody(bodyCI);
 
