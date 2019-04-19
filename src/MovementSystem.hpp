@@ -25,4 +25,7 @@ private:
 	ObjectManager* objectManager;
 	GameStateCmp *gameState;
 
+    void handleBossDoor(Entity *pEntity, Entity *qEntity);
+
+	void handleBossDoorTimer(float elapsed_ms) const;
 };

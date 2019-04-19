@@ -52,9 +52,9 @@ int CollisionSystem::update(float elapsed_ms)
 
 				// Handle door collisions
 				int doorUpdateAction = handleDoors(entity);
-				if (doorUpdateAction != NO_CHANGE)
-				{
-					return doorUpdateAction;
+                if (doorUpdateAction != NO_CHANGE)
+                {
+                    return doorUpdateAction;
 				}
 
 				// Handle enemy collisions
@@ -65,7 +65,7 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-        int keyUpdateAction = handleKeys(entity);
+        		int keyUpdateAction = handleKeys(entity);
 				if (keyUpdateAction != NO_CHANGE)
 				{
 					return keyUpdateAction;
@@ -114,15 +114,13 @@ int CollisionSystem::update(float elapsed_ms)
 		}
 
 		Collision* torchCmp = collisionComponent->getCollision(torchEntity);
-		if (torchCmp->torch_light_countdown_ms > 0.f)
-    {
-      torchCmp->torch_light_countdown_ms -= elapsed_ms;
-      if (torchCmp->torch_light_countdown_ms <= 0.f)
-      {
-        torchEntity->active = false;
-				SoundManager::getInstance().playTorchDying();
-      }
-    }
+		if (torchCmp->torch_light_countdown_ms > 0.f) {
+            torchCmp->torch_light_countdown_ms -= elapsed_ms;
+            if (torchCmp->torch_light_countdown_ms <= 0.f) {
+                torchEntity->active = false;
+                SoundManager::getInstance().playTorchDying();
+            }
+        }
 	}
 
 	return NO_CHANGE;

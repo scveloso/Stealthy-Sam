@@ -92,7 +92,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_TL: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
@@ -100,7 +100,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_TR: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -109,7 +109,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_ML: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Boss_Door");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -118,8 +118,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_MR: {
-					entity = objectManager->makeEntity("Wall");
-
+					entity = objectManager->makeEntity("Boss_Door");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
@@ -1249,6 +1248,13 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
     T11_Startgame->active = false;
     T11_Startgame->ui = true;
     gameState->textArray[9] = T11_Startgame;
+
+	Entity* Boss_Door_Text = objectManager->makeEntity(BOSS_DOOR_TEXT);
+	drawCmp.add(Boss_Door_Text,textures_path("text/boss_door.png"));
+	transformCmp.add(Boss_Door_Text,{600,700},{.8,.8},0.0);
+    Boss_Door_Text->active = false;
+    Boss_Door_Text->ui = true;
+
 
     if (!gameState->in_tutorial) {
 		if (gameState->level_two_key && gameState->level_three_key) {
