@@ -1,7 +1,7 @@
 #include "ParticleCmp.hpp"
 
 void ParticleCmp::add(Entity *entity) {
-	particle_map[entity->id] = PARTICLE_LIFETIME;
+	particle_map[entity->id] = 0;
 }
 
 void ParticleCmp::remove(Entity *entity) {
@@ -10,6 +10,10 @@ void ParticleCmp::remove(Entity *entity) {
 
 int ParticleCmp::getLifetime(Entity* entity) {
     return particle_map[entity->id];
+}
+
+void ParticleCmp::resetLifetime(Entity* entity) {
+    particle_map[entity->id] = PARTICLE_LIFETIME;
 }
 
 int ParticleCmp::decrementLifetime(Entity* entity) {
