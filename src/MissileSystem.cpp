@@ -53,6 +53,39 @@ std::pair<std::string, Draw*> MissileSystem::spawnMissile() {
     return std::make_pair(out.str(), drawComponent->getDrawByLabel(out.str()));
 }
 
+void MissileSystem::update() {
+    for (int i = dynamicWorld->getDispatcher()->getNumManifolds() - 1; i >= 0; --i) {
+        btCollisionObject *obj = dynamicWorld->getCollisionObjectArray()[i];
+        btPersistentManifold* manifold = dynamicWorld->getDispatcher()->getManifoldByIndexInternal(i);
+        Entity* e1 = (Entity*) manifold->getBody0()->getUserPointer();
+        Entity* e2 = (Entity*) manifold->getBody1()->getUserPointer();
+        if (manifold->getNumContacts() > 0) {
+            if (e1->label.rfind(MISSILE_LABEL_PREFIX, 0) == 0 && e2->label.rfind("Wall") == 0) {
+                bounce_number[e1->id]++;
+                if (bounce_number[e1->id] > BOUNCE_THRESHOLD) {
+                    collisionComponent->remove(e2);
+                    movementComponent->remove(e2);
+                    transformCmp->remove(e2);
+                    drawComponent->remove(e2);
+                    collisionComponent->remove(e2);
+                    dynamicWorld->removeCollisionObject(const_cast<btCollisionObject *> (manifold->getBody1()));
+                }
+            }
+            if (e2->label.rfind(MISSILE_LABEL_PREFIX, 0) == 0 && e1->label.rfind("Wall") == 0) {
+                bounce_number[e2->id]++;
+                if (bounce_number[e2->id] > BOUNCE_THRESHOLD) {
+                    collisionComponent->remove(e2);
+                    movementComponent->remove(e2);
+                    transformCmp->remove(e2);
+                    drawComponent->remove(e2);
+                    collisionComponent->remove(e2);
+                    dynamicWorld->removeCollisionObject(const_cast<btCollisionObject *> (manifold->getBody1()));
+                }
+            }
+        }
+    }
+}
+
 void createMissile(Entity* self, Collision* collision, vec2 pos)
 {
     // Set default rotation and pos from param

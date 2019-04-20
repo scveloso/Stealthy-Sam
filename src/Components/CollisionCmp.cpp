@@ -24,3 +24,8 @@ std::unordered_map<int, Collision *> CollisionCmp::getmap()
 Collision* CollisionCmp::getCollision(Entity *entity) {
 	return collision_map[entity->id];
 }
+
+void CollisionCmp::remove(Entity *entity) {
+    collision_map.erase(entity->id);
+
+}

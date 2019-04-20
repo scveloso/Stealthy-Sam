@@ -305,6 +305,8 @@ bool World::update(float elapsed_ms)
 	}
 
 	dynamicsWorld->stepSimulation(elapsed_ms);
+	missileSystem->update();
+
 
 	return true;
 }
