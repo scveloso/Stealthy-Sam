@@ -1232,25 +1232,25 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	// Key counter
 	Entity* key_0_3 = objectManager->makeEntity("key0_UI");
 	drawCmp.add(key_0_3, textures_path("text/0_3.png"));
-	transformCmp.add(key_0_3, {50,90}, {.7,.7}, 0.0);
+	transformCmp.add(key_0_3, {50,95}, {.7,.7}, 0.0);
     key_0_3->active = false;
 
 	// Key counter
 	Entity* key_1_3 = objectManager->makeEntity("key1_UI");
 	drawCmp.add(key_1_3, textures_path("text/1_3.png"));
-	transformCmp.add(key_1_3, {55,90}, {.7,.7}, 0.0);
+	transformCmp.add(key_1_3, {55,95}, {.7,.7}, 0.0);
     key_1_3->active = false;
 
 	// Key counter
 	Entity* key_2_3 = objectManager->makeEntity("key2_UI");
 	drawCmp.add(key_2_3, textures_path("text/2_3.png"));
-	transformCmp.add(key_2_3, {50,90}, {.7,.7}, 0.0);
+	transformCmp.add(key_2_3, {50,95}, {.7,.7}, 0.0);
     key_2_3->active = false;
 
     // Key counter
     Entity* key_3_3 = objectManager->makeEntity("key3_UI");
     drawCmp.add(key_3_3, textures_path("text/3_3.png"));
-    transformCmp.add(key_3_3, {50,90}, {.7,.7}, 0.0);
+    transformCmp.add(key_3_3, {50,95}, {.7,.7}, 0.0);
     key_3_3->active = false;
 
 	Entity* T1_Welcome = objectManager->makeEntity(T1_WELCOME);
@@ -1335,6 +1335,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	transformCmp.add(Boss_Door_Text,{600,700},{.8,.8},0.0);
     Boss_Door_Text->active = false;
     Boss_Door_Text->ui = true;
+
+	Entity* Boss_Text = objectManager->makeEntity(BOSS_TEXT);
+	drawCmp.add(Boss_Text,textures_path("text/boss_text.png"));
+	transformCmp.add(Boss_Text,{600,700},{.8,.8},0.0);
+	Boss_Text->active = false;
+	Boss_Text->ui = true;
 
 
     if (!gameState->in_tutorial) {

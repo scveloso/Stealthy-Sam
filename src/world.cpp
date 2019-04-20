@@ -79,7 +79,7 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	// separate window size for Mac OS
-	//m_window = glfwCreateWindow((int)screen.x / 2, (int)screen.y / 2, "Stealthy Sam", nullptr, nullptr);
+	// m_window = glfwCreateWindow((int)screen.x / 2, (int)screen.y / 2, "Stealthy Sam", nullptr, nullptr);
 
 	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Stealthy Sam", nullptr, nullptr);
 
@@ -366,7 +366,9 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
+                Entity* entity = objectManager->getEntityByLabel(BOSS_TEXT);
+                entity->active = true;
+                // m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
