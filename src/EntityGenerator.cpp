@@ -1353,6 +1353,12 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	Boss_Text->active = false;
 	Boss_Text->ui = true;
 
+	Entity* Intro_Text = objectManager->makeEntity(INTRO_TEXT);
+	drawCmp.add(Intro_Text,textures_path("text/intro_message.png"));
+	transformCmp.add(Intro_Text,{600,700},{.8,.8},0.0);
+	Intro_Text->active = false;
+	Intro_Text->ui = true;
+
 
     if (!gameState->in_tutorial) {
 		if (gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)

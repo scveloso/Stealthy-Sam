@@ -26,6 +26,7 @@ public:
     bool has_pressed_H;
     float boss_door_text_countdown_ms;
     float boss_text_countdown_ms;
+    float intro_text_countdown_ms;
 
     bool is_game_paused;
     bool in_main_menu;

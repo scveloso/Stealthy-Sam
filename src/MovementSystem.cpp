@@ -165,6 +165,12 @@ void MovementSystem::handleTimer(float elapsed_ms) const
             objectManager->getEntityByLabel(BOSS_TEXT)->active = false;
         }
     }
+    if (gameState->intro_text_countdown_ms > 0.f) {
+        gameState->intro_text_countdown_ms -= elapsed_ms;
+        if (gameState->intro_text_countdown_ms <= 0.f) {
+            objectManager->getEntityByLabel(INTRO_TEXT)->active = false;
+        }
+    }
 }
 
 void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
@@ -249,7 +255,7 @@ void MovementSystem::handleBossDoor(Entity *pEntity, Entity *qEntity) {
     {
         if (gameState->boss_door_text_countdown_ms < 0.f)
         {
-            gameState->boss_door_text_countdown_ms = 3500.f;
+            gameState->boss_door_text_countdown_ms = 10000.f;
             objectManager->getEntityByLabel(BOSS_DOOR_TEXT)->active = true;
         }
     }
