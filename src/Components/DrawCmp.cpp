@@ -19,8 +19,9 @@ void DrawCmp::remove(Entity* entity) {
     int i = 0;
     for (auto& it : draw_vec) {
         if (it.first->id == entity->id) {
-            draw_vec.erase(draw_vec.begin()+i);
-            return;
+					delete it.second;
+          draw_vec.erase(draw_vec.begin()+i);
+          return;
         }
         i++;
 	}

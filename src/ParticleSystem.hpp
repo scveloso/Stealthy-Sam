@@ -14,7 +14,10 @@ class ParticleSystem
 public:
 	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp ,ParticleCmp* particleComponent);
 	Entity* update();
-	std::pair<std::string, Draw*> spawnSmoke(Entity* entity);
+	void spawnSmoke(Entity* entity);
+
+	void clearDeadParticles();
+
 
 	vec2 s_position;
 	vec2 EBox;

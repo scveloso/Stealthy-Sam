@@ -82,6 +82,29 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					collisionCmp.add(entity);
 
                     itemCmp.add(entity);
+
+										for (int i = 0; i < 7; i++) {
+											std::ostringstream out;
+											out << SMOKE_LABEL_PREFIX << entity->id << i;
+											Entity* newSmoke = objectManager->makeEntity(out.str());
+
+											vec2 pos = transformCmp.getTransform(entity)->m_position;
+
+											int width = entity->label == TORCH_LABEL ? 5:25;
+											int y_offset = entity->label == TORCH_LABEL ? 15:TILE_WIDTH;
+											float scale = entity->label == TORCH_LABEL ? 1.5f : 3.f;
+
+											movementCmp.add(newSmoke, 25, 0);
+											movementCmp.setMovementDirection(newSmoke, UP);
+											newSmoke->ui = true;
+											drawCmp.add(newSmoke, textures_path("Dungeon/smoke_particle_new.png"));
+
+											float offset = (rand() % width) + 1;
+											float offset_m = rand() % 2 == 0 ? 1.f : -1.f;
+											vec2 spawnPos = {pos.x + (offset * offset_m) , pos.y - y_offset};
+											transformCmp.add(newSmoke, spawnPos, {scale,scale}, 0);
+											particleCmp.add(newSmoke);
+										}
 					break;
 				}
 				case TOP_LEFT_CORNER: {
@@ -318,7 +341,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
-					collisionCmp.add(entity);
 					break;
 				}
 				case UNLIT_CAULDRON: {
@@ -343,6 +365,29 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					drawCmp.add(entity, textures_path("Dungeon/LIT_CAULDRON.png"));
 					collisionCmp.add(entity);
 					entity->active = false;
+
+					for (int i = 0; i < 7; i++) {
+						std::ostringstream out;
+				    out << SMOKE_LABEL_PREFIX << entity->id << i;
+				    Entity* newSmoke = objectManager->makeEntity(out.str());
+
+				    vec2 pos = transformCmp.getTransform(entity)->m_position;
+
+				    int width = entity->label == TORCH_LABEL ? 5:25;
+				    int y_offset = entity->label == TORCH_LABEL ? 15:TILE_WIDTH;
+						float scale = entity->label == TORCH_LABEL ? 1.5f : 3.f;
+
+				    movementCmp.add(newSmoke, 25, 0);
+				    movementCmp.setMovementDirection(newSmoke, UP);
+				    newSmoke->ui = true;
+				    drawCmp.add(newSmoke, textures_path("Dungeon/smoke_particle_new.png"));
+
+				    float offset = (rand() % width) + 1;
+				    float offset_m = rand() % 2 == 0 ? 1.f : -1.f;
+				    vec2 spawnPos = {pos.x + (offset * offset_m) , pos.y - y_offset};
+				    transformCmp.add(newSmoke, spawnPos, {scale,scale}, 0);
+				    particleCmp.add(newSmoke);
+					}
 					break;
 				}
 				case PILLAR_TOP: {
@@ -1468,6 +1513,29 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 			collisionCmp.add(entity);
 			itemCmp.add(entity);
 			gameState->held_entity = entity;
+
+			for (int i = 0; i < 7; i++) {
+				std::ostringstream out;
+		    out << SMOKE_LABEL_PREFIX << entity->id << i;
+		    Entity* newSmoke = objectManager->makeEntity(out.str());
+
+		    vec2 pos = transformCmp.getTransform(entity)->m_position;
+
+		    int width = entity->label == TORCH_LABEL ? 5:25;
+		    int y_offset = entity->label == TORCH_LABEL ? 15:TILE_WIDTH;
+				float scale = entity->label == TORCH_LABEL ? 1.5f : 3.f;
+
+		    movementCmp.add(newSmoke, 25, 0);
+		    movementCmp.setMovementDirection(newSmoke, UP);
+		    newSmoke->ui = true;
+		    drawCmp.add(newSmoke, textures_path("Dungeon/smoke_particle_new.png"));
+
+		    float offset = (rand() % width) + 1;
+		    float offset_m = rand() % 2 == 0 ? 1.f : -1.f;
+		    vec2 spawnPos = {pos.x + (offset * offset_m) , pos.y - y_offset};
+		    transformCmp.add(newSmoke, spawnPos, {scale,scale}, 0);
+		    particleCmp.add(newSmoke);
+			}
 		}
 	}
 
@@ -1518,4 +1586,3 @@ void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos)
     // Limit it to the xy plane and not have any z movement
     collision->body->setLinearFactor(btVector3(1,1,0));
 }
-

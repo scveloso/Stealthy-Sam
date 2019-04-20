@@ -5,6 +5,8 @@
 #include "Components/EnemyCmp.hpp"
 #include "ObjectManager.hpp"
 #include "SoundManager.hpp"
+#include <string>
+#include <iostream>
 
 class DrawSystem
 {

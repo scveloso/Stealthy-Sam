@@ -60,6 +60,7 @@ void ObjectManager::removeEntity(Entity* entity) {
     int i = 0;
     for (auto& it : entities) {
         if (it->id == entity->id) {
+						delete it;
             entities.erase(entities.begin()+i);
             return;
         }

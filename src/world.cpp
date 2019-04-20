@@ -310,8 +310,7 @@ bool World::update(float elapsed_ms)
 }
 
 void World::handleParticle(Entity* entity) {
-    std::pair<std::string, Draw*> smoke = particleSystem->spawnSmoke(entity);
-    ds->initializeItem(objectManager->getEntityByLabel(smoke.first), smoke.second, standardEffect);
+    particleSystem->spawnSmoke(entity);
 }
 
 // Takes in an UpdateAction, handles room changes, restarts, etc.
@@ -518,6 +517,8 @@ void World::draw()
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);
+
+	//particleSystem->clearDeadParticles();
 }
 
 // Should the game be over ?

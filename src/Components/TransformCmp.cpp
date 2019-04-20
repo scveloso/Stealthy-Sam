@@ -14,6 +14,7 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 }
 
 void TransformCmp::remove(Entity *entity) {
+	delete transform_map[entity->id];
 	transform_map.erase(entity->id);
 }
 

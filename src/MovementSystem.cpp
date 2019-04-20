@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <Components/GameStateCmp.hpp>
+#include <ParticleSystem.hpp>
 
 // System to handle movement for ALL relevant entities, including non-Sam entities.
 //
@@ -190,7 +191,7 @@ void MovementSystem::stopEntityMovement(Entity* entity)
 bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTransform)
 {
   // Basic ghost enemies can go through walls
-  if (entity->label == ENEMY_LABEL) {
+  if (entity->label == ENEMY_LABEL || entity->label.rfind(SMOKE_LABEL_PREFIX, 0) == 0) {
     return false;
   }
 
