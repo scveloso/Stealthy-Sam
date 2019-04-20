@@ -5,6 +5,7 @@ class MovementCmp : public Cmp
 {
 public:
 	void add(Entity* entity, float speed, float acceleration);
+	void remove(Entity* entity);
 	std::unordered_map<int, Movement *> getmap();
 
 	Movement* getMovement(Entity* entity);

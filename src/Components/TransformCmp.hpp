@@ -5,6 +5,7 @@ class TransformCmp : public Cmp
 {
 public:
 	void add(Entity *entity, vec2 m_position, vec2 m_scale, float m_rotation);
+	void remove(Entity *entity);
 	std::unordered_map<int, Transform *> getmap();
 	Transform* getTransform(Entity *entity);
 

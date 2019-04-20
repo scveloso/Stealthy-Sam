@@ -5,6 +5,7 @@ class DrawCmp : public Cmp
 {
 public:
 	void add(Entity *entity, const char* file);
+	void remove(Entity *entity);
 
 	void addGhost(Entity *entity, const char* default_file, const char* chase_file);
 
