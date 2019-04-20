@@ -379,6 +379,8 @@ void World::handleUpdateAction(int updateAction)
 				m_text->restart();
 				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
+                gameState->intro_text_countdown_ms = 20000.f;
+                objectManager->getEntityByLabel(INTRO_TEXT)->active = true;
 
 				SoundManager soundManager = SoundManager::getInstance();
 				soundManager.haltMusic();
