@@ -592,7 +592,12 @@ void InputSystem::torch_cauldron_collision(int entityId, Transform* entityTransf
         if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
         {
           otherEntity->active = true;
-          gameState->num_lit_cauldrons++;
+          if (gameState->current_room == ROOM_FOUR_GUID)
+          {
+            gameState->num_lit_cauldrons++;
+            Entity* entity = objectManager->getEntityByLabel(BOSS_TEXT);
+            entity->active = false;
+          }
           SoundManager::getInstance().playCauldronLightUp();
         }
       }

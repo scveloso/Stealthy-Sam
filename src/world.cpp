@@ -175,7 +175,8 @@ bool World::init(vec2 screen)
 void World::generateEntities()
 {
 	std::string room_path = "";
-	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
+	if (gameState->current_room == ROOM_ONE_GUID && gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)
+	{
 		room_path = map_path("level_one_with_key.json");
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
@@ -331,7 +332,6 @@ void World::handleUpdateAction(int updateAction)
 			}
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				clearMap();
 				gameState->previous_room = gameState->current_room;
@@ -345,7 +345,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -355,7 +354,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -365,7 +363,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
+                gameState->boss_text_countdown_ms = 10000.f;
+				objectManager->getEntityByLabel(BOSS_TEXT)->active = true;
 				m_cone->clear_enemy_position();
 				break;
 			}

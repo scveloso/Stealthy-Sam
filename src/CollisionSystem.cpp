@@ -58,9 +58,9 @@ int CollisionSystem::update(float elapsed_ms)
 
 				// Handle door collisions
 				int doorUpdateAction = handleDoors(entity);
-				if (doorUpdateAction != NO_CHANGE)
-				{
-					return doorUpdateAction;
+                if (doorUpdateAction != NO_CHANGE)
+                {
+                    return doorUpdateAction;
 				}
 
 				// Handle enemy collisions
@@ -71,7 +71,7 @@ int CollisionSystem::update(float elapsed_ms)
 				}
 
 				// Handle key collisions
-        int keyUpdateAction = handleKeys(entity);
+        		int keyUpdateAction = handleKeys(entity);
 				if (keyUpdateAction != NO_CHANGE)
 				{
 					return keyUpdateAction;
@@ -120,15 +120,13 @@ int CollisionSystem::update(float elapsed_ms)
 		}
 
 		Collision* torchCmp = collisionComponent->getCollision(torchEntity);
-		if (torchCmp->torch_light_countdown_ms > 0.f)
-    {
-      torchCmp->torch_light_countdown_ms -= elapsed_ms;
-      if (torchCmp->torch_light_countdown_ms <= 0.f)
-      {
-        torchEntity->active = false;
-				SoundManager::getInstance().playTorchDying();
-      }
-    }
+		if (torchCmp->torch_light_countdown_ms > 0.f) {
+            torchCmp->torch_light_countdown_ms -= elapsed_ms;
+            if (torchCmp->torch_light_countdown_ms <= 0.f) {
+                torchEntity->active = false;
+                SoundManager::getInstance().playTorchDying();
+            }
+        }
 	}
 
 	return NO_CHANGE;
@@ -218,12 +216,18 @@ int CollisionSystem::handleKeys(Entity* entity)
 	if (entity->label.compare("Key") == 0 && entity->active)
 	{
 		entity->active = false;
-		if (gameStateComponent->current_room == ROOM_TWO_GUID)
+		if (gameStateComponent->current_room == ROOM_ONE_GUID)
 		{
-			gameStateComponent->level_two_key = true;
+			gameStateComponent->level_one_key = true;
 			increaseKeyCount();
 			SoundManager::getInstance().playKeyPickup();
 		}
+        else if (gameStateComponent->current_room == ROOM_TWO_GUID)
+        {
+            gameStateComponent->level_two_key = true;
+            increaseKeyCount();
+            SoundManager::getInstance().playKeyPickup();
+        }
 		else if (gameStateComponent->current_room == ROOM_THREE_GUID)
 		{
 			gameStateComponent->level_three_key = true;
@@ -237,20 +241,26 @@ int CollisionSystem::handleKeys(Entity* entity)
 
 
 void CollisionSystem::increaseKeyCount() {
-	Entity* key02 = objectManager->getEntityByLabel("key0_UI");
-	Entity* key12 = objectManager->getEntityByLabel("key1_UI");
-	Entity* key22 = objectManager->getEntityByLabel("key2_UI");
+	Entity* key03 = objectManager->getEntityByLabel("key0_UI");
+	Entity* key13 = objectManager->getEntityByLabel("key1_UI");
+	Entity* key23 = objectManager->getEntityByLabel("key2_UI");
+    Entity* key33 = objectManager->getEntityByLabel("key3_UI");
 
-	if (key02->active) {
-		key02->active = false;
-		key02->ui = false;
-		key12->active = true;
-		key12->ui = true;
-	} else if (key12->active) {
-		key12->active = false;
-		key12->ui = false;
-		key22->active = true;
-		key22->ui = true;
+	if (key03->active) {
+        key03->active = false;
+        key03->ui = false;
+		key13->active = true;
+		key13->ui = true;
+	} else if (key13->active) {
+		key13->active = false;
+		key13->ui = false;
+		key23->active = true;
+		key23->ui = true;
+	} else if (key23->active) {
+		key23->active = false;
+		key23->ui = false;
+		key33->active = true;
+		key33->ui = true;
 	}
 }
 

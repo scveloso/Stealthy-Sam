@@ -98,7 +98,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_TL: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
@@ -106,7 +106,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_TR: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -115,7 +115,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_ML: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Boss_Door");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -129,8 +129,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_MR: {
-					entity = objectManager->makeEntity("Wall");
-
+					entity = objectManager->makeEntity("Boss_Door");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
@@ -346,21 +345,31 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case PILLAR_TOP: {
-					entity = objectManager->makeEntity("PILLAR_TOP");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_MID: {
-					entity = objectManager->makeEntity("PILLAR_MID");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_BOT: {
@@ -1058,16 +1067,20 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					entity = objectManager->makeEntity("Key");
 
 
-					if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+					if (gameState->current_room == ROOM_ONE_GUID && !gameState->level_one_key)
 					{
-						std::cout << "Level 2 key is still active" << std::endl;
+						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+						collisionCmp.add(entity);
+					}
+					else if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+					{
 						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
 						collisionCmp.add(entity);
 					}
 					else if (gameState->current_room == ROOM_THREE_GUID && !gameState->level_three_key)
 					{
-						std::cout << "Level 3 key is still active" << std::endl;
 						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
 						collisionCmp.add(entity);
@@ -1227,22 +1240,28 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	key_UI->ui = true;
 
 	// Key counter
-	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
-	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
-	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
-    key_0_2->active = false;
+	Entity* key_0_3 = objectManager->makeEntity("key0_UI");
+	drawCmp.add(key_0_3, textures_path("text/0_3.png"));
+	transformCmp.add(key_0_3, {50,95}, {.6,.6}, 0.0);
+    key_0_3->active = false;
 
 	// Key counter
-	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
-	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
-	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
-	key_1_2->active = false;
+	Entity* key_1_3 = objectManager->makeEntity("key1_UI");
+	drawCmp.add(key_1_3, textures_path("text/1_3.png"));
+	transformCmp.add(key_1_3, {55,95}, {.6,.6}, 0.0);
+    key_1_3->active = false;
 
 	// Key counter
-	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
-	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
-	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
-	key_2_2->active = false;
+	Entity* key_2_3 = objectManager->makeEntity("key2_UI");
+	drawCmp.add(key_2_3, textures_path("text/2_3.png"));
+	transformCmp.add(key_2_3, {50,95}, {.6,.6}, 0.0);
+    key_2_3->active = false;
+
+    // Key counter
+    Entity* key_3_3 = objectManager->makeEntity("key3_UI");
+    drawCmp.add(key_3_3, textures_path("text/3_3.png"));
+    transformCmp.add(key_3_3, {50,95}, {.6,.6}, 0.0);
+    key_3_3->active = false;
 
 	Entity* T1_Welcome = objectManager->makeEntity(T1_WELCOME);
 	drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
@@ -1321,20 +1340,48 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
     T11_Startgame->ui = true;
     gameState->textArray[9] = T11_Startgame;
 
+	Entity* Boss_Door_Text = objectManager->makeEntity(BOSS_DOOR_TEXT);
+	drawCmp.add(Boss_Door_Text,textures_path("text/boss_door.png"));
+	transformCmp.add(Boss_Door_Text,{600,700},{.8,.8},0.0);
+    Boss_Door_Text->active = false;
+    Boss_Door_Text->ui = true;
+
+	Entity* Boss_Text = objectManager->makeEntity(BOSS_TEXT);
+	drawCmp.add(Boss_Text,textures_path("text/boss_text.png"));
+	transformCmp.add(Boss_Text,{600,700},{.8,.8},0.0);
+	Boss_Text->active = false;
+	Boss_Text->ui = true;
+
+
     if (!gameState->in_tutorial) {
-		if (gameState->level_two_key && gameState->level_three_key) {
-			key_1_2->ui = false;
-			key_1_2->active = false;
-			key_2_2->ui = true;
-			key_2_2->active = true;
-		} else if (gameState->level_two_key || gameState->level_three_key) {
-			key_0_2->ui = false;
-			key_0_2->active = false;
-			key_1_2->ui = true;
-			key_1_2->active = true;
-		} else {
-			key_0_2->ui = true;
-			key_0_2->active = true;
+		if (gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)
+		{
+			key_2_3->ui = false;
+			key_2_3->active = false;
+			key_3_3->ui = true;
+			key_3_3->active = true;
+		}
+		else if ((gameState->level_one_key && gameState->level_two_key) ||
+				(gameState->level_two_key && gameState->level_three_key) ||
+				(gameState->level_one_key && gameState->level_three_key))
+		{
+			key_1_3->ui = false;
+			key_1_3->active = false;
+			key_2_3->ui = true;
+			key_2_3->active = true;
+
+		}
+		else if (gameState->level_one_key || gameState->level_two_key || gameState->level_three_key)
+		{
+			key_0_3->ui = false;
+			key_0_3->active = false;
+			key_1_3->ui = true;
+			key_1_3->active = true;
+		}
+		else
+			{
+			key_0_3->ui = true;
+			key_0_3->active = true;
 		}
 	}
     else

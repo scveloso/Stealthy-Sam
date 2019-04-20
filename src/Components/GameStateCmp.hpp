@@ -10,6 +10,7 @@ public:
     bool loadGame();
 
     bool sam_is_alive;
+    bool level_one_key;
     bool level_two_key;
     bool level_three_key;
 
@@ -23,6 +24,8 @@ public:
 
     bool has_moved;
     bool has_pressed_H;
+    float boss_door_text_countdown_ms;
+    float boss_text_countdown_ms;
 
     bool is_game_paused;
     bool in_main_menu;
