@@ -23,6 +23,7 @@ MovementSystem* ms;
 TextSystem* ts;
 LightSystem* ls;
 MissileSystem* missileSystem;
+ParticleSystem* particleSystem;
 
 // Game State component
 GameStateCmp* gameState;
@@ -226,8 +227,9 @@ void World::makeSystems()
 	ts = new TextSystem();
 	ls = new LightSystem();
 	missileSystem = new MissileSystem();
+	particleSystem = new ParticleSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, dynamicsWorld);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, particleSystem, dynamicsWorld);
 }
 
 
@@ -257,6 +259,7 @@ void World::clearMap()
 	delete ts;
 	delete ls;
 	delete missileSystem;
+	delete particleSystem;
 }
 
 // Releases all the associated resources
@@ -296,10 +299,19 @@ bool World::update(float elapsed_ms)
 	handleUpdateAction(updateAction);
 	ms->update(elapsed_ms);
 	ls->update();
+	Entity* smokin = particleSystem->update();
+	if (smokin) {
+	    handleParticle(smokin);
+	}
 
 	dynamicsWorld->stepSimulation(elapsed_ms);
 
 	return true;
+}
+
+void World::handleParticle(Entity* entity) {
+    std::pair<std::string, Draw*> smoke = particleSystem->spawnSmoke(entity);
+    ds->initializeItem(objectManager->getEntityByLabel(smoke.first), smoke.second, standardEffect);
 }
 
 // Takes in an UpdateAction, handles room changes, restarts, etc.

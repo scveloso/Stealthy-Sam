@@ -55,3 +55,14 @@ std::vector<Entity*> ObjectManager::getEntitiesByLabel(std::string label)
 	}
 	return labelEntities;
 }
+
+void ObjectManager::removeEntity(Entity* entity) {
+    int i = 0;
+    for (auto& it : entities) {
+        if (it->id == entity->id) {
+            entities.erase(entities.begin()+i);
+            return;
+        }
+        i++;
+    }
+}

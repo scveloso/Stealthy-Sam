@@ -26,6 +26,7 @@ void MovementSystem::update(float elapsed_ms)
 	for (auto& it : movementComponent->getmap())
   {
     Entity* entity = objectManager->getEntity(it.first);
+    if (!entity->active) continue;
 
     // Calculate step
     float step = movementComponent->getStep(entity, elapsed_ms);

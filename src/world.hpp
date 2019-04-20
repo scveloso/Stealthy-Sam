@@ -52,6 +52,8 @@ public:
 	// Takes in an UpdateAction, handles room changes, death, etc.
 	void handleUpdateAction(int action);
 
+	void handleParticle(Entity* entity);
+
 	// Releases all associated resources
 	void destroy();
 
