@@ -17,7 +17,8 @@ void GameStateCmp::init() {
     // Tutorial status
     has_moved = false;
     has_pressed_H = false;
-    special_door_countdown_ms = -1.f;
+    boss_door_text_countdown_ms = -1.f;
+    boss_text_countdown_ms = -1.f;
 
     // New game is unpaused, not loading and not hidden
     is_game_paused = false;

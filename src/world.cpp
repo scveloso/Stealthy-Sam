@@ -332,7 +332,6 @@ void World::handleUpdateAction(int updateAction)
 			}
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				clearMap();
 				gameState->previous_room = gameState->current_room;
@@ -346,7 +345,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -356,7 +354,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -366,9 +363,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities();
-                Entity* entity = objectManager->getEntityByLabel(BOSS_TEXT);
-                entity->active = true;
-                // m_water->clear_enemy_position();
+                gameState->boss_text_countdown_ms = 10000.f;
+				objectManager->getEntityByLabel(BOSS_TEXT)->active = true;
 				m_cone->clear_enemy_position();
 				break;
 			}

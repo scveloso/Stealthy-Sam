@@ -27,5 +27,5 @@ private:
 
     void handleBossDoor(Entity *pEntity, Entity *qEntity);
 
-	void handleBossDoorTimer(float elapsed_ms) const;
+	void handleTimer(float elapsed_ms) const;
 };

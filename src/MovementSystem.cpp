@@ -146,16 +146,22 @@ void MovementSystem::update(float elapsed_ms)
           }
       }
     }
-    handleBossDoorTimer(elapsed_ms);
+      handleTimer(elapsed_ms);
     }
 }
 
-void MovementSystem::handleBossDoorTimer(float elapsed_ms) const
+void MovementSystem::handleTimer(float elapsed_ms) const
 {
-    if (gameState->special_door_countdown_ms > 0.f) {
-        gameState->special_door_countdown_ms -= elapsed_ms;
-        if (gameState->special_door_countdown_ms <= 0.f) {
+    if (gameState->boss_door_text_countdown_ms > 0.f) {
+        gameState->boss_door_text_countdown_ms -= elapsed_ms;
+        if (gameState->boss_door_text_countdown_ms <= 0.f) {
             objectManager->getEntityByLabel(BOSS_DOOR_TEXT)->active = false;
+        }
+    }
+    if (gameState->boss_text_countdown_ms > 0.f) {
+        gameState->boss_text_countdown_ms -= elapsed_ms;
+        if (gameState->boss_text_countdown_ms <= 0.f) {
+            objectManager->getEntityByLabel(BOSS_TEXT)->active = false;
         }
     }
 }
@@ -240,9 +246,9 @@ void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTra
 void MovementSystem::handleBossDoor(Entity *pEntity, Entity *qEntity) {
     if (pEntity->label == SAM_GUID && qEntity->label == "Boss_Door")
     {
-        if (gameState->special_door_countdown_ms < 0.f)
+        if (gameState->boss_door_text_countdown_ms < 0.f)
         {
-            gameState->special_door_countdown_ms = 3500.f;
+            gameState->boss_door_text_countdown_ms = 3500.f;
             objectManager->getEntityByLabel(BOSS_DOOR_TEXT)->active = true;
         }
     }

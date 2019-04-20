@@ -345,7 +345,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case PILLAR_TOP: {
-					entity = objectManager->makeEntity("PILLAR_TOP");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -354,7 +354,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case PILLAR_MID: {
-					entity = objectManager->makeEntity("PILLAR_MID");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
