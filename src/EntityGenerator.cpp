@@ -18,7 +18,7 @@ using json = nlohmann::json;
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
 								 EnemySystem* es, InputSystem* is, MovementSystem* ms,
                                  TextSystem* ts, LightSystem* ls, GameStateCmp* gs,
-                                 MissileSystem* missileSys, ParticleSystem* particleSys)
+                                 MissileSystem* missileSys, ParticleSystem* particleSys, btDiscreteDynamicsWorld* dw)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -31,6 +31,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	gameState = gs;
 	missileSystem = missileSys;
 	particleSystem = particleSys;
+	dynamicWorld = dw;
 }
 
 // Parse .json file to generate entities
@@ -87,13 +88,18 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 					entity = objectManager->makeEntity("Wall");
 
+                    collisionCmp.add(entity);
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/top_left_corner.png"));
-					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case DOOR_TL: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_TL.png"));
@@ -101,7 +107,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_TR: {
-					entity = objectManager->makeEntity("Special_Door");
+					entity = objectManager->makeEntity("Door_top");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
@@ -110,21 +116,30 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case DOOR_ML: {
-					entity = objectManager->makeEntity("Wall");
+					entity = objectManager->makeEntity("Boss_Door");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_ML.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case DOOR_MR: {
-					entity = objectManager->makeEntity("Wall");
-
+					entity = objectManager->makeEntity("Boss_Door");
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_MR.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case DOOR_BL: {
@@ -134,6 +149,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/DOOR_BL.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case DOOR_BR: {
@@ -188,6 +208,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/top_right_corner.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case BOTTOM_LEFT_CORNER: {
@@ -197,6 +222,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/bottom_left_corner.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case BOTTOM_RIGHT_CORNER: {
@@ -206,6 +236,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/bottom_right_corner.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case TOP_WALL: {
@@ -215,6 +250,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/top_wall.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case BOTTOM_WALL: {
@@ -224,6 +264,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/bottom_wall.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case LEFT_WALL: {
@@ -232,6 +277,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/left_wall.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case RIGHT_WALL: {
@@ -241,6 +291,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/right_wall.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case BLACK_TILE: {
@@ -250,6 +305,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/black_tile.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case FLOOR_TILE: {
@@ -268,6 +328,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/UNLIT_CAULDRON.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case LIT_CAULDRON: {
@@ -281,21 +346,31 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					break;
 				}
 				case PILLAR_TOP: {
-					entity = objectManager->makeEntity("PILLAR_TOP");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_MID: {
-					entity = objectManager->makeEntity("PILLAR_MID");
+					entity = objectManager->makeEntity("Wall");
 
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_BOT: {
@@ -305,6 +380,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_BOT.png"));
 					collisionCmp.add(entity);
+
+                    Collision* collision = collisionCmp.getCollision(entity);
+                    createWallPhysicsObject(entity, collision, {x, y});
+
+                    dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case CLOSET: {
@@ -988,16 +1068,20 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					entity = objectManager->makeEntity("Key");
 
 
-					if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+					if (gameState->current_room == ROOM_ONE_GUID && !gameState->level_one_key)
 					{
-						std::cout << "Level 2 key is still active" << std::endl;
+						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
+						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
+						collisionCmp.add(entity);
+					}
+					else if (gameState->current_room == ROOM_TWO_GUID && !gameState->level_two_key)
+					{
 						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
 						collisionCmp.add(entity);
 					}
 					else if (gameState->current_room == ROOM_THREE_GUID && !gameState->level_three_key)
 					{
-						std::cout << "Level 3 key is still active" << std::endl;
 						transformCmp.add(entity, { x, y }, { 3.125f, 3.125f }, 0.0);
 						drawCmp.add(entity, textures_path("Dungeon/KEY.png"));
 						collisionCmp.add(entity);
@@ -1157,22 +1241,28 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	key_UI->ui = true;
 
 	// Key counter
-	Entity* key_0_2 = objectManager->makeEntity("key0_UI");
-	drawCmp.add(key_0_2, textures_path("text/0_2.png"));
-	transformCmp.add(key_0_2, {50,90}, {.7,.7}, 0.0);
-    key_0_2->active = false;
+	Entity* key_0_3 = objectManager->makeEntity("key0_UI");
+	drawCmp.add(key_0_3, textures_path("text/0_3.png"));
+	transformCmp.add(key_0_3, {50,95}, {.6,.6}, 0.0);
+    key_0_3->active = false;
 
 	// Key counter
-	Entity* key_1_2 = objectManager->makeEntity("key1_UI");
-	drawCmp.add(key_1_2, textures_path("text/1_2.png"));
-	transformCmp.add(key_1_2, {55,90}, {.7,.7}, 0.0);
-	key_1_2->active = false;
+	Entity* key_1_3 = objectManager->makeEntity("key1_UI");
+	drawCmp.add(key_1_3, textures_path("text/1_3.png"));
+	transformCmp.add(key_1_3, {55,95}, {.6,.6}, 0.0);
+    key_1_3->active = false;
 
 	// Key counter
-	Entity* key_2_2 = objectManager->makeEntity("key2_UI");
-	drawCmp.add(key_2_2, textures_path("text/2_2.png"));
-	transformCmp.add(key_2_2, {50,90}, {.7,.7}, 0.0);
-	key_2_2->active = false;
+	Entity* key_2_3 = objectManager->makeEntity("key2_UI");
+	drawCmp.add(key_2_3, textures_path("text/2_3.png"));
+	transformCmp.add(key_2_3, {50,95}, {.6,.6}, 0.0);
+    key_2_3->active = false;
+
+    // Key counter
+    Entity* key_3_3 = objectManager->makeEntity("key3_UI");
+    drawCmp.add(key_3_3, textures_path("text/3_3.png"));
+    transformCmp.add(key_3_3, {50,95}, {.6,.6}, 0.0);
+    key_3_3->active = false;
 
 	Entity* T1_Welcome = objectManager->makeEntity(T1_WELCOME);
 	drawCmp.add(T1_Welcome,textures_path("text/Tutorial/T1_Welcome.png"));
@@ -1251,20 +1341,48 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
     T11_Startgame->ui = true;
     gameState->textArray[9] = T11_Startgame;
 
+	Entity* Boss_Door_Text = objectManager->makeEntity(BOSS_DOOR_TEXT);
+	drawCmp.add(Boss_Door_Text,textures_path("text/boss_door.png"));
+	transformCmp.add(Boss_Door_Text,{600,700},{.8,.8},0.0);
+    Boss_Door_Text->active = false;
+    Boss_Door_Text->ui = true;
+
+	Entity* Boss_Text = objectManager->makeEntity(BOSS_TEXT);
+	drawCmp.add(Boss_Text,textures_path("text/boss_text.png"));
+	transformCmp.add(Boss_Text,{600,700},{.8,.8},0.0);
+	Boss_Text->active = false;
+	Boss_Text->ui = true;
+
+
     if (!gameState->in_tutorial) {
-		if (gameState->level_two_key && gameState->level_three_key) {
-			key_1_2->ui = false;
-			key_1_2->active = false;
-			key_2_2->ui = true;
-			key_2_2->active = true;
-		} else if (gameState->level_two_key || gameState->level_three_key) {
-			key_0_2->ui = false;
-			key_0_2->active = false;
-			key_1_2->ui = true;
-			key_1_2->active = true;
-		} else {
-			key_0_2->ui = true;
-			key_0_2->active = true;
+		if (gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)
+		{
+			key_2_3->ui = false;
+			key_2_3->active = false;
+			key_3_3->ui = true;
+			key_3_3->active = true;
+		}
+		else if ((gameState->level_one_key && gameState->level_two_key) ||
+				(gameState->level_two_key && gameState->level_three_key) ||
+				(gameState->level_one_key && gameState->level_three_key))
+		{
+			key_1_3->ui = false;
+			key_1_3->active = false;
+			key_2_3->ui = true;
+			key_2_3->active = true;
+
+		}
+		else if (gameState->level_one_key || gameState->level_two_key || gameState->level_three_key)
+		{
+			key_0_3->ui = false;
+			key_0_3->active = false;
+			key_1_3->ui = true;
+			key_1_3->active = true;
+		}
+		else
+			{
+			key_0_3->ui = true;
+			key_0_3->active = true;
 		}
 	}
     else
@@ -1359,9 +1477,39 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	enemySystem->		init(		objectManager, &transformCmp, enemyCmp		, &movementCmp	, itemCmp, gameState);
 	movementSystem->	init(		objectManager, &transformCmp, &collisionCmp	, &movementCmp	, gameState);
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
-	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
-    missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp);
+	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy, &enemyCmp);
+    missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp, dynamicWorld);
     particleSystem->    init(		objectManager, &drawCmp		, &transformCmp	, &movementCmp	, gameState, &particleCmp);
 
 	drawSystem->setup(effect);
 }
+
+void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos)
+{
+    collision->shape = new btBoxShape(btVector3(40, 40, 1));
+    // Set default rotation and pos from param
+    btQuaternion rotation;
+    rotation.setEulerZYX(0,0,0);
+    btVector3 position = btVector3(pos.x, pos.y, 0);
+    btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(rotation, position));
+
+    btScalar bodyMass = 0;
+    btVector3 bodyInertia = btVector3(0, 0, 0);
+
+    btRigidBody::btRigidBodyConstructionInfo bodyCI = btRigidBody::btRigidBodyConstructionInfo(bodyMass, motionState, collision->shape, bodyInertia);
+
+    // Restitution is how much energy is retained on bouncing
+    bodyCI.m_restitution = 1.f;
+    bodyCI.m_friction = 0.1f;
+
+    collision->body = new btRigidBody(bodyCI);
+    collision->body->setUserPointer(self);
+
+    collision->body->setCollisionFlags(collision->body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT );
+    collision->body->setActivationState( DISABLE_DEACTIVATION );
+    collision->body->activate(true);
+
+    // Limit it to the xy plane and not have any z movement
+    collision->body->setLinearFactor(btVector3(1,1,0));
+}
+

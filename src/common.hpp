@@ -8,6 +8,9 @@
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
 
+
+#include "btBulletDynamicsCommon.h"
+
 // JSON
 #include <../ext/json/json.hpp>
 
@@ -130,6 +133,8 @@ const std::string PAUSE_SCREEN = "Pause_Screen";
 const std::string VICTORY_SCREEN = "Victory_Screen";
 const std::string MAIN_MENU = "Main_Menu";
 const std::string T1_WELCOME = "T1_Welcome";
+const std::string BOSS_DOOR_TEXT = "Boss_Door_Text";
+const std::string BOSS_TEXT = "Boss_Text";
 
 const std::string GAME_SAVED_ALERT = "Game_Saved";
 const std::string GAME_LOADED_ALERT = "Game_Loaded";

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 project(436d)
 
+#set(CMAKE_BUILD_TYPE Debug)
+
 # Set c++11
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
@@ -182,10 +184,14 @@ if (NOT GLFW_FOUND OR NOT SDL2_FOUND)
    endif()
 endif()
 
+# Add Bullet
+find_package( Bullet REQUIRED )
+include_directories(${BULLET_INCLUDE_DIRS} )
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES} ${BULLET_LIBRARIES})
 
 # Needed to add this
 if(IS_OS_LINUX)

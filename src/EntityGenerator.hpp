@@ -34,7 +34,8 @@ class EntityGenerator
 public:
 	EntityGenerator(ObjectManager *objectManager, CollisionSystem *collisionSystem, DrawSystem *drawSystem,
                     EnemySystem *enemySystem, InputSystem *inputSystem, MovementSystem *movementSystem,
-                    TextSystem *textSystem, LightSystem *lightSystem, GameStateCmp *gameState, MissileSystem *missileSystem, ParticleSystem* particleSystem);
+                    TextSystem *textSystem, LightSystem *lightSystem, GameStateCmp *gameState, MissileSystem *missileSystem, ParticleSystem* particleSystem,
+                        btDiscreteDynamicsWorld* dynamicWorld);
 	void generateEntities(std::string room_path, Light* light, EnemyCone* enemy, Text* text, Effect effect);
 
 private:
@@ -58,4 +59,6 @@ private:
 	GameStateCmp* gameState;
 	MissileSystem* missileSystem;
 	ParticleSystem* particleSystem;
+    btDiscreteDynamicsWorld* dynamicWorld;
 };
+void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos);

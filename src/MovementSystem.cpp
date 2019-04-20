@@ -48,6 +48,16 @@ void MovementSystem::update(float elapsed_ms)
     }
 
     Transform* entityTransform = transformComponent->getTransform(entity);
+
+    if (entityTransform->body != NULL) {
+        // Handled by bullet physics, ignore other stuff
+        btTransform transform;
+        entityTransform->body->getMotionState()->getWorldTransform(transform);
+        btVector3 pos = transform.getOrigin();
+
+        entityTransform->m_position = { pos.getX(), pos.getY() };
+        continue;
+    }
     int movementDirection = movementComponent->getMovementDirection(entity);
     vec2 vecDirection = movementComponent->getVecDirection(entity);
     vec2 oldPosition = entityTransform->m_position;
@@ -137,7 +147,24 @@ void MovementSystem::update(float elapsed_ms)
           }
       }
     }
-  }
+      handleTimer(elapsed_ms);
+    }
+}
+
+void MovementSystem::handleTimer(float elapsed_ms) const
+{
+    if (gameState->boss_door_text_countdown_ms > 0.f) {
+        gameState->boss_door_text_countdown_ms -= elapsed_ms;
+        if (gameState->boss_door_text_countdown_ms <= 0.f) {
+            objectManager->getEntityByLabel(BOSS_DOOR_TEXT)->active = false;
+        }
+    }
+    if (gameState->boss_text_countdown_ms > 0.f) {
+        gameState->boss_text_countdown_ms -= elapsed_ms;
+        if (gameState->boss_text_countdown_ms <= 0.f) {
+            objectManager->getEntityByLabel(BOSS_TEXT)->active = false;
+        }
+    }
 }
 
 void MovementSystem::cauldronCheck(Entity *entity, Transform *entityTransform) {
@@ -168,12 +195,14 @@ bool MovementSystem::is_movement_interrupted(Entity* entity, Transform* entityTr
       {
           Entity* otherEntity = objectManager->getEntity(otherEntityId);
 
-          if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0))
+          if ((otherEntity->label.compare("Wall") == 0) || (otherEntity->label.compare("Closet") == 0)
+                                                           || (otherEntity->label.compare("Boss_Door") == 0))
           {
               Transform *otherEntityTransform = transformComponent->getTransform(otherEntity);
 
               if (CollisionSystem::AABB(entityTransform, otherEntityTransform))
               {
+                  handleBossDoor(entity, otherEntity);
                   return true;
               }
           }
@@ -203,11 +232,25 @@ void MovementSystem::torch_cauldron_collision(int entityId, Transform* entityTra
                     {
                         // if the torch is being lit for the first time, increment torch count
                         otherEntity->active = true;
-                        gameState->num_lit_cauldrons += 1;
+                        if (gameState->current_room == ROOM_FOUR_GUID)
+                        {
+                            gameState->num_lit_cauldrons += 1;
+                        }
                         SoundManager::getInstance().playCauldronLightUp();
                     }
                 }
             }
+        }
+    }
+}
+
+void MovementSystem::handleBossDoor(Entity *pEntity, Entity *qEntity) {
+    if (pEntity->label == SAM_GUID && qEntity->label == "Boss_Door")
+    {
+        if (gameState->boss_door_text_countdown_ms < 0.f)
+        {
+            gameState->boss_door_text_countdown_ms = 3500.f;
+            objectManager->getEntityByLabel(BOSS_DOOR_TEXT)->active = true;
         }
     }
 }

@@ -28,6 +28,12 @@ ParticleSystem* particleSystem;
 // Game State component
 GameStateCmp* gameState;
 
+btDefaultCollisionConfiguration* collisionConfiguration;
+btCollisionDispatcher* dispatcher;
+btBroadphaseInterface* overlappingPairCache;
+btSequentialImpulseConstraintSolver * solver;
+btDiscreteDynamicsWorld* dynamicsWorld;
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -161,10 +167,6 @@ bool World::init(vec2 screen)
 	if (!standardEffect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-    //Uncomment if you want to start on level 4
-    // gameState->current_room = ROOM_FOUR_GUID;
-    // gameState->held_item = TORCH;
-
 	generateEntities();
 
 	return true;
@@ -174,7 +176,8 @@ bool World::init(vec2 screen)
 void World::generateEntities()
 {
 	std::string room_path = "";
-	if ((gameState->current_room == ROOM_ONE_GUID) && gameState->level_two_key && gameState->level_three_key) {
+	if (gameState->current_room == ROOM_ONE_GUID && gameState->level_one_key && gameState->level_two_key && gameState->level_three_key)
+	{
 		room_path = map_path("level_one_with_key.json");
 	}
 	else if (gameState->current_room == ROOM_ONE_GUID) {
@@ -205,6 +208,16 @@ void World::generateEntities()
 
 void World::makeSystems()
 {
+    // Make the Bullet physics world
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    overlappingPairCache = new btDbvtBroadphase();
+    solver = new btSequentialImpulseConstraintSolver();
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    dynamicsWorld->setGravity(btVector3(0, 0, 0));
+
+
+
 	objectManager = new ObjectManager();
 	ds = new DrawSystem();
 	inputSys = new InputSystem();
@@ -216,7 +229,7 @@ void World::makeSystems()
 	missileSystem = new MissileSystem();
 	particleSystem = new ParticleSystem();
 
-	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, particleSystem);
+	entityGenerator = new EntityGenerator(objectManager, cs, ds, es, inputSys, ms, ts, ls, gameState, missileSystem, particleSystem, dynamicsWorld);
 }
 
 
@@ -280,7 +293,7 @@ bool World::update(float elapsed_ms)
 
 	// Update Systems
 	int updateAction = es->update(elapsed_ms);
-  handleUpdateAction(updateAction);
+    handleUpdateAction(updateAction);
 
 	updateAction = cs->update(elapsed_ms);
 	handleUpdateAction(updateAction);
@@ -290,6 +303,8 @@ bool World::update(float elapsed_ms)
 	if (smokin) {
 	    handleParticle(smokin);
 	}
+
+	dynamicsWorld->stepSimulation(elapsed_ms);
 
 	return true;
 }
@@ -329,7 +344,6 @@ void World::handleUpdateAction(int updateAction)
 			}
 			case CHANGE_TO_ROOM_ONE_ACTION:
 			{
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				clearMap();
 				gameState->previous_room = gameState->current_room;
@@ -343,7 +357,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_TWO_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -353,7 +366,6 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_THREE_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
 				m_cone->clear_enemy_position();
 				break;
 			}
@@ -363,7 +375,8 @@ void World::handleUpdateAction(int updateAction)
 				gameState->previous_room = gameState->current_room;
 				gameState->current_room = ROOM_FOUR_GUID;
 				generateEntities();
-				// m_water->clear_enemy_position();
+                gameState->boss_text_countdown_ms = 10000.f;
+				objectManager->getEntityByLabel(BOSS_TEXT)->active = true;
 				m_cone->clear_enemy_position();
 				break;
 			}

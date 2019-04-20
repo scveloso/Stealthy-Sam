@@ -315,3 +315,4 @@ vec2 crSpline(float t, std::vector<vec2> path, int i)
 	vec2 ans = { x*0.5f, y*0.5f };
 	return ans;
 }
+
