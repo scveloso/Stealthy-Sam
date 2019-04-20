@@ -47,6 +47,7 @@ int CollisionSystem::update(float elapsed_ms)
 		{
 			Entity* entity = objectManager->getEntity(entityId);
 			entityTransform = transformComponent->getTransform(entity);
+			if (!entity->active) continue;
 
 			// Check if enemy vision cone collides with Sam
 			handleEnemyVisionCone(samTransform, entity);

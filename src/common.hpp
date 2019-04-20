@@ -142,6 +142,9 @@ const std::string ROOM_FOUR_GUID = "ROOM_FOUR";
 const std::string TUTORIAL_LEVEL_GUID = "TUTORIAL_LEVEL";
 
 const std::string ENEMY_LABEL = "Enemy.Ghost";
+const std::string TORCH_LABEL = "Torch";
+const std::string CAULDRON_LABEL = "Cauldron";
+const std::string SMOKE_LABEL = "Smoke";
 const std::string BOSS_GUID = "Enemy.Boss";
 
 const std::string SAM_GUID = "Player";

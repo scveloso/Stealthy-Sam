@@ -44,6 +44,7 @@ set(SOURCE_FILES
 		src/MovementSystem.cpp
 		src/TextSystem.cpp
 		src/LightSystem.cpp
+		src/ParticleSystem.cpp
 		src/DecisionNode.cpp
 		src/EntityGenerator.cpp
     src/light.cpp
@@ -64,6 +65,7 @@ set(SOURCE_FILES
 		src/MovementSystem.hpp
 		src/TextSystem.hpp
 		src/LightSystem.hpp
+		src/ParticleSystem.hpp
 		src/DecisionNode.hpp
 		src/EntityGenerator.hpp
     src/light.hpp
@@ -86,6 +88,8 @@ set(SOURCE_FILES
 		src/Components/MovementCmp.cpp
 		src/Components/ItemCmp.hpp
 		src/Components/ItemCmp.cpp
+		src/Components/ParticleCmp.hpp
+        src/Components/ParticleCmp.cpp
 		src/Components/GameStateCmp.hpp
 		src/Components/GameStateCmp.cpp
     src/Strategies/BossStrategy.cpp src/Strategies/BossStrategy.hpp src/MissileSystem.cpp src/MissileSystem.hpp)

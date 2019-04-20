@@ -12,6 +12,10 @@ void TransformCmp::add(Entity *entity, vec2 m_position, vec2 m_scale, float m_ro
 	transform_map[entity->id] = tb;
 }
 
+void TransformCmp::remove(Entity *entity) {
+	transform_map.erase(entity->id);
+}
+
 TransformCmp::~TransformCmp() {
 	//printf("TRANSFORM DESTRUCTOR\n"); //called 6 times intially
 	//printf("%d \n", transform_map.size());

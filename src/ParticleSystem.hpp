@@ -1,20 +1,20 @@
-#pragma once
 #include "Components/DrawCmp.hpp"
 #include "Components/TransformCmp.hpp"
 #include "Components/MovementCmp.hpp"
-#include "Components/EnemyCmp.hpp"
+#include "Components/ParticleCmp.hpp"
 #include "ObjectManager.hpp"
 #include "SoundManager.hpp"
+#include "DrawSystem.hpp"
 
-class DrawSystem
+#include <stdio.h>
+#include <sstream>
+
+class ParticleSystem
 {
 public:
-	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, EnemyCmp ec, GameStateCmp* gameStateCmp);
-    bool initializeItem(Entity* entity, Draw* draw, Effect effect);
-	void update(const mat3 projection);
-	void updateUI(const mat3 projection);
-	bool setup(Effect effect);
-	void playStep();
+	void init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, MovementCmp* mc, GameStateCmp* gameStateCmp ,ParticleCmp* particleComponent);
+	Entity* update();
+	std::pair<std::string, Draw*> spawnSmoke(Entity* entity);
 
 	vec2 s_position;
 	vec2 EBox;
@@ -26,9 +26,10 @@ private:
 	EnemyCmp enemyComponent;
 	TransformCmp* transformComponent;
 	MovementCmp* movementComponent;
+	ParticleCmp* particleComponent;
 	ObjectManager* objectManager;
 	GameStateCmp* gameState;
-
-	int stepTimer;
-	bool curStep;
+	int numSmoke;
 };
+
+const std::string SMOKE_LABEL_PREFIX = "Smoke_";

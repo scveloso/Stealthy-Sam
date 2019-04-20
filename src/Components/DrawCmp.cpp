@@ -15,6 +15,17 @@ void DrawCmp::add(Entity *entity, const char* file)
 	draw_vec.emplace_back(std::make_pair(entity, draw));
 }
 
+void DrawCmp::remove(Entity* entity) {
+    int i = 0;
+    for (auto& it : draw_vec) {
+        if (it.first->id == entity->id) {
+            draw_vec.erase(draw_vec.begin()+i);
+            return;
+        }
+        i++;
+	}
+}
+
 DrawCmp::~DrawCmp() {
 	//printf("DRAWCMP DESTRUCTOR \n");
 

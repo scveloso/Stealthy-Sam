@@ -18,7 +18,7 @@ using json = nlohmann::json;
 EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSystem* ds,
 								 EnemySystem* es, InputSystem* is, MovementSystem* ms,
                                  TextSystem* ts, LightSystem* ls, GameStateCmp* gs,
-                                 MissileSystem* missileSys)
+                                 MissileSystem* missileSys, ParticleSystem* particleSys)
 {
 	objectManager = om;
 	collisionSystem = cs;
@@ -30,6 +30,7 @@ EntityGenerator::EntityGenerator(ObjectManager* om, CollisionSystem* cs, DrawSys
 	lightSystem = ls;
 	gameState = gs;
 	missileSystem = missileSys;
+	particleSystem = particleSys;
 }
 
 // Parse .json file to generate entities
@@ -1360,6 +1361,7 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 	textSystem->		init(		objectManager, gameState	, text			, light			, enemy);
 	lightSystem->		init(		objectManager, gameState	, &transformCmp	, light			, enemy);
     missileSystem->		init(		objectManager, &collisionCmp, &movementCmp	, gameState		, &drawCmp, &transformCmp);
+    particleSystem->    init(		objectManager, &drawCmp		, &transformCmp	, &movementCmp	, gameState, &particleCmp);
 
 	drawSystem->setup(effect);
 }
