@@ -351,6 +351,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_TOP.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_MID: {
@@ -360,6 +365,11 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/PILLAR_MID.png"));
 					collisionCmp.add(entity);
+
+					Collision* collision = collisionCmp.getCollision(entity);
+					createWallPhysicsObject(entity, collision, {x, y});
+
+					dynamicWorld->addRigidBody(collision->body);
 					break;
 				}
 				case PILLAR_BOT: {
