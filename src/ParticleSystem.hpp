@@ -16,6 +16,9 @@ public:
 	Entity* update();
 	std::pair<std::string, Draw*> spawnSmoke(Entity* entity);
 
+	void clearDeadParticles();
+
+
 	vec2 s_position;
 	vec2 EBox;
 	vec2 rRestart;

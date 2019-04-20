@@ -318,7 +318,6 @@ void EntityGenerator::generateEntities(std::string room_path, Light* light, Enem
 
 					transformCmp.add(entity, {x, y}, {3.125f, 3.125f}, 0.0);
 					drawCmp.add(entity, textures_path("Dungeon/floor_tile.png"));
-					collisionCmp.add(entity);
 					break;
 				}
 				case UNLIT_CAULDRON: {
@@ -1512,4 +1511,3 @@ void createWallPhysicsObject(Entity *self, Collision *collision, vec2 pos)
     // Limit it to the xy plane and not have any z movement
     collision->body->setLinearFactor(btVector3(1,1,0));
 }
-

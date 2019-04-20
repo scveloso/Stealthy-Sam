@@ -22,6 +22,31 @@ void ParticleSystem::init(ObjectManager* om, DrawCmp* dc, TransformCmp* tc, Move
 	particleComponent = pc;
 }
 
+void ParticleSystem::clearDeadParticles() {
+	for (auto& it : particleComponent->getmap()) {
+			Entity* entity = objectManager->getEntity(it.first);
+			if (!entity->active) continue;
+
+			int lifetime = particleComponent->decrementLifetime(entity);
+			if (lifetime <= 0) {
+				 printf("trying to remove particle from transformCmp...\n");
+				 transformComponent->remove(entity);
+				 printf("trying to remove particle from draw...\n");
+				 drawComponent->remove(entity);
+				 printf("trying to remove particle from move...\n");
+				 movementComponent->remove(entity);
+				 printf("trying to remove particle from particle...\n");
+				 particleComponent->remove(entity);
+				 printf("trying to remove particle from obj...\n");
+				 objectManager->removeEntity(entity);
+				 printf("trying to delete particle...\n");
+				 //delete entity;
+				 printf("particle deleted\n");
+					//entity->active = false;
+			}
+	}
+}
+
 Entity* ParticleSystem::update()
 {
     for (auto& it : particleComponent->getmap()) {
@@ -30,18 +55,20 @@ Entity* ParticleSystem::update()
 
         int lifetime = particleComponent->decrementLifetime(entity);
         if (lifetime <= 0) {
-//            printf("trying to remove particle from transformCmp...\n");
-//            transformComponent->remove(entity);
-//            printf("trying to remove particle from draw...\n");
-//            drawComponent->remove(entity);
-//            printf("trying to remove particle from move...\n");
-//            movementComponent->remove(entity);
-//            printf("trying to remove particle from obj...\n");
-//            objectManager->removeEntity(entity);
-//            printf("trying to delete particle...\n");
-//            free(entity);
-//            printf("particle deleted\n");
-            entity->active = false;
+           // printf("trying to remove particle from transformCmp...\n");
+           // transformComponent->remove(entity);
+           // printf("trying to remove particle from draw...\n");
+           // drawComponent->remove(entity);
+           // printf("trying to remove particle from move...\n");
+           // movementComponent->remove(entity);
+					 // printf("trying to remove particle from particle...\n");
+           // particleComponent->remove(entity);
+           // printf("trying to remove particle from obj...\n");
+           // objectManager->removeEntity(entity);
+           // printf("trying to delete particle...\n");
+           // //delete entity;
+           // printf("particle deleted\n");
+          	entity->active = false;
         }
     }
 
@@ -60,7 +87,7 @@ Entity* ParticleSystem::update()
       for (auto& cauldronEntity : cauldronEntities)
       {
         if (!cauldronEntity->active) continue;
-        if (rand() % 200 == 0) {
+        if (rand() % 50 == 0) {
             return cauldronEntity;
         }
       }
@@ -78,6 +105,7 @@ std::pair<std::string, Draw*> ParticleSystem::spawnSmoke(Entity* entity) {
 
     int width = entity->label == TORCH_LABEL ? 5:25;
     int y_offset = entity->label == TORCH_LABEL ? 15:TILE_WIDTH;
+		float scale = entity->label == TORCH_LABEL ? 1.5f : 3.f;
 
     movementComponent->add(newSmoke, 25, 0);
     movementComponent->setMovementDirection(newSmoke, UP);
@@ -87,7 +115,7 @@ std::pair<std::string, Draw*> ParticleSystem::spawnSmoke(Entity* entity) {
     float offset = (rand() % width) + 1;
     float offset_m = rand() % 2 == 0 ? 1.f : -1.f;
     vec2 spawnPos = {pos.x + (offset * offset_m) , pos.y - y_offset};
-    transformComponent->add(newSmoke, spawnPos, {3.f,3.f}, 0);
+    transformComponent->add(newSmoke, spawnPos, {scale,scale}, 0);
 
     particleComponent->add(newSmoke);
 

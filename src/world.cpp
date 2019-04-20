@@ -516,6 +516,8 @@ void World::draw()
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);
+
+	//particleSystem->clearDeadParticles();
 }
 
 // Should the game be over ?

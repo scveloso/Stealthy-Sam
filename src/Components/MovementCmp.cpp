@@ -13,6 +13,7 @@ void MovementCmp::add(Entity *entity, float speed, float acceleration) {
 }
 
 void MovementCmp::remove(Entity *entity) {
+    delete movement_map[entity->id];
     movement_map.erase(entity->id);
 }
 
