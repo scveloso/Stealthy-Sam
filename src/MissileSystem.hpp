@@ -12,6 +12,7 @@ class MissileSystem {
 public:
     void init(ObjectManager* om, CollisionCmp* cc, MovementCmp* mc, GameStateCmp* gameStateCmp, DrawCmp* drawCmp, TransformCmp* transformCmp, btDiscreteDynamicsWorld* dw);
     std::pair<std::string, Draw*> spawnMissile();
+    void update();
 private:
     CollisionCmp* collisionComponent;
     MovementCmp* movementComponent;
@@ -21,6 +22,8 @@ private:
     TransformCmp *transformCmp;
     int num_missiles;
     btDiscreteDynamicsWorld* dynamicWorld;
+    std::unordered_map<int, int> bounce_number;
 };
 const std::string MISSILE_LABEL_PREFIX = "Missile_";
+const int BOUNCE_THRESHOLD = 5;
 void createMissile(Entity* self, Collision* collision, vec2 pos);

@@ -8,6 +8,9 @@ public:
 	std::unordered_map<int, Collision*> getmap();
 	Collision* getCollision(Entity *entity);
 	~CollisionCmp();
+
+    void remove(Entity *entity);
+
 private:
 	std::unordered_map<int, Collision*> collision_map;
 };
