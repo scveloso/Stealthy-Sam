@@ -1,9 +1,9 @@
-# 436D 2018 Winter 2, Assignment 1
+# Stealthy Sam
 
-The assignment details are [here](https://www.cs.ubc.ca/~sheffa/games_course/Vjan19/assn/A1.pdf).
+This is a top-down roguelike stealth game made by Team 5 in the offering of CPSC 436D in 2018/2019 winter term 2 at UBC. 
 
-To get started, clone this repository by running:
-
-```
-git clone https://stash.ugrad.cs.ubc.ca:8443/scm/cs436d18w2/assginment1.git
-```
+To play the game:
+1) Clone the repository
+2) Run CMake with the root directory as the source code, and build in the build folder of the root directory. 
+3) cd into the build folder and run `make`.
+4) Execute ./436d
